@@ -14,7 +14,8 @@
   
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-icon-180x180.png">
   <link href="./assets/favicon.ico" rel="icon">
-
+  <link href="./assets/css/ninja-slider.css" rel="stylesheet" type="text/css" />
+  <script src="./assets/js/ninja-slider.js" type="text/javascript"></script>
   <title>Title page</title>  
 
 <link href="./main.d8e0d294.css" rel="stylesheet">
@@ -131,6 +132,10 @@
 }    
 </style>
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Code to be executed when the DOM is ready
+    nslider.init ();
+  }); 
   document.addEventListener("DOMContentLoaded", function () {
     const images = document.querySelectorAll("img");
     images.forEach((img) => {
@@ -337,13 +342,38 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-block">
+        <!--<div class="card">
+          <div class="card-block">-->
             <h2>Projects</h2>
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <div id="ninja-slider" >
+              <div class="slider-inner">
+                <ul id="unDiv">
+                                   
+              
+                  <li><a class="ns-img" href="./assets/images/img-014.jpg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-015.jpg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-016.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-017.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-018.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-019.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-020.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-021.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-012.jpg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-022.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-023.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-024.jpeg"></a><div class="caption">@colerise</div></li>
+                  <li><a class="ns-img" href="./assets/images/img-025.jpg"></a><div class="caption">@colerise</div></li>
+                              
+                                        
+                </ul>
+                <div class="fs-icon" title="Expand/Close">
+                </div>
+              </div>
+              </div>       
+           <!-- <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             
 
-            <!-- Wrapper for slides -->
+            
             <div class="carousel-inner" role="listbox">
               <div class="item active">
                 <img src="./assets/images/img-05.jpg" class="img-responsive" alt="...">
@@ -369,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             </div>
 
-            <!-- Indicators -->
+          
             <ol class="carousel-indicators">
               <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
               <li data-target="#carousel-example-generic" data-slide-to="1"></li>
@@ -378,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           </div>
           </div>
-        </div>
+        </div>-->
         
         <div class="card">
           <div class="card-block">
