@@ -130,6 +130,45 @@
   z-index: -1; /* Asegura que este elemento quede detrás */
   clear: both;
 }    
+.contenedor, .protected-content {
+      display: none;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      margin: 50px auto;
+    }
+    .contenedor.active {
+      display: block;
+    }
+    .protected-content.active {
+      display: block;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }  
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -170,6 +209,16 @@ document.addEventListener("DOMContentLoaded", function () {
 </head>
 
 <body class="">
+    <!-- Formulario de pregunta de seguridad -->
+  <div class="container active" id="security-container">
+    <h1>Pregunta de Seguridad</h1>
+    <p>¿Cuál es el color favorito de Messi?</p>
+    <input type="text" id="answer" placeholder="Escribe tu respuesta aquí">
+    <button id="submit">Enviar</button>
+    <p id="error" class="error"></p>
+  </div>
+  
+<div class="protected-content" id="protected-content">
   <div class="responsive-container">
       <h1>Manuel Teodoro Córdova Tapia</h1>
       <p class="classy">Silvester Stallone - Denzel Washington - Rambo - Condoro - Oso - Rimbi - Pichón</p>
@@ -480,7 +529,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   </div>
 </footer>
-
+</div>
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
      scrollRevelation('.card');
