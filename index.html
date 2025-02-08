@@ -205,6 +205,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.style.overflow = ""; // Reactiva el scroll
   }, 50); // Ajusta el tiempo según sea necesario
 });
+  document.getElementById("submit").addEventListener("click", async () => {
+      const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+      const errorElement = document.getElementById("error");
+
+      // Llamada a la función serverless en Vercel para validar la respuesta
+      const response = await fetch(`./api/validarRespuesta?respuesta=${userAnswer}`);
+
+      if (response.ok) {
+        // Si la respuesta es correcta, mostramos el contenido protegido
+        document.getElementById("security-container").style.display = "none";
+        document.getElementById("protected-content").style.display = "block";
+      } else {
+        // Si la respuesta es incorrecta, mostramos un mensaje de error
+        const result = await response.json();
+        errorElement.textContent = result.message;
+      }
+    });
 </script>  
 </head>
 
