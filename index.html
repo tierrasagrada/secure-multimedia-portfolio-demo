@@ -170,59 +170,7 @@
       margin-top: 10px;
     }  
 </style>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Code to be executed when the DOM is ready
-    nslider.init ();
-  }); 
-  document.addEventListener("DOMContentLoaded", function () {
-    const images = document.querySelectorAll("img");
-    images.forEach((img) => {
-      img.onload = function () {
-        img.style.opacity = "1"; // Muestra la imagen cuando esté lista
-      };
-    });
-  });
-
-// Asegura que las secciones se rendericen correctamente sin mostrar el desplazamiento
-document.addEventListener("DOMContentLoaded", function () {
-  const sections = document.querySelectorAll(".section-container");
-
-  // Guarda la posición inicial del scroll
-  const originalScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-
-  // Deshabilita el scroll temporalmente
-  document.body.style.overflow = "hidden";
-
-  // Desplaza cada sección al viewport sin que sea visible para el usuario
-  sections.forEach((section) => {
-    section.scrollIntoView({ block: "start" });
-  });
-
-  // Restaura la posición inicial y habilita el scroll
-  setTimeout(() => {
-    window.scrollTo(0, originalScrollPosition);
-    document.body.style.overflow = ""; // Reactiva el scroll
-  }, 50); // Ajusta el tiempo según sea necesario
-});
-  document.getElementById("submit").addEventListener("click", async () => {
-      const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
-      const errorElement = document.getElementById("error");
-console.log(userAnswer);
-      // Llamada a la función serverless en Vercel para validar la respuesta
-      const response = await fetch(`https://inchallah.vercel.app/api/validarRespuesta?respuesta=${userAnswer}`);
-
-      if (response.ok) {
-        // Si la respuesta es correcta, mostramos el contenido protegido
-        document.getElementById("security-container").style.display = "none";
-        document.getElementById("protected-content").style.display = "block";
-      } else {
-        // Si la respuesta es incorrecta, mostramos un mensaje de error
-        const result = await response.json();
-        errorElement.textContent = result.message;
-      }
-    });
-</script>  
+ 
 </head>
 
 <body class="">
@@ -565,6 +513,65 @@ console.log(userAnswer);
   ga('send', 'pageview');
 </script>
 
---><script type="text/javascript" src="./main.bc58148c.js"></script></body>
+-->
+ <script>
+  //llamada backend
+  document.getElementById("submit").addEventListener("click", async () => {
+      const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+      const errorElement = document.getElementById("error");
+console.log(userAnswer);
+      // Llamada a la función serverless en Vercel para validar la respuesta
+      const response = await fetch(`https://inchallah.vercel.app/api/validarRespuesta?respuesta=${userAnswer}`);
+
+      if (response.ok) {
+        // Si la respuesta es correcta, mostramos el contenido protegido
+        document.getElementById("security-container").style.display = "none";
+        document.getElementById("protected-content").style.display = "block";
+      } else {
+        // Si la respuesta es incorrecta, mostramos un mensaje de error
+        const result = await response.json();
+        errorElement.textContent = result.message;
+      }
+    });
+  
+  document.addEventListener("DOMContentLoaded", function() {
+    // Code to be executed when the DOM is ready
+    nslider.init ();
+  }); 
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll("img");
+    images.forEach((img) => {
+      img.onload = function () {
+        img.style.opacity = "1"; // Muestra la imagen cuando esté lista
+      };
+    });
+  });
+
+// Asegura que las secciones se rendericen correctamente sin mostrar el desplazamiento
+document.addEventListener("DOMContentLoaded", function () {
+  const sections = document.querySelectorAll(".section-container");
+
+  // Guarda la posición inicial del scroll
+  const originalScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+  // Deshabilita el scroll temporalmente
+  document.body.style.overflow = "hidden";
+
+  // Desplaza cada sección al viewport sin que sea visible para el usuario
+  sections.forEach((section) => {
+    section.scrollIntoView({ block: "start" });
+  });
+
+  // Restaura la posición inicial y habilita el scroll
+  setTimeout(() => {
+    window.scrollTo(0, originalScrollPosition);
+    document.body.style.overflow = ""; // Reactiva el scroll
+  }, 50); // Ajusta el tiempo según sea necesario
+});
+
+</script>  
+  
+  
+  <script type="text/javascript" src="./main.bc58148c.js"></script></body>
 
 </html>
