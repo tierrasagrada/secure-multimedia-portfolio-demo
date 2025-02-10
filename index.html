@@ -229,16 +229,17 @@
       if (response.ok) {
   // Verifica que se recibieron imágenes
     if (Array.isArray(images) && images.length > 0) {
-      sliderContainer.innerHTML = ""; // Limpia el contenido existente
+        sliderContainer.innerHTML = ""; // Limpia el contenido existente
         //protectedContentImages.prepend = result.images;
         protectedContent.style.display = "block";
         // Si la respuesta es correcta, mostramos el contenido protegido
         protectedContent.innerHTML = result.content; // Carga el contenido desde la API      
-        document.getElementById("security-container").style.display = "none";              
-      // Crea dinámicamente los elementos del slider
-      images.forEach((imgSrc) => {
+        document.getElementById("security-container").style.display = "none"; 
+        // Mostrar el slider si estaba oculto
+        slideWrapper.style.display = "block";
+        // Crea dinámicamente los elementos del slider
+        images.forEach((imgSrc) => {
         const li = document.createElement("li");
-
         const a = document.createElement("a");
         a.className = "ns-img";
         a.href = imgSrc;
@@ -249,12 +250,8 @@
 
         li.appendChild(a);
         li.appendChild(div);
-        sliderContainer.appendChild(li);
-      });
-
-      // Mostrar el slider si estaba oculto
-      slideWrapper.style.display = "block";
-     
+        sliderContainer.innerHTML(li);
+      });    
     } else {
       console.error("No se encontraron imágenes para cargar.");
     }     
