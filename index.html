@@ -230,10 +230,10 @@
   // Verifica que se recibieron imágenes
     if (Array.isArray(images) && images.length > 0) {
       sliderContainer.innerHTML = ""; // Limpia el contenido existente
-        // Si la respuesta es correcta, mostramos el contenido protegido
-        protectedContent.innerHTML = result.content; // Carga el contenido desde la API
         //protectedContentImages.prepend = result.images;
         protectedContent.style.display = "block";
+        // Si la respuesta es correcta, mostramos el contenido protegido
+        protectedContent.innerHTML = result.content; // Carga el contenido desde la API      
         document.getElementById("security-container").style.display = "none";              
       // Crea dinámicamente los elementos del slider
       images.forEach((imgSrc) => {
@@ -258,7 +258,7 @@
     } else {
       console.error("No se encontraron imágenes para cargar.");
     }     
-         //nslider.init ();
+         nslider.init ();
       } else {
         // Si la respuesta es incorrecta, mostramos un mensaje de error
         errorElement.textContent = result.message;
