@@ -20,7 +20,7 @@
       return res.status(200).json({
         success: true,
         message: "Respuesta correcta.",
-        content: '<div class="protected-content" id="protected-content">
+        content: `<div class="protected-content" id="protected-content">
   <div class="responsive-container">
       <h1>Manuel Teodoro Córdova Tapia</h1>
       <p class="classy">Silvester Stallone - Denzel Washington - Rambo - Condoro - Oso - Rimbi - Pichón</p>
@@ -132,7 +132,7 @@
           </div>
         </div>
       </div>
-    </footer>'
+    </footer>`
       });
     }
 
