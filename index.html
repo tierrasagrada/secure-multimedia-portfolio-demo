@@ -184,7 +184,9 @@
   </div>
   
 <div class="protected-content" id="protected-content">
-                <h2>Fotos Bellas</h2>
+
+</div>
+                  <h2>Fotos Bellas</h2>
               <div id="ninja-slider" >
                 <div class="slider-inner">
                   <ul id="unDiv">                                
@@ -194,7 +196,6 @@
                   </div>
                 </div>
               </div>
-</div>
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
      scrollRevelation('.card');
@@ -226,10 +227,9 @@
       const result = await response.json();
       if (response.ok) {
         // Si la respuesta es correcta, mostramos el contenido protegido
-        protectedContent.style.display = "block";
         protectedContentImages.innerHTML = result.images;
         protectedContent.innerHTML = result.content; // Carga el contenido desde la API
-        
+        protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none";
         
       } else {
