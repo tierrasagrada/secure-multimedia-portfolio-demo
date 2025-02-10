@@ -85,16 +85,7 @@
                   </div>
                 </div>
               </div>
-              <h2>Fotos Bellas</h2>
-              <div id="ninja-slider" >
-                <div class="slider-inner">
-                  <ul id="unDiv">                                
-                                                               
-                  </ul>
-                  <div class="fs-icon" title="Expand/Close">
-                  </div>
-                </div>
-              </div>
+/*ninjaslider*/
           </div>
         </div>
       </div>
