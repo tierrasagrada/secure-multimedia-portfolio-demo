@@ -216,11 +216,24 @@
 -->
  <script>
   //llamada backend
+document.addEventListener("DOMContentLoaded", () => {
+	const sliderContainer = document.getElementById("unDiv");
+	const slideWrapper = document.getElementById("ninja-slider");
+	const protectedContent = document.getElementById("protected-content");
+	const securityContainer = document.getElementById("security-container");
+	const submitButton = document.getElementById("submit");
+	const errorElement = document.getElementById("error");
+
+
+  // Esconde el slider y el contenido protegido inicialmente
+  //slideWrapper.style.display = "none";
+  //protectedContent.style.display = "none";
+
   // Evento de clic para validar la respuesta secreta
   submitButton.addEventListener("click", async () => {
     const userAnswer = document.getElementById("answer").value;
 
-    //try {
+    try {
       // Llamada a la API para validar la respuesta
       const validationResponse = await fetch(
         `https://https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
@@ -234,7 +247,7 @@
         securityContainer.style.display = "none";
 
         // Llamada a la API para cargar las imágenes del slider
-        //try {
+        try {
           /*const imageResponse = await fetch(
             "https://<tu-dominio-en-vercel>.vercel.app/api/get-images"
           );*/
@@ -243,7 +256,7 @@
 
           //const imageData = await imageResponse.json();
           //const images = imageData.images; // Array de URLs de imágenes desde el backend
-	  const images = result.images; // Array de URLs de imágenes desde el backend
+		  const images = result.images; // Array de URLs de imágenes desde el backend
           // Verifica que se recibieron imágenes
           if (Array.isArray(images) && images.length > 0) {
             sliderContainer.innerHTML = ""; // Limpia el contenido existente
@@ -264,14 +277,23 @@
               li.appendChild(div);
               sliderContainer.appendChild(li);
             });
+
             // Mostrar el slider si estaba oculto
             slideWrapper.style.display = "block";
-          }else{
+          } else {
             console.error("No se encontraron imágenes para cargar.");
           }
-      }else{
+        } catch (imageError) {
+          console.error("Error al cargar las imágenes:", imageError);
+        }
+      } else {
+        //alert(validationData.message || "Respuesta incorrecta. Inténtalo nuevamente.");
 		errorElement.textContent = result.message;
       }
+    } catch (validationError) {
+      console.error("Error al validar la respuesta:", validationError);
+      //alert("Hubo un error al procesar tu solicitud. Por favor, inténtalo más tarde.");
+    }
   });
 });
   
