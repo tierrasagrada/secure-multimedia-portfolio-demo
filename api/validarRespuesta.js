@@ -89,12 +89,7 @@
               <div id="ninja-slider" >
                 <div class="slider-inner">
                   <ul id="unDiv">                                
-                    <li><a class="ns-img" href="./assets/images/img-015.jpg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-016.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-021.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-012.jpg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-022.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-025.jpg"></a><div class="caption">@colerise</div></li>                                                                  
+                                                               
                   </ul>
                   <div class="fs-icon" title="Expand/Close">
                   </div>
@@ -131,7 +126,13 @@
           </div>
         </div>
       </div>
-    </footer>`
+    </footer>`,
+    images:`        <li><a class="ns-img" href="./assets/images/img-015.jpg"></a><div class="caption">@colerise</div></li>
+                    <li><a class="ns-img" href="./assets/images/img-016.jpeg"></a><div class="caption">@colerise</div></li>
+                    <li><a class="ns-img" href="./assets/images/img-021.jpeg"></a><div class="caption">@colerise</div></li>
+                    <li><a class="ns-img" href="./assets/images/img-012.jpg"></a><div class="caption">@colerise</div></li>
+                    <li><a class="ns-img" href="./assets/images/img-022.jpeg"></a><div class="caption">@colerise</div></li>
+                    <li><a class="ns-img" href="./assets/images/img-025.jpg"></a><div class="caption">@colerise</div></li>`   
       });
     }
 
