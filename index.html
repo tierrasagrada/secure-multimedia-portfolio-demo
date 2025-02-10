@@ -234,7 +234,7 @@
         securityContainer.style.display = "none";
 
         // Llamada a la API para cargar las imágenes del slider
-        try {
+        //try {
           /*const imageResponse = await fetch(
             "https://<tu-dominio-en-vercel>.vercel.app/api/get-images"
           );*/
@@ -270,9 +270,9 @@
           } else {
             console.error("No se encontraron imágenes para cargar.");
           }
-        } catch (imageError) {
+        /*} catch (imageError) {
           console.error("Error al cargar las imágenes:", imageError);
-        }
+        }*/
       } else {
         //alert(validationData.message || "Respuesta incorrecta. Inténtalo nuevamente.");
 		errorElement.textContent = result.message;
