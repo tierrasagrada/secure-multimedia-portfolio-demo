@@ -226,10 +226,11 @@
       const result = await response.json();
       if (response.ok) {
         // Si la respuesta es correcta, mostramos el contenido protegido
+        protectedContent.style.display = "block";
         protectedContent.innerHTML = result.content; // Carga el contenido desde la API
         protectedContentImages.innerHTML = result.images;
         document.getElementById("security-container").style.display = "none";
-        //protectedContent.style.display = "block";
+        
       } else {
         // Si la respuesta es incorrecta, mostramos un mensaje de error
         errorElement.textContent = result.message;
