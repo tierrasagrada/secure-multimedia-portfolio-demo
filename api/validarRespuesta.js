@@ -118,12 +118,7 @@
         </div>
       </div>
     </footer>`,
-    images:`        <li><a class="ns-img" href="./assets/images/img-015.jpg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-016.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-021.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-012.jpg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-022.jpeg"></a><div class="caption">@colerise</div></li>
-                    <li><a class="ns-img" href="./assets/images/img-025.jpg"></a><div class="caption">@colerise</div></li>`   
+    images:`<li><a class="ns-img" href="./assets/images/img-015.jpg"></a><div class="caption">@colerise</div></li><li><a class="ns-img" href="./assets/images/img-016.jpeg"></a><div class="caption">@colerise</div></li><li><a class="ns-img" href="./assets/images/img-021.jpeg"></a><div class="caption">@colerise</div></li><li><a class="ns-img" href="./assets/images/img-012.jpg"></a><div class="caption">@colerise</div></li><li><a class="ns-img" href="./assets/images/img-022.jpeg"></a><div class="caption">@colerise</div></li><li><a class="ns-img" href="./assets/images/img-025.jpg"></a><div class="caption">@colerise</div></li>`   
       });
     }
 
