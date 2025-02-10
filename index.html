@@ -184,7 +184,16 @@
   </div>
   
 <div class="protected-content" id="protected-content">
-  
+                <h2>Fotos Bellas</h2>
+              <div id="ninja-slider" >
+                <div class="slider-inner">
+                  <ul id="unDiv">                                
+                                                               
+                  </ul>
+                  <div class="fs-icon" title="Expand/Close">
+                  </div>
+                </div>
+              </div>
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
@@ -216,12 +225,11 @@
       const response = await fetch(`https://inchallah.vercel.app/api/validarRespuesta?respuesta=${userAnswer}`);
       const result = await response.json();
       if (response.ok) {
-        document.getElementById("security-container").style.display = "none";
-        protectedContent.style.display = "block";
         // Si la respuesta es correcta, mostramos el contenido protegido
         protectedContent.innerHTML = result.content; // Carga el contenido desde la API
         protectedContentImages.append = result.images;
-
+        document.getElementById("security-container").style.display = "none";
+        protectedContent.style.display = "block";
       } else {
         // Si la respuesta es incorrecta, mostramos un mensaje de error
         errorElement.textContent = result.message;
