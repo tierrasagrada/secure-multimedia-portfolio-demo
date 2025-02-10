@@ -227,8 +227,9 @@
       if (response.ok) {
         // Si la respuesta es correcta, mostramos el contenido protegido
         protectedContent.style.display = "block";
-        protectedContent.innerHTML = result.content; // Carga el contenido desde la API
         protectedContentImages.innerHTML = result.images;
+        protectedContent.innerHTML = result.content; // Carga el contenido desde la API
+        
         document.getElementById("security-container").style.display = "none";
         
       } else {
