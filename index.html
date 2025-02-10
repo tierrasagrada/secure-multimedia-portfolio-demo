@@ -250,12 +250,11 @@
 
         li.appendChild(a);
         li.appendChild(div);
-        sliderContainer.append(li);
+        sliderContainer.appendChild(li);
       });    
     } else {
       console.error("No se encontraron imágenes para cargar.");
-    }     
-         nslider.init ();
+    }              
       } else {
         // Si la respuesta es incorrecta, mostramos un mensaje de error
         errorElement.textContent = result.message;
