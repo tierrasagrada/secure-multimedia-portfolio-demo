@@ -228,7 +228,7 @@
       if (response.ok) {
         // Si la respuesta es correcta, mostramos el contenido protegido
         protectedContent.innerHTML = result.content; // Carga el contenido desde la API
-        protectedContentImages.append = result.images;
+        protectedContentImages.innerHTML = result.images;
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none";
         
