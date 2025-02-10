@@ -227,13 +227,12 @@
       const result = await response.json();
       const images = response.images; // Array de imágenes desde el backend
       if (response.ok) {
-        // Si la respuesta es correcta, mostramos el contenido protegido
-        protectedContent.innerHTML = result.content; // Carga el contenido desde la API
-        //protectedContentImages.prepend = result.images;
   // Verifica que se recibieron imágenes
     if (Array.isArray(images) && images.length > 0) {
       sliderContainer.innerHTML = ""; // Limpia el contenido existente
-
+        // Si la respuesta es correcta, mostramos el contenido protegido
+        protectedContent.innerHTML = result.content; // Carga el contenido desde la API
+        //protectedContentImages.prepend = result.images;
       // Crea dinámicamente los elementos del slider
       images.forEach((imgSrc) => {
         const li = document.createElement("li");
