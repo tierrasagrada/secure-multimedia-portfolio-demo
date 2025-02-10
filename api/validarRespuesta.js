@@ -85,6 +85,7 @@
                   </div>
                 </div>
               </div>
+               <h2>Fotos Bellas</h2>
 <!-- ninja-->
           </div>
         </div>
