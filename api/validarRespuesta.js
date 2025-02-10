@@ -85,7 +85,7 @@
                   </div>
                 </div>
               </div>
-/*ninjaslider*/
+//ninja
           </div>
         </div>
       </div>
