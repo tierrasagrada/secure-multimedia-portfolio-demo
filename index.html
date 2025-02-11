@@ -242,10 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       //const validationData = await validationResponse.json();
 
       if (validationResponse.ok /*&& validationData.success*/) {
-        // Muestra el contenido protegido y esconde el formulario de seguridad
-        protectedContent.style.display = "block";
-        securityContainer.style.display = "none";
-	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    
+
         // Llamada a la API para cargar las imágenes del slider
         try {
           /*const imageResponse = await fetch(
@@ -280,6 +277,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Mostrar el slider si estaba oculto
             slideWrapper.style.display = "block";
+        // Muestra el contenido protegido y esconde el formulario de seguridad
+        protectedContent.style.display = "block";
+        securityContainer.style.display = "none";
+	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    		  
           } else {
             console.error("No se encontraron imágenes para cargar.");
           }
