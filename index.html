@@ -143,7 +143,7 @@
       display: block;
     }
     .protected-content.active {
-      display: block;
+      /*display: block;*/
     }
     input[type="text"] {
       padding: 10px;
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	// Asignar todo el contenido de una vez
         // Muestra el contenido protegido y esconde el formulario de seguridad
-        protectedContent.style.display = "block";
+       // protectedContent.style.display = "block";
         securityContainer.style.display = "none";
 	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    	
 	sliderContainer.innerHTML = sliderContent;	
