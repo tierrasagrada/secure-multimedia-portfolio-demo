@@ -1,5 +1,9 @@
 import fs from "fs";
 import path from "path";
+import mime from "mime";
+import { promisify } from "util";
+
+const readFileAsync = promisify(fs.readFile);
 
 export default function handler(req, res) {
   if(req.method === "GET") {
@@ -20,21 +24,19 @@ export default function handler(req, res) {
           return res.status(500).json({ error: "No hay imágenes en la carpeta." });
         }        
 
-        // Convierte cada imagen a base64
-        const images = imageFiles.map((filename) => {
-        const filePath = path.join(imageFolder, filename);
-        const imageBuffer = fs.readFileSync(filePath);
-        const extension = path.extname(filename).toLowerCase(); // Detectar formato
-
-        let mimeType = "image/jpeg"; // Valor por defecto
-        if (extension === ".png") mimeType = "image/png";
-        if (extension === ".jpg") mimeType = "image/jpg";
- 
-        return {
-          filename,
-          base64: `data:${mimeType};base64,${imageBuffer.toString("base64")}`,
-        };
-      });
+        const images = await Promise.all(
+          imageFiles.map(async (filename) => {
+            const filePath = path.join(imageFolder, filename);
+            const imageBuffer = await readFileAsync(filePath);
+            const mimeType = mime.getType(filePath);
+    
+            return {
+              filename,
+              buffer: imageBuffer.toString("base64"), // Lo enviamos como base64 pero en Blob en el front
+              mimeType,
+            };
+          })
+        );
         // HTML protegido (ejemplo básico)
         const protectedContent = `<div class="responsive-container">
           <h1>Manuel Teodoro Córdova Tapia</h1>
