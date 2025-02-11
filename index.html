@@ -232,7 +232,7 @@ submitButton.addEventListener("click", async () => {
 
     // Si la respuesta es correcta
     if (data.success) {
-      const protectedContent = document.getElementById("protected-content");
+      const protectedContent = document.getElementById("sliker");
 
       // 1. Mostrar el contenido HTML oculto
       protectedContent.innerHTML = `
@@ -258,9 +258,9 @@ submitButton.addEventListener("click", async () => {
           )
           .join("");
         protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
-        const losSlikers = document.getElementById("sliker");
+        //const losSlikers = document.getElementById("sliker");
         // Mostrar el slider
-        losSlikers.appendChild= sliderContainer;
+        //losSlikers.appendChild= sliderContainer;
         nslider.init ();
         //const sliderWrapper = document.getElementById("ninja-slider");
         //sliderWrapper.style.display = "block";
