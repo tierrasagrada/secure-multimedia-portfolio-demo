@@ -253,18 +253,12 @@ submitButton.addEventListener("click", async () => {
           .map(
             (imgSrc) =>
               `<li>
-                <a class="ns-img" href="${imgSrc}"></a>
+                <a class="ns-img" href="${imgSrc.base64}"></a>
                 <div class="caption">@colerise</div>
               </li>`
           )
           .join("");
-//        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
-        //const losSlikers = document.getElementById("sliker");
-        // Mostrar el slider
-        //losSlikers.appendChild= sliderContainer;
         nslider.init ();
-        //const sliderWrapper = document.getElementById("ninja-slider");
-        //sliderWrapper.style.display = "block";
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none"; 
         console.log("Slider cargado correctamente.");
