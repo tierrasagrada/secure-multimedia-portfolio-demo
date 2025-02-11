@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // Llamada a la API para validar la respuesta
       const validationResponse = await fetch(
-        `https://https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
+        `https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
       );
 	  const result = await validationResponse.json();
       //const validationData = await validationResponse.json();
