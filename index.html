@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const securityContainer = document.getElementById("security-container");
 	const submitButton = document.getElementById("submit");
 	const errorElement = document.getElementById("error");
-
+	let sliderContent = ""; // Variable para almacenar el contenido HTML
 
   // Esconde el slider y el contenido protegido inicialmente
   //slideWrapper.style.display = "none";
@@ -258,23 +258,16 @@ document.addEventListener("DOMContentLoaded", () => {
           if (Array.isArray(images) && images.length > 0) {
             sliderContainer.innerHTML = ""; // Limpia el contenido existente
 
-            // Crea dinámicamente los elementos del slider
-            images.forEach((imgSrc) => {
-              const li = document.createElement("li");
-
-              const a = document.createElement("a");
-              a.className = "ns-img";
-              a.href = imgSrc;
-
-              const div = document.createElement("div");
-              div.className = "caption";
-              div.textContent = "@colerise";
-
-              li.appendChild(a);
-              li.appendChild(div);
-              sliderContainer.appendChild(li);
-            });
-
+		     images.forEach((imgSrc) => {
+		  sliderContent += `
+		    <li>
+		      <a class="ns-img" href="${imgSrc}"></a>
+		      <div class="caption">@colerise</div>
+		    </li>
+		  `;
+		});
+	// Asignar todo el contenido de una vez
+	sliderContainer.innerHTML = sliderContent;
             // Mostrar el slider si estaba oculto
             slideWrapper.style.display = "block";
         // Muestra el contenido protegido y esconde el formulario de seguridad
