@@ -245,7 +245,7 @@ submitButton.addEventListener("click", async () => {
       `;
 
       // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
-      const sliderContainer = document.getElementById("unDiv");
+      const sliderContainer = document.getElementById("unDiv");      
 
       if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
         sliderContainer.innerHTML = data.images
@@ -258,7 +258,9 @@ submitButton.addEventListener("click", async () => {
           )
           .join("");
         protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
+        const losSlikers = document.getElementById("sliker");
         // Mostrar el slider
+        losSlikers.innerHTML= sliderContainer;
         nslider.init ();
         const sliderWrapper = document.getElementById("ninja-slider");
         sliderWrapper.style.display = "block";
