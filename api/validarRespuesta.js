@@ -5,7 +5,7 @@ import { promisify } from "util";
 
 const readFileAsync = promisify(fs.readFile);
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if(req.method === "GET") {
       const { respuesta } = req.query;
       // Validar si la respuesta es igual a "amarillo"
