@@ -247,9 +247,10 @@ submitButton.addEventListener("click", async () => {
       `;
 
       // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
-      const sliderContainer = document.getElementById("unDiv");      
-
-      if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
+      const sliderContainer = document.getElementById("unDiv");     
+      
+      //antiguo forma de recorre imagenes
+      /*if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
         sliderContainer.innerHTML = data.images
           .map(
             (imgSrc) =>
@@ -258,7 +259,31 @@ submitButton.addEventListener("click", async () => {
                 <div class="caption">@colerise</div>
               </li>`
           )
-          .join("");
+          .join("");*/
+        
+        //Nueva forma de recorrer imagenes
+        // Convertir imágenes base64 a Blob y Object URL
+        data.images.forEach((image) => {
+          const binaryData = atob(image.buffer);
+          const arrayBuffer = new ArrayBuffer(binaryData.length);
+          const uint8Array = new Uint8Array(arrayBuffer);
+    
+          for (let i = 0; i < binaryData.length; i++) {
+            uint8Array[i] = binaryData.charCodeAt(i);
+          }
+    
+          const blob = new Blob([uint8Array], { type: image.mimeType });
+          const imageUrl = URL.createObjectURL(blob); // Crear URL temporal
+
+          const div = document.createElement("div");
+          div.className = "caption";
+          div.textContent = "@colerise";
+    
+          li.appendChild(a);
+          li.appendChild(div);
+          sliderContainer.appendChild(li);
+        });          
+      
 //        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
         //const losSlikers = document.getElementById("sliker");
         // Mostrar el slider
