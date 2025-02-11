@@ -7,12 +7,18 @@ export default function handler(req, res) {
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
-        const imageFolder = path.join(__dirname, "protectedimages");
+        // Usa process.cwd() para obtener la ruta correcta
+        const imageFolder = path.join(process.cwd(), "api/protected-images");
         
         if (!fs.existsSync(imageFolder)) {
           return res.status(500).json({ error: "No se encontraron imágenes." });
-        }        
+        }       
+        
         const imageFiles = fs.readdirSync(imageFolder); // Lee las imágenes en la carpeta
+
+        if (imageFiles.length === 0) {
+          return res.status(500).json({ error: "No hay imágenes en la carpeta." });
+        }        
 
         // Convierte cada imagen a base64
         const images = imageFiles.map((filename) => {
