@@ -236,7 +236,7 @@ submitButton.addEventListener("click", async () => {
 
       // 1. Mostrar el contenido HTML oculto
       protectedContent.innerHTML = `
-        <div id="ninja-slider" style="display: none;">
+        <div id="ninja-slider">
           <div class="slider-inner">
             <ul id="unDiv"></ul>
             <div class="fs-icon" title="Expand/Close"></div>
@@ -262,8 +262,8 @@ submitButton.addEventListener("click", async () => {
         // Mostrar el slider
         losSlikers.innerHTML= sliderContainer;
         nslider.init ();
-        const sliderWrapper = document.getElementById("ninja-slider");
-        sliderWrapper.style.display = "block";
+        //const sliderWrapper = document.getElementById("ninja-slider");
+        //sliderWrapper.style.display = "block";
         protectedContent.style.display = "block";
         
         console.log("Slider cargado correctamente.");
