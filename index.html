@@ -184,7 +184,7 @@
   </div>
   
 <div class="protected-content" id="protected-content">                 
-              <div id="ninja-slider"  style="display: none;">
+              <!--<div id="ninja-slider"  style="display: none;">
                 <div class="slider-inner">
                   <ul id="unDiv">                                
                                                                
@@ -192,7 +192,7 @@
                   <div class="fs-icon" title="Expand/Close">
                   </div>
                 </div>
-              </div>
+              </div>-->
 </div>
 
 
@@ -216,82 +216,63 @@
   });
 </script>  	
  <script>
-  //llamada backend
-document.addEventListener("DOMContentLoaded", () => {
-	const sliderContainer = document.getElementById("unDiv");
-	const slideWrapper = document.getElementById("ninja-slider");
-	const protectedContent = document.getElementById("protected-content");
-	const securityContainer = document.getElementById("security-container");
-	const submitButton = document.getElementById("submit");
-	const errorElement = document.getElementById("error");
-	let sliderContent = ""; // Variable para almacenar el contenido HTML
+const submitButton = document.getElementById("submit");
+submitButton.addEventListener("click", async () => {
+  const userAnswer = document.getElementById("respuesta").value;
 
-  // Esconde el slider y el contenido protegido inicialmente
-  //slideWrapper.style.display = "none";
-  //protectedContent.style.display = "none";
+  try {
+    // Llamada al backend para validar la respuesta y obtener todo el contenido necesario
+    const response = await fetch(
+      `https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
+    );
 
-  // Evento de clic para validar la respuesta secreta
-  submitButton.addEventListener("click", async () => {
-    const userAnswer = document.getElementById("answer").value;
+    if (!response.ok) throw new Error("Error al obtener los datos del backend");
 
-    try {
-      // Llamada a la API para validar la respuesta
-      const validationResponse = await fetch(
-        `https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
-      );
-	  const result = await validationResponse.json();
-      //const validationData = await validationResponse.json();
+    const data = await response.json();
 
-      if (validationResponse.ok /*&& validationData.success*/) {
+    // Si la respuesta es correcta
+    if (data.success) {
+      const protectedContent = document.getElementById("protected-content");
 
-        // Llamada a la API para cargar las imágenes del slider
-        try {
-          /*const imageResponse = await fetch(
-            "https://<tu-dominio-en-vercel>.vercel.app/api/get-images"
-          );*/
+      // 1. Mostrar el contenido HTML oculto
+      protectedContent.innerHTML = `
+        <div id="ninja-slider" style="display: none;">
+          <div class="slider-inner">
+            <ul id="unDiv"></ul>
+            <div class="fs-icon" title="Expand/Close"></div>
+          </div>
+        </div>
+      `;
 
-          //if (!imageResponse.ok) throw new Error("Error al obtener las imágenes del backend");
+      // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
+      const sliderContainer = document.getElementById("unDiv");
 
-          //const imageData = await imageResponse.json();
-          //const images = imageData.images; // Array de URLs de imágenes desde el backend
-		  const images = result.images; // Array de URLs de imágenes desde el backend
-          // Verifica que se recibieron imágenes
-          if (Array.isArray(images) && images.length > 0) {
-            sliderContainer.innerHTML = ""; // Limpia el contenido existente
+      if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
+        sliderContainer.innerHTML = data.images
+          .map(
+            (imgSrc) =>
+              `<li>
+                <a class="ns-img" href="${imgSrc}"></a>
+                <div class="caption">@colerise</div>
+              </li>`
+          )
+          .join("");
 
-		     images.forEach((imgSrc) => {
-		  sliderContent += `
-		    <li>
-		      <a class="ns-img" href="${imgSrc}"></a>
-		      <div class="caption">@colerise</div>
-		    </li>
-		  `;
-		});
-	// Asignar todo el contenido de una vez
-        // Muestra el contenido protegido y esconde el formulario de seguridad
-       protectedContent.style.display = "block";
-   	 // Mostrar el slider si estaba oculto
-    	slideWrapper.style.display = "block";				  
-        securityContainer.style.display = "none";
-	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    	
-	sliderContainer.innerHTML = sliderContent;	
-  
-	  nslider.init ();
-          } else {
-            console.error("No se encontraron imágenes para cargar.");
-          }
-        } catch (imageError) {
-          console.error("Error al cargar las imágenes:", imageError);
-        }
+        // Mostrar el slider
+        const sliderWrapper = document.getElementById("ninja-slider");
+        sliderWrapper.style.display = "block";
+
+        console.log("Slider cargado correctamente.");
       } else {
-        //alert(validationData.message || "Respuesta incorrecta. Inténtalo nuevamente.");
-		errorElement.textContent = result.message;
+        console.error("No se encontraron imágenes para cargar.");
       }
-    } catch (validationError) {
-      console.error("Error al validar la respuesta:", validationError);
-      //alert("Hubo un error al procesar tu solicitud. Por favor, inténtalo más tarde.");
+    } else {
+      alert("Respuesta incorrecta. Por favor, inténtalo de nuevo.");
     }
-  });
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Ocurrió un error. Inténtalo nuevamente más tarde.");
+  }
 });
 
   document.addEventListener("DOMContentLoaded", function() {
