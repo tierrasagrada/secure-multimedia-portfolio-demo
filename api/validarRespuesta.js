@@ -8,7 +8,7 @@ export default function handler(req, res) {
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
         // Usa process.cwd() para obtener la ruta correcta
-        const imageFolder = path.join(process.cwd(), "api/protected-images");
+        const imageFolder = path.join(process.cwd(), "api/protectedimages");
         
         if (!fs.existsSync(imageFolder)) {
           return res.status(500).json({ error: "No se encontraron imágenes." });
