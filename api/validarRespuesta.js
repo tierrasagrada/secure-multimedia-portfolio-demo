@@ -7,18 +7,28 @@ export default function handler(req, res) {
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
-        const imageFolder = path.join(process.cwd(), "public", "protectedimages");
+        const imageFolder = path.join(__dirname, "protected-images");
+        
+        if (!fs.existsSync(imageFolder)) {
+          return res.status(500).json({ error: "No se encontraron imágenes." });
+        }        
         const imageFiles = fs.readdirSync(imageFolder); // Lee las imágenes en la carpeta
 
         // Convierte cada imagen a base64
         const images = imageFiles.map((filename) => {
-          const filePath = path.join(imageFolder, filename);
-          const imageBuffer = fs.readFileSync(filePath);
-          return {
-            filename,
-            base64: `data:image/jpeg;base64,${imageBuffer.toString("base64")}`, // Cambia a png o el formato necesario
-          };
-        });        
+        const filePath = path.join(imageFolder, filename);
+        const imageBuffer = fs.readFileSync(filePath);
+        const extension = path.extname(filename).toLowerCase(); // Detectar formato
+
+        let mimeType = "image/jpeg"; // Valor por defecto
+        if (extension === ".png") mimeType = "image/png";
+        if (extension === ".jpg") mimeType = "image/jpg";
+ 
+        return {
+          filename,
+          base64: `data:${mimeType};base64,${imageBuffer.toString("base64")}`,
+        };
+      });
         // HTML protegido (ejemplo básico)
         const protectedContent = `<div class="responsive-container">
           <h1>Manuel Teodoro Córdova Tapia</h1>
