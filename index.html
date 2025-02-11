@@ -215,6 +215,7 @@
      scrollRevelation('.card');
   });
 </script>  	
+
  <script>
 const submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", async () => {
@@ -258,7 +259,13 @@ submitButton.addEventListener("click", async () => {
               </li>`
           )
           .join("");
+//        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
+        //const losSlikers = document.getElementById("sliker");
+        // Mostrar el slider
+        //losSlikers.appendChild= sliderContainer;
         nslider.init ();
+        //const sliderWrapper = document.getElementById("ninja-slider");
+        //sliderWrapper.style.display = "block";
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none"; 
         console.log("Slider cargado correctamente.");
