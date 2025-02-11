@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Muestra el contenido protegido y esconde el formulario de seguridad
         protectedContent.style.display = "block";
         securityContainer.style.display = "none";
-
+	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    
         // Llamada a la API para cargar las imágenes del slider
         try {
           /*const imageResponse = await fetch(
