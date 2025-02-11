@@ -7,7 +7,7 @@ export default function handler(req, res) {
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
-        const imageFolder = path.join(process.cwd(), "public/protectedimages");
+        const imageFolder = path.join(process.cwd(), "public", "protectedimages");
         const imageFiles = fs.readdirSync(imageFolder); // Lee las imágenes en la carpeta
 
         // Convierte cada imagen a base64
