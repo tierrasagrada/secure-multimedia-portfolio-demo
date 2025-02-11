@@ -7,7 +7,7 @@ export default function handler(req, res) {
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
-        const imageFolder = path.join(__dirname, "protected-images");
+        const imageFolder = path.join(__dirname, "protectedimages");
         
         if (!fs.existsSync(imageFolder)) {
           return res.status(500).json({ error: "No se encontraron imágenes." });
