@@ -257,11 +257,11 @@ submitButton.addEventListener("click", async () => {
               </li>`
           )
           .join("");
-
+        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
         // Mostrar el slider
         const sliderWrapper = document.getElementById("ninja-slider");
         sliderWrapper.style.display = "block";
-
+        protectedContent.style.display = "block";
         console.log("Slider cargado correctamente.");
       } else {
         console.error("No se encontraron imágenes para cargar.");
