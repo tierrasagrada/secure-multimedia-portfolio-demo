@@ -86,7 +86,7 @@
                 </div>
               </div>
                <h2>Fotos Bellas</h2>
-<!-- ninja-->
+<!-- ninja--><div id="sliker"></div>
           </div>
         </div>
       </div>
