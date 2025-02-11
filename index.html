@@ -232,10 +232,11 @@ submitButton.addEventListener("click", async () => {
 
     // Si la respuesta es correcta
     if (data.success) {
-      const protectedContent = document.getElementById("sliker");
-
+      const protectedContent = document.getElementById("protected-contenter");
+      protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
       // 1. Mostrar el contenido HTML oculto
-      protectedContent.innerHTML = `
+      const protectedContent2 = document.getElementById("sliker");
+      protectedContent2.innerHTML = `
         <div id="ninja-slider">
           <div class="slider-inner">
             <ul id="unDiv"></ul>
@@ -257,7 +258,7 @@ submitButton.addEventListener("click", async () => {
               </li>`
           )
           .join("");
-        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
+//        protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
         //const losSlikers = document.getElementById("sliker");
         // Mostrar el slider
         //losSlikers.appendChild= sliderContainer;
