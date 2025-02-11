@@ -270,11 +270,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Asignar todo el contenido de una vez
         // Muestra el contenido protegido y esconde el formulario de seguridad
        protectedContent.style.display = "block";
+   	 // Mostrar el slider si estaba oculto
+    	slideWrapper.style.display = "block";				  
         securityContainer.style.display = "none";
 	 protectedContent.innerHTML = result.content; // Carga el contenido desde la API    	
 	sliderContainer.innerHTML = sliderContent;	
-   	 // Mostrar el slider si estaba oculto
-    	slideWrapper.style.display = "block";		  
+  
 	  nslider.init ();
           } else {
             console.error("No se encontraron imágenes para cargar.");
