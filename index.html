@@ -232,7 +232,7 @@ submitButton.addEventListener("click", async () => {
 
     // Si la respuesta es correcta
     if (data.success) {
-      const protectedContent = document.getElementById("protected-contenter");
+      const protectedContent = document.getElementById("protected-content");
       protectedContent.innerHTML = data.content; // Carga el contenido desde la API   
       // 1. Mostrar el contenido HTML oculto
       const protectedContent2 = document.getElementById("sliker");
