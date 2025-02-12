@@ -13,7 +13,7 @@ const generateToken = (filename) => {
 };
 
 // Endpoint para obtener la lista de imágenes con URLs seguras
-app.get("/api/images", async (req, res) => {
+app.get("/images", async (req, res) => {
   try {
     const imageFiles = fs.readdirSync(imageFolder);
 
