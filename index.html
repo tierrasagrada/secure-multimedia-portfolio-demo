@@ -252,7 +252,12 @@ submitButton.addEventListener("click", async () => {
     const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
     if (!response2.ok) throw new Error(`Error HTTP: ${response2.status}`);  
       
-    const imagesarray = await response2.json();
+    let imagesarray = await response2.json();
+
+    // Si la respuesta es un objeto con claves numéricas, convertirlo en array
+    if (!Array.isArray(imagesarray)) {
+      imagesarray = Object.values(imagesarray);
+    }      
       
       //antiguo forma de recorre imagenes
       /*if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
@@ -282,13 +287,16 @@ submitButton.addEventListener("click", async () => {
 
           //const blob = new Blob([data.buffer], { type: data.mimeType });
           //const imageUrl = URL.createObjectURL(blob);
-
+          if (!image.secureUrl) {
+            console.error("URL de imagen no encontrada:", image);
+            return;
+          }
           const li = document.createElement("li");
     
           const a = document.createElement("a");
           a.className = "ns-img";
           a.href = image.imageUrl; // Usamos el Blob URL
-          
+          a.alt = image.filename || "Imagen protegida";
           const div = document.createElement("div");          
 
           div.className = "caption";
