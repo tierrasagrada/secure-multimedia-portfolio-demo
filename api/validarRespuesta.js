@@ -15,7 +15,7 @@ export default function handler(req, res) {
           </div>
           </div>
             <!-- Add your content of header -->
-            <div class="background-color-layer" style="background-image: url('assets/images/img-01.jpg')"></div>
+            <div class="background-color-layer" style="background-image: url('./assets/images/img-01.jpg')"></div>
               <main class="content-wrapper">
                 <header class="white-text-container section-container">
                 </header>
