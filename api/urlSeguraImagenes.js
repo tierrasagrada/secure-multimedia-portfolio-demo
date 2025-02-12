@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const app = express();
 const SECRET_KEY = "tu_clave_secreta"; // 🔐 Cambia esto por una clave segura
-const imageFolder = path.join(__dirname, "protected-images"); // 📂 Asegúrate de que esta carpeta existe
+const imageFolder = path.join(__dirname, "api/protectedimages"); // 📂 Asegúrate de que esta carpeta existe
 
 app.use(express.json()); // ✅ Middleware para parsear JSON
 
