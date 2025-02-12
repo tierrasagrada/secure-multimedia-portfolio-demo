@@ -1,44 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const mime = require("mime");
-const util = require("util");
-const { promisify } = require("util");
-
-const readFileAsync = promisify(fs.readFile);
-
-export default async function handler(req, res) {
+export default function handler(req, res) {
   if(req.method === "GET") {
       const { respuesta } = req.query;
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
         // Usa process.cwd() para obtener la ruta correcta
-        const imageFolder = path.join(process.cwd(), "api/protectedimages");
         
-        if (!fs.existsSync(imageFolder)) {
-          return res.status(500).json({ error: "No se encontraron imágenes." });
-        }       
-        
-        const imageFiles = fs.readdirSync(imageFolder); // Lee las imágenes en la carpeta
-
-        if (imageFiles.length === 0) {
-          return res.status(500).json({ error: "No hay imágenes en la carpeta." });
-        }        
-
-        const images = await Promise.all(
-          imageFiles.map(async (filename) => {
-            const filePath = path.join(imageFolder, filename);
-            const imageBuffer = await readFileAsync(filePath);
-            const mimeType = mime.getType(filePath);
-    
-            return {
-              filename,
-              buffer: imageBuffer.toString("base64"), // Lo enviamos como base64 pero en Blob en el front
-              //buffer: imageBuffer,
-              mimeType,
-            };
-          })
-        );
         // HTML protegido (ejemplo básico)
         const protectedContent = `<div class="responsive-container">
           <h1>Manuel Teodoro Córdova Tapia</h1>
@@ -145,7 +112,7 @@ export default async function handler(req, res) {
           success: true,
           message: "Respuesta correcta.",
           content: protectedContent,
-          images, 
+          //images, 
         });
       }
       // Respuesta incorrecta
