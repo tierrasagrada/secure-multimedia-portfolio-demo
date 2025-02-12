@@ -272,9 +272,12 @@ submitButton.addEventListener("click", async () => {
             uint8Array[i] = binaryData.charCodeAt(i);
           }
     
-          const blob = new Blob([uint8Array], { type: image.mimeType });
-          const imageUrl = URL.createObjectURL(blob); // Crear URL temporal
+          //const blob = new Blob([uint8Array], { type: image.mimeType });
+          //const imageUrl = URL.createObjectURL(blob); // Crear URL temporal
 
+          const blob = new Blob([data.buffer], { type: data.mimeType });
+          const imageUrl = URL.createObjectURL(blob);
+          
           const div = document.createElement("div");
           div.className = "caption";
           div.textContent = "@colerise";
