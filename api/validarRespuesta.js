@@ -33,8 +33,8 @@ export default async function handler(req, res) {
     
             return {
               filename,
-              //buffer: imageBuffer.toString("base64"), // Lo enviamos como base64 pero en Blob en el front
-              buffer: imageBuffer,
+              buffer: imageBuffer.toString("base64"), // Lo enviamos como base64 pero en Blob en el front
+              //buffer: imageBuffer,
               mimeType,
             };
           })
