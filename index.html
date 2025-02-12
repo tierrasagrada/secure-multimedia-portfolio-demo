@@ -295,7 +295,7 @@ submitButton.addEventListener("click", async () => {
     
           const a = document.createElement("a");
           a.className = "ns-img";
-          a.href = image.imageUrl; // Usamos el Blob URL
+          a.href = image.secureUrl; // Usamos el Blob URL
           a.alt = image.filename || "Imagen protegida";
           const div = document.createElement("div");          
 
