@@ -249,7 +249,9 @@ submitButton.addEventListener("click", async () => {
       // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
       const sliderContainer = document.getElementById("unDiv");     
 
-    const response = await fetch("https://inchallah.vercel.app/api/images"); // Llamada al backend en Vercel
+    const responses = await fetch("https://inchallah.vercel.app/api/images"); // Llamada al backend en Vercel
+    if (!responses.ok) throw new Error(`Error HTTP: ${responses.status}`);  
+      
     const imagesarray = await response.json();
       
       //antiguo forma de recorre imagenes
