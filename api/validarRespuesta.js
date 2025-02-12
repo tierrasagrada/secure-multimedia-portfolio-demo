@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const mime = require("mime");
 const util = require("util");
+const { promisify } = require("util");
 
 const readFileAsync = promisify(fs.readFile);
 
