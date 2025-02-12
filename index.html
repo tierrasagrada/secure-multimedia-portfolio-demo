@@ -223,13 +223,13 @@ submitButton.addEventListener("click", async () => {
 
   try {
     // Llamada al backend para validar la respuesta y obtener todo el contenido necesario
-    const response = await fetch(
+    const response1 = await fetch(
       `https://inchallah.vercel.app/api/validarRespuesta?respuesta=${encodeURIComponent(userAnswer)}`
     );
 
-    if (!response.ok) throw new Error("Error al obtener los datos del backend");
+    if (!response1.ok) throw new Error("Error al obtener los datos del backend");
 
-    const data = await response.json();
+    const data = await response1.json();
 
     // Si la respuesta es correcta
     if (data.success) {
@@ -249,10 +249,10 @@ submitButton.addEventListener("click", async () => {
       // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
       const sliderContainer = document.getElementById("unDiv");     
 
-    const response = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
-    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);  
+    const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
+    if (!response2.ok) throw new Error(`Error HTTP: ${response2.status}`);  
       
-    const imagesarray = await response.json();
+    const imagesarray = await response2.json();
       
       //antiguo forma de recorre imagenes
       /*if (sliderContainer && Array.isArray(data.images) && data.images.length > 0) {
