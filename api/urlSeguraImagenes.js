@@ -4,15 +4,15 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const SECRET_KEY = "tu_clave_secreta"; // 🔐 Cambia esto por una clave segura
+const SECRET_KEY = "laclave"; // 🔐 Clave secreta para firmar los tokens
 const imageFolder = path.join(__dirname, "protectedimages"); // 📂 Asegúrate de que esta carpeta existe
 
 app.use(express.json()); // ✅ Middleware para parsear JSON
 
 app.all("/api/urlSeguraImagenes", async (req, res) => {
   try {
-    // 📌 Si es una petición GET, devolver la lista de imágenes con URLs seguras
-    if (req.method === "GET") {
+    // 📌 1️⃣ Si NO se envían parámetros, devolver la lista de imágenes con URLs seguras
+    if (!req.query.token && !req.query.filename) {
       if (!fs.existsSync(imageFolder)) {
         return res.status(500).json({ error: "La carpeta de imágenes no existe" });
       }
@@ -26,8 +26,8 @@ app.all("/api/urlSeguraImagenes", async (req, res) => {
       return res.json(images);
     }
 
-    // 📌 Si es una petición GET con token y filename, devolver la imagen
-    if (req.method === "GET" && req.query.token && req.query.filename) {
+    // 📌 2️⃣ Si se envían `token` y `filename`, validar el token y devolver la imagen
+    if (req.query.token && req.query.filename) {
       const { filename, token } = req.query;
 
       try {
@@ -47,11 +47,10 @@ app.all("/api/urlSeguraImagenes", async (req, res) => {
       }
     }
 
-    return res.status(405).json({ error: "Método no permitido" });
+    return res.status(400).json({ error: "Parámetros incorrectos" });
   } catch (error) {
     res.status(500).json({ error: "Error en la API de imágenes" });
   }
 });
 
 module.exports = app; // ✅ Vercel necesita esta línea para reconocer el archivo
-
