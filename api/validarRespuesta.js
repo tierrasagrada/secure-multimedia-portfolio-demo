@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import mime from "mime";
-import { promisify } from "util";
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime");
+const util = require("util");
 
 const readFileAsync = promisify(fs.readFile);
 
