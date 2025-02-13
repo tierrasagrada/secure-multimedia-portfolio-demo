@@ -1,17 +1,17 @@
 {
   "routes": [
     {
-      "src": "/assets/js/.*",
+      "src": "./assets/js/.*",
       "status": 404
     },
     {
-      "src": "/assets/css/.*",
+      "src": "./assets/css/.*",
       "status": 404
     }
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "./(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
