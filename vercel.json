@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/(.*\\.js|.*\\.css)",
-      "destination": "/403" 
+      "source": "/assets/js/(.*)",
+      "destination": "/api/403"
+    },
+    {
+      "source": "/assets/css/(.*)",
+      "destination": "/api/403"
     }
   ],
   "headers": [
