@@ -1,12 +1,12 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "./assets/js/(.*)",
-      "destination": "/403"
+      "src": "./assets/js/.*",
+      "status": 404
     },
     {
-      "source": "./assets/css/(.*)",
-      "destination": "/403"
+      "src": "./assets/css/.*",
+      "status": 404
     }
   ],
   "headers": [
@@ -16,9 +16,8 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'" }
       ]
     }
   ]
 }
-
