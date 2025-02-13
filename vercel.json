@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/assets/js/(.*)",
+      "source": "./assets/js/(.*)",
       "destination": "/403"
     },
     {
-      "source": "/assets/css/(.*)",
+      "source": "./assets/css/(.*)",
       "destination": "/403"
     }
   ],
