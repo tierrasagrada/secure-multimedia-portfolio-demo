@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/assets/js/(.*)",
-      "destination": "/api/403"
+      "destination": "/403"
     },
     {
       "source": "/assets/css/(.*)",
-      "destination": "/api/403"
+      "destination": "/403"
     }
   ],
   "headers": [
