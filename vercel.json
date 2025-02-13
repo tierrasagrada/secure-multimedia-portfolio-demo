@@ -1,11 +1,13 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*\\.js|.*\\.css)",
-      "status": 403
-    },
+      "source": "/(.*\\.js|.*\\.css)",
+      "destination": "/403" 
+    }
+  ],
+  "headers": [
     {
-      "src": "/(.*)",
+      "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
@@ -15,3 +17,4 @@
     }
   ]
 }
+
