@@ -2,11 +2,11 @@
   "routes": [
     {
       "source": "/assets/js/.*",
-      "status": 404
+      "src": 404
     },
     {
       "source": "/assets/css/.*",
-      "status": 404
+      "src": 404
     }
   ],
   "headers": [
