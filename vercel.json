@@ -1,12 +1,12 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/assets/js/.*",
-      "status": 404
+      "source": "/assets/js/.*",
+      "destination": /404
     },
     {
-      "src": "/assets/css/.*",
-      "status": 404
+      "source": "/assets/css/.*",
+      "destination": /404
     }
   ],
   "headers": [
@@ -23,4 +23,5 @@
       ]
     }
   ]
+  
 }
