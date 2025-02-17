@@ -1,14 +1,4 @@
-{
-  "routes": [
-    {
-      "src": "/assets/js/.*",
-      "status": 404
-    },
-    {
-      "src": "/assets/css/.*",
-      "status": 404
-    }
-  ],
+{ 
   "headers": [
     {
       "source": "/(.*)",
