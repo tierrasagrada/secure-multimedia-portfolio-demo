@@ -15,7 +15,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; connect-src 'self' https://vercel.live https://*.pusher.com wss://*.pusher.com; img-src 'self' https://vercel.com; script-src 'self' https://vercel.live 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://vercel.com; font-src 'self' https://fonts.gstatic.com https://vercel.live; frame-src 'self' https://vercel.live; frame-ancestors https://app.safe.global https://eth-dapp-browser-ne49wqncp-ledgerhq.vercel.app https://dapp-browser.apps.ledger.com"
+          "value": "default-src 'self'; connect-src 'self' https://vercel.live https://*.pusher.com wss://*.pusher.com;  img-src 'self' https://vercel.com; script-src 'self' https://vercel.live; style-src 'self' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://vercel.com; style-src-elem 'self' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com; font-src 'self' https://fonts.gstatic.com https://vercel.live; frame-src 'self' https://vercel.live"
         },
         {
           "key": "X-Content-Type-Options",
