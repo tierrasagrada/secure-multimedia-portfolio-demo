@@ -1,11 +1,11 @@
 {
   "routes": [
     {
-      "src": "./assets/js/.*",
+      "src": "/assets/js/.*",
       "status": 404
     },
     {
-      "src": "./assets/css/.*",
+      "src": "/assets/css/.*",
       "status": 404
     }
   ],
