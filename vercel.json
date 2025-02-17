@@ -1,7 +1,7 @@
 {
   "routes": [
-    { "src": "/assets/js/.*", "status": 404 },
-    { "src": "/assets/css/.*", "status": 404 }
+    { "source": "/assets/js/.*", "status": 404 },
+    { "source": "/assets/css/.*", "status": 404 }
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }
