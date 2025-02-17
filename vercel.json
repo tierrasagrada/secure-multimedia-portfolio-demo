@@ -1,28 +1,30 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "/assets/js/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "/assets/css/*",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
     {
-      "src": "/assets/(css|js)/(.*)",
+      "src": "/assets/(js|css)/(.*)",
       "status": 404
     },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://miapp.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS, PATCH, DELETE, POST, PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Content-Type, Authorization" }
-      ]
     },
     {
-      "source": "/(.*)",
+      "src": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
@@ -33,6 +35,17 @@
         },
         { "key": "Referrer-Policy", "value": "strict-origin" },
         { "key": "Permissions-Policy", "value": "geolocation=(self), microphone=()" }
+      ]
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS, PATCH, DELETE, POST, PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Content-Type, Authorization" }
       ]
     }
   ]
