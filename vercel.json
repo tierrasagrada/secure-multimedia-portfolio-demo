@@ -1,19 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "/assets/js/*",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "/assets/css/*",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/assets/(js|css)/(.*)",
@@ -22,9 +8,11 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
-    },
+    }
+  ],
+  "headers": [
     {
-      "src": "/(.*)",
+      "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
@@ -36,9 +24,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin" },
         { "key": "Permissions-Policy", "value": "geolocation=(self), microphone=()" }
       ]
-    }
-  ],
-  "headers": [
+    },
     {
       "source": "/api/(.*)",
       "headers": [
@@ -50,3 +36,4 @@
     }
   ]
 }
+
