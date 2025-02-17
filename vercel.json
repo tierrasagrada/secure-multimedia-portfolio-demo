@@ -1,12 +1,12 @@
 {
   "routes": [
     {
-      "source": "/assets/js/(.*)",
-      "destination": "/404"
+      "src": "/assets/js/(.*)",
+      "status": 404
     },
     {
-      "source": "/assets/css/(.*)",
-      "destination": "/404"
+      "src": "/assets/css/(.*)",
+      "status": 404
     }
   ],
   "headers": [
@@ -15,8 +15,8 @@
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         { "key": "Access-Control-Allow-Origin", "value": "https://inchallah.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS, PATCH, DELETE, POST, PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Content-Type, Authorization" }
       ]
     },
     {
@@ -27,7 +27,7 @@
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; connect-src 'self' https://vercel.live https://*.pusher.com wss://*.pusher.com; img-src 'self' https://vercel.com; script-src 'self' https://vercel.live 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://vercel.com; font-src 'self' https://fonts.gstatic.com https://vercel.live; frame-src 'self' https://vercel.live"
+          "value": "default-src 'self'; connect-src 'self' https://vercel.live https://*.pusher.com wss://*.pusher.com; img-src 'self' https://vercel.com data:; script-src 'self' https://vercel.live 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com https://vercel.com; font-src 'self' https://fonts.gstatic.com https://vercel.live; frame-src 'self' https://vercel.live"
         },
         { "key": "Referrer-Policy", "value": "strict-origin" },
         { "key": "Permissions-Policy", "value": "geolocation=(self), microphone=()" }
