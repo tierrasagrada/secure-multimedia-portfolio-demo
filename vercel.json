@@ -1,5 +1,5 @@
 {
-  "rewrites": [
+  "routes": [
     {
       "source": "/assets/js/.*",
       "status": 404
