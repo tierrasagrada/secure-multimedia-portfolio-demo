@@ -1,15 +1,4 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/assets/(js|css|images)/(.*)",
-      "dest": "/assets/$1/$2"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
