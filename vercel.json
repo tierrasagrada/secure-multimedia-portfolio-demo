@@ -1,11 +1,5 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/assets/(js|css)/(.*)",
-      "status": 404
-    }
-  ],
+  "version": 2
   "headers": [
     {
       "source": "/(.*)",
