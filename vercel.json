@@ -1,15 +1,15 @@
 {
- "version": 2,
+  "version": 2,
   "routes": [
     {
-      "src": "/assets/(js|css)/(.*)",
-      "status": 404
+      "src": "/assets/(js|css|images)/(.*)",
+      "dest": "/assets/$1/$2"
     },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     }
-  ],  
+  ],
   "headers": [
     {
       "source": "/(.*)",
