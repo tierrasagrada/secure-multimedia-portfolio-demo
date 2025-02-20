@@ -1,5 +1,5 @@
 export default function handler(req, res) {
-  if(req.method === "GET") {
+  if(req.method === "POST") {
       const { respuesta } = req.query;
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
@@ -119,6 +119,6 @@ export default function handler(req, res) {
       return res.status(401).json({ success: false, message: "Respuesta incorrecta. Por favor, inténtalo de nuevo." });
   }
   // Método no permitido
-  res.setHeader("Allow", ["GET"]);
+  res.setHeader("Allow", ["POST"]);
   res.status(405).json({ success: false, message: "Método no permitido." });
 } 
