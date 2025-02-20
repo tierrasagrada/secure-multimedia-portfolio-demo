@@ -116,7 +116,7 @@ export default function handler(req, res) {
         });
       }
       // Respuesta incorrecta
-      return res.status(401).json({ success: false, message: "Respuesta incorrecta." });
+      return res.status(401).json({ success: false, message: "Respuesta incorrecta. Por favor, inténtalo de nuevo." });
   }
   // Método no permitido
   res.setHeader("Allow", ["GET"]);
