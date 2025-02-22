@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function (event) {
-    // scrollRevelation('.card');
+     scrollRevelation('.card');
   });
 const submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", async () => {
@@ -71,7 +71,7 @@ submitButton.addEventListener("click", async () => {
         nslider.init ();
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none"; 
-    	  scrollRevelation('.card');
+    	  
         console.log("Slider cargado correctamente.");
     } else {
      	document.getElementById("error").textContent = data.message;
