@@ -23,7 +23,7 @@ submitButton.addEventListener("click", async () => {
     // Si la respuesta es correcta
     if (data.success) {// 1. Mostrar el contenido HTML oculto
       const protectedContent = document.getElementById("protected-content");
-      protectedContent.innerHTML = DOMPurify.sanitize(data.content);// Carga el contenido desde la API
+      protectedContent.innerHTML = data.content;// Carga el contenido desde la API
       const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
       const ninjadiv = `
         <div id="ninja-slider">
