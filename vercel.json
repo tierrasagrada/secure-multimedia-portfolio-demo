@@ -8,7 +8,7 @@
       ]
     },    
     {
-      "source": "./assets/js/:path*",
+      "source": "/assets/js/:path*",
       "headers": [
         { "key": "Cache-Control", "value": "private, no-store" }
       ]
