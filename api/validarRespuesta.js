@@ -1,6 +1,6 @@
 export default function handler(req, res) {
   if(req.method === "POST") {
-      const { respuesta } = req.query;
+      const { respuesta } = req.body;
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
