@@ -23,7 +23,27 @@ submitButton.addEventListener("click", async () => {
     // Si la respuesta es correcta
     if (data.success) {// 1. Mostrar el contenido HTML oculto
       const protectedContent = document.getElementById("protected-content");
-      protectedContent.innerHTML = data.content;// Carga el contenido desde la API
+	    
+const cleanHTML = DOMPurify.sanitize(data.content, {
+  ADD_TAGS: ["iframe"],
+  ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src", "title", "referrerpolicy"],
+  FORBID_ATTR: ["onload", "onclick"], // Bloquea eventos inseguros
+  FORBID_TAGS: ["script"], // Evita inyecciones de JS
+});
+
+const diveo = document.createElement("div");
+div.innerHTML = cleanHTML;
+
+// Validar que el iframe es de YouTube
+const iframes = diveo.getElementsByTagName("iframe");
+for (let iframe of iframes) {
+  if (!iframe.src.startsWith("https://www.youtube.com/embed/")) {
+    iframe.remove(); // Elimina iframes no seguros
+  }
+}
+
+protectedContent.innerHTML = diveo.innerHTML;
+	    
       const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
       const ninjadiv = `
         <div id="ninja-slider">
