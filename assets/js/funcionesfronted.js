@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function (event) {
-     scrollRevelation('.card');
+     //scrollRevelation('.card');
   });
 const submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", async () => {
