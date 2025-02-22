@@ -40,7 +40,7 @@ submitButton.addEventListener("click", async () => {
 
     const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
       
-    if (!response2.ok) throw new Error(Error HTTP: ${response2.status});  
+    if (!response2.ok) throw new Error("Error HTTP:", response2.status);  
       
     let imagesarray = await response2.json();
 
