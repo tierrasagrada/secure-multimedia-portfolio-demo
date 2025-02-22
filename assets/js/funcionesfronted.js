@@ -1,6 +1,3 @@
-document.addEventListener("DOMContentLoaded", function (event) {
-     //scrollRevelation('.card');
-  });
 const submitButton = document.getElementById("submit");
 submitButton.addEventListener("click", async () => {
   const userAnswer = document.getElementById("answer").value;
@@ -71,7 +68,6 @@ protectedContent.innerHTML = diveo.innerHTML;
         imagesarray.forEach((image) => {
           
           if (!image.secureUrl) {
-            console.error("URL de imagen no encontrada:", image);
             return;
           }
           
@@ -90,22 +86,14 @@ protectedContent.innerHTML = diveo.innerHTML;
         });          
         nslider.init ();
         protectedContent.style.display = "block";
-        document.getElementById("security-container").style.display = "none"; 
-    	  
-        console.log("Slider cargado correctamente.");
+        document.getElementById("security-container").style.display = "none";     	  
     } else {
      	document.getElementById("error").textContent = data.message;
     }
   } catch (error) {
-    console.error("Error:", error);
-    alert("Ocurrió un error. Inténtalo nuevamente más tarde.");
+	document.getElementById("error").textContent = "Ocurrió un error. Inténtalo nuevamente más tarde.";
   }
 });
-
-  document.addEventListener("DOMContentLoaded", function() {
-    // Code to be executed when the DOM is ready
-	//nslider.init ();
-  }); 
 
   document.addEventListener("DOMContentLoaded", function () {
     const images = document.querySelectorAll("img");
