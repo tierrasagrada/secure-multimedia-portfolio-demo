@@ -16,7 +16,7 @@ submitButton.addEventListener("click", async () => {
         body: JSON.stringify({ respuesta: userAnswer })
       });
     
-    if (!response1.ok) throw new Error("Error al obtener los datos del backend");
+    //if (!response1.ok) throw new Error("Error al obtener los datos del backend");
 
     const data = await response1.json();
 
