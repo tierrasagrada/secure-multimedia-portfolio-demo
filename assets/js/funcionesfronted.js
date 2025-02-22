@@ -32,7 +32,7 @@ const cleanHTML = DOMPurify.sanitize(data.content, {
 });
 
 const diveo = document.createElement("div");
-div.innerHTML = cleanHTML;
+diveo.innerHTML = cleanHTML;
 
 // Validar que el iframe es de YouTube
 const iframes = diveo.getElementsByTagName("iframe");
