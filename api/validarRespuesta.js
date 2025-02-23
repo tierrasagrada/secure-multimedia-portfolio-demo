@@ -1,14 +1,6 @@
 export default function handler(req, res) {
   if(req.method === "POST") {
       const { respuesta } = req.body;
-      // 1️⃣ Validar que el body tenga la clave "respuesta"
-     if (!respuesta || typeof respuesta !== "string") {
-        return res.status(400).json({ success: false, message: "Solicitud inválida." });
-      }
-      // 2️⃣ Validar solo caracteres permitidos (prevención de inyección)
-      if (!/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
-        return res.status(400).json({ success: false, message: "Respuesta inválida." });
-      }    
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
@@ -119,7 +111,7 @@ export default function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: "Respuesta correcta.",
-          content: protectedContent,
+          content: protectedContent
           //images, 
         });
       }
