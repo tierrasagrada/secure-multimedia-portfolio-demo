@@ -1,10 +1,14 @@
 export default function handler(req, res) {
   if(req.method === "POST") {
+      // 2️⃣ Validar el body
+      if (!req.body || typeof req.body !== "object") {
+        return res.status(400).json({ success: false, message: "Solicitud inválida." });
+      }
+    
       const { respuesta } = req.body;
-      // 2️⃣ Validar solo caracteres permitidos (prevención de inyección)
-      if (!/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
+      if (typeof respuesta !== "string" || !/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
         return res.status(400).json({ success: false, message: "Respuesta inválida." });
-      }        
+      }    
       // Validar si la respuesta es igual a "amarillo"
       if(respuesta && respuesta.toLowerCase() === "amarillo") {
         // Ruta donde se encuentran las imágenes protegidas
