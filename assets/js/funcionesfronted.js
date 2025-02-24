@@ -105,7 +105,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           li.appendChild(a);
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
-		  count++;
+
              sliderContainer.appendChild(li);
 		 
 	  }
