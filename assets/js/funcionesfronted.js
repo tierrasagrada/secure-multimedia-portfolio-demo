@@ -81,7 +81,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 		imgsw.src = image.secureUrl;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "300px";
-		imgsw.setAttribute('loading', 'lazy');
+		//imgsw.setAttribute('loading', 'lazy');
 		wanderitodiv.appendChild(imgsw);
 	  }
           const li = document.createElement("li");
