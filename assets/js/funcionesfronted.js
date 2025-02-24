@@ -66,6 +66,7 @@ protectedContent.innerHTML = diveo.innerHTML;
     if (!response2.ok) throw new Error("Error HTTP:", response2.status);  
       
     let imagesarray = await response2.json();
+let sentences = 0;
 
     // Si la respuesta es un objeto con claves numéricas, convertirlo en array
     if (!Array.isArray(imagesarray)) {
@@ -73,7 +74,7 @@ protectedContent.innerHTML = diveo.innerHTML;
     
     }      
         imagesarray.forEach((image) => {
-          
+          return sentences += 1
           if (!image.secureUrl) {
             return;
           }
@@ -104,7 +105,8 @@ protectedContent.innerHTML = diveo.innerHTML;
           li.appendChild(a);
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
-             sliderContainer.appendChild(li);		 
+             sliderContainer.appendChild(li);		
+		console.log(sentences);  
 	  }
         });        
 	     
