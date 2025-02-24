@@ -72,7 +72,6 @@ protectedContent.innerHTML = diveo.innerHTML;
       imagesarray = Object.values(imagesarray);
     
     }      
-	    const count =0;
         imagesarray.forEach((image) => {
           
           if (!image.secureUrl) {
@@ -105,9 +104,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           li.appendChild(a);
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
-
-             sliderContainer.appendChild(li);
-		 
+             sliderContainer.appendChild(li);		 
 	  }
         });        
 	     
