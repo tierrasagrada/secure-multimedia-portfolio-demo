@@ -80,7 +80,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 	        const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
 		imgsw.style.width = "250px";
-		imgsw.style.height = "250px";
+		imgsw.style.height = "200px";
 		//imgsw.setAttribute('loading', 'lazy');
 		wanderitodiv.appendChild(imgsw);
 	  }
