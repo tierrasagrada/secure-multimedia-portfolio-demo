@@ -72,7 +72,7 @@ protectedContent.innerHTML = diveo.innerHTML;
       imagesarray = Object.values(imagesarray);
     
     }      
-	    const count =0;
+	    let count =0;
         imagesarray.forEach((image) => {
           count++;
           if (!image.secureUrl) {
