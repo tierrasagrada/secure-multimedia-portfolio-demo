@@ -46,7 +46,8 @@ for (let iframe of iframes) {
 protectedContent.innerHTML = diveo.innerHTML;
 	    
       const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
-      const wanderitodiv = document.getElementById("wanderito");	    
+      const wanderitodiv = document.getElementById("wanderito");
+      const wanderitodiv2 = document.getElementById("wanderito2");	
       const ninjadiv = `
         <div id="ninja-slider">
           <div class="slider-inner">
@@ -69,7 +70,9 @@ protectedContent.innerHTML = diveo.innerHTML;
     // Si la respuesta es un objeto con claves numéricas, convertirlo en array
     if (!Array.isArray(imagesarray)) {
       imagesarray = Object.values(imagesarray);
+    
     }      
+	    
         imagesarray.forEach((image) => {
           
           if (!image.secureUrl) {
@@ -77,13 +80,19 @@ protectedContent.innerHTML = diveo.innerHTML;
           }
 
 	  if(image.filename === "wanderers.png"){
-	        const imgsw = document.createElement("img");
+		const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "200px";
-		//imgsw.setAttribute('loading', 'lazy');
 		wanderitodiv.appendChild(imgsw);
 	  }
+	  if(image.filename === "img-01.jpg"){
+		const imgsw2 = document.createElement("img");
+		imgsw2.src = image.secureUrl;
+ 		imgsw2.className = "img-responsive";
+		wanderitodiv2.appendChild(imgsw2);
+	  }
+		
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.className = "ns-img";
@@ -95,7 +104,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           div.textContent = "@colerise";
           li.appendChild(a);
           li.appendChild(div);
-	  if(image.filename != "wanderers.png"){
+	  if(image.filename != "wanderers.png" || image.filename != "img-01.jpg"){
              sliderContainer.appendChild(li);
 	  }
         });          
