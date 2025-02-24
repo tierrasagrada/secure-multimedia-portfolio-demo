@@ -106,9 +106,10 @@ protectedContent.innerHTML = diveo.innerHTML;
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
              sliderContainer.appendChild(li);
-		  console.log(count);
+		 
 	  }
-        });          
+        });        
+	     console.log(count);
         nslider.init ();
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none";  	    
