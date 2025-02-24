@@ -19,7 +19,8 @@ export default function handler(req, res) {
           <h1>Manuel Teodoro Córdova Tapia</h1>
           <p class="classy">Silvester Stallone - Denzel Washington - Rambo - Condoro - Oso - Rimbi - Pichón</p>
           <div class="topright">
-            <img src="./assets/images/wanderers.png" width="250" height="300" loading="lazy">
+            <div id="wanderito"></div>
+            <!--<img src="./assets/images/wanderers.png" width="250" height="300" loading="lazy">-->
           </div>
           </div>
             <!-- Add your content of header -->
