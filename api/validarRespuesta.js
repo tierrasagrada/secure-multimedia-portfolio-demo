@@ -37,7 +37,7 @@ export default function handler(req, res) {
                             <h2>About me</h2>
                             <div class="row">
                               <div class="col-md-4">
-                                <p><img src="./assets/images/img-01.jpg" class="img-responsive" alt=""></p>
+                                <p><div id="wanderito2"></div><!--<img src="./assets/images/img-01.jpg" class="img-responsive" alt="">--></p>
                               </div>
                               <div class="col-md-8">
                                 <p>En memoria para nuestro Padre de sus hijos Bryan y Valeria. </p>
