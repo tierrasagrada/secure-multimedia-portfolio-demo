@@ -82,7 +82,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "300px";
 		//imgsw.setAttribute('loading', 'lazy');
-		
+		wanderitodiv.appendChild(imgsw);
 	  }
           const li = document.createElement("li");
           const a = document.createElement("a");
@@ -99,8 +99,7 @@ protectedContent.innerHTML = diveo.innerHTML;
         });          
         nslider.init ();
         protectedContent.style.display = "block";
-        document.getElementById("security-container").style.display = "none";  
-	    wanderitodiv.appendChild(imgsw);
+        document.getElementById("security-container").style.display = "none";  	    
     } else {
      	document.getElementById("error").textContent = data.message;
     }
