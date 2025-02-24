@@ -5,6 +5,10 @@ submitButton.addEventListener("click", async () => {
       document.getElementById("error").textContent = "La respuesta no puede estar vacía";
       return;
     }
+    if (!/^[a-zA-Z0-9\s]+$/.test(userAnswer)) {
+  	document.getElementById("error").textContent = "Respuesta no válida. Usa solo letras y números.";
+	return;
+     }	
   try {
     // Llamada al backend para validar la respuesta y obtener todo el contenido necesario
       const response1 = await fetch("https://inchallah.vercel.app/api/validarRespuesta", {
