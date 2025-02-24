@@ -95,7 +95,9 @@ protectedContent.innerHTML = diveo.innerHTML;
           div.textContent = "@colerise";
           li.appendChild(a);
           li.appendChild(div);
-          sliderContainer.appendChild(li);
+	  if(image.filename != "wanderers.png"){
+             sliderContainer.appendChild(li);
+	  }
         });          
         nslider.init ();
         protectedContent.style.display = "block";
