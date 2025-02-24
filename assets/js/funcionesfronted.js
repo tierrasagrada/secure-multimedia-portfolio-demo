@@ -74,7 +74,7 @@ protectedContent.innerHTML = diveo.innerHTML;
     }      
 	    const count =0;
         imagesarray.forEach((image) => {
-          count++;
+          
           if (!image.secureUrl) {
             return;
           }
@@ -105,6 +105,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           li.appendChild(a);
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
+		  count++;
              sliderContainer.appendChild(li);
 		 
 	  }
