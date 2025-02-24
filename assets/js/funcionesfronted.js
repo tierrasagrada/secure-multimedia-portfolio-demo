@@ -79,7 +79,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 	  if(image.filename === "wanderers.png"){
 	        const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
-		imgsw.style.width = "250px";
+		imgsw.style.width = "400px";
 		imgsw.style.height = "200px";
 		//imgsw.setAttribute('loading', 'lazy');
 		wanderitodiv.appendChild(imgsw);
