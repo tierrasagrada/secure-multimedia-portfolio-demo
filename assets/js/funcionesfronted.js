@@ -85,12 +85,14 @@ let sentences = 0;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "200px";
 		wanderitodiv.appendChild(imgsw);
+		   image.splice(index, 1);
 	  }
 	  if(image.filename === "img-01.jpg"){
 		const imgsw2 = document.createElement("img");
 		imgsw2.src = image.secureUrl;
  		imgsw2.className = "img-responsive";
 		wanderitodiv2.appendChild(imgsw2);
+		  image.splice(index, 1);
 	  }
 		
           const li = document.createElement("li");
@@ -104,10 +106,10 @@ let sentences = 0;
           div.textContent = "@colerise";
           li.appendChild(a);
           li.appendChild(div);
-	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
+	 // if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
              sliderContainer.appendChild(li);		
 		console.log( {sentences} );  
-	  }
+	//  }
         });        
 	     
         nslider.init ();
