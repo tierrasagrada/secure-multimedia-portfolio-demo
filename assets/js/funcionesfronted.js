@@ -79,8 +79,11 @@ protectedContent.innerHTML = diveo.innerHTML;
 	  if(image.filename === "wanderers.png"){
 	        const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
-		imgsw.width = "250px";
-		imgsw.height = "300px";
+	        imgsw.id = "f";
+		//imgsw.width = "250px";
+		  document.getElementById("f").width = "250";
+		  document.getElementById("f").height = "300";
+		//imgsw.height = "300px";
 		//imgsw.setAttribute('loading', 'lazy');
 		wanderitodiv.appendChild(imgsw);
 	  }
