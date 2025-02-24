@@ -74,7 +74,7 @@ let sentences = 0;
     
     }      
         imagesarray.forEach((image) => {
-          return sentences += 1;
+           sentences++;
           if (!image.secureUrl) {
             return;
           }
@@ -106,7 +106,7 @@ let sentences = 0;
           li.appendChild(div);
 	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
              sliderContainer.appendChild(li);		
-		console.log(sentences);  
+		console.log( {sentences} );  
 	  }
         });        
 	     
