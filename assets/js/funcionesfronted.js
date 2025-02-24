@@ -109,7 +109,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 		 
 	  }
         });        
-	     console.log(count);
+	     
         nslider.init ();
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none";  	    
