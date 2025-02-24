@@ -46,6 +46,7 @@ for (let iframe of iframes) {
 protectedContent.innerHTML = diveo.innerHTML;
 	    
       const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
+      const wanderitodiv = document.getElementById("wanderito");	    
       const ninjadiv = `
         <div id="ninja-slider">
           <div class="slider-inner">
@@ -58,7 +59,7 @@ protectedContent.innerHTML = diveo.innerHTML;
 
       // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
       const sliderContainer = document.getElementById("unDiv");     
-
+	    
     const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
       
     if (!response2.ok) throw new Error("Error HTTP:", response2.status);  
@@ -74,7 +75,15 @@ protectedContent.innerHTML = diveo.innerHTML;
           if (!image.secureUrl) {
             return;
           }
-          
+
+	  if(image.filename === "wanderers.png"){
+	        const imgsw = document.createElement("img");
+		imgsw.src = image.secureUrl;
+		imgsw.style.width = "250px";
+		imgsw.style.height = "300px";
+		imgsw.setAttribute('loading', 'lazy');
+		wanderitodiv.appendChild(imgsw);
+	  }
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.className = "ns-img";
