@@ -74,7 +74,7 @@ let sentences = 0;
     
     }      
         imagesarray.forEach((image) => {
-          return sentences += 1
+          return sentences += 1;
           if (!image.secureUrl) {
             return;
           }
