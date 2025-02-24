@@ -104,7 +104,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           div.textContent = "@colerise";
           li.appendChild(a);
           li.appendChild(div);
-	  if(image.filename != "wanderers.png" || image.filename != "img-01.jpg"){
+	  if(image.filename != "wanderers.png" && image.filename != "img-01.jpg"){
              sliderContainer.appendChild(li);
 	  }
         });          
