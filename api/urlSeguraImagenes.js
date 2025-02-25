@@ -9,26 +9,33 @@ const imageFolder = path.join(__dirname, "protectedimages"); // 📂 Asegúrate 
 
 app.use(express.json()); // ✅ Middleware para parsear JSON
 
-app.all("/api/urlSeguraImagenes", async (req, res) => {
+//app.all("/api/urlSeguraImagenes", async (req, res) => {
+app.post("/api/urlSeguraImagenes", async (req, res) => {  
   try {
+    const { token, filename } = req.body;
     // 📌 1️⃣ Si NO se envían parámetros, devolver la lista de imágenes con URLs seguras
-    if (!req.query.token && !req.query.filename) {
+    if (!token && !filename) {
       if (!fs.existsSync(imageFolder)) {
         return res.status(500).json({ error: "La carpeta de imágenes no existe" });
-      }
+      }    
+    /*if (!req.query.token && !req.query.filename) {
+      if (!fs.existsSync(imageFolder)) {
+        return res.status(500).json({ error: "La carpeta de imágenes no existe" });
+      }*/
 
       const imageFiles = fs.readdirSync(imageFolder);
       const images = imageFiles.map((filename) => {
-        const token = jwt.sign({ filename }, SECRET_KEY, { expiresIn: "1h" });
-        return { filename, secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}&filename=${filename}` };
+        const token = jwt.sign({ filename }, SECRET_KEY, { expiresIn: "1h" });// secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}&filename=${filename}`
+        return { filename, secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}&filename=${encodeURIComponent(filename)}` };
       });
 
       return res.json(images);
     }
 
     // 📌 2️⃣ Si se envían `token` y `filename`, validar el token y devolver la imagen
-    if (req.query.token && req.query.filename) {
-      const { filename, token } = req.query;
+    //if (req.query.token && req.query.filename) {
+    if (token && filename) {
+      //const { filename, token } = req.query;
 
       try {
         const decoded = jwt.verify(token, SECRET_KEY);
