@@ -88,7 +88,7 @@ let sentences = 0;
 		   //image.splice(index, 1);
 	    const index = image.findIndex(image1 => image1.filename === "wanderers.png");
 	    if (index !== -1) {
-	        image.splice(index, 1);
+	        imagesarray.splice(index, 1);
 	    }				  
 	  }
 	  if(image.filename === "img-01.jpg"){
@@ -99,7 +99,7 @@ let sentences = 0;
 		  //image.splice(index, 1);
 	    const index3 = image.findIndex(image1 => image1.filename === "img-01.jpg");
 	    if (index3 !== -1) {
-	        image.splice(index3, 1);
+	        imagesarray.splice(index3, 1);
 	    }		  
 	  }
 		
