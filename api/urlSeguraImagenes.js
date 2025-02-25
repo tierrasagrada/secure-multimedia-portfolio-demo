@@ -59,5 +59,33 @@ app.post("/api/urlSeguraImagenes", async (req, res) => {
     res.status(500).json({ error: "Error en la API de imágenes" });
   }
 });
+//nueva llamada get
+// ✅ Permitir GET para cargar imágenes en <img> o <a>
+app.get("/api/urlSeguraImagenes", async (req, res) => {
+  try {
+    const { token, filename } = req.query;
 
+    if (!token || !filename) {
+      return res.status(400).json({ error: "Faltan parámetros" });
+    }
+
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY);
+      if (decoded.filename !== filename) {
+        return res.status(403).json({ error: "Acceso no autorizado" });
+      }
+
+      const filePath = path.join(imageFolder, filename);
+      if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+      } else {
+        return res.status(404).json({ error: "Imagen no encontrada" });
+      }
+    } catch (error) {
+      return res.status(403).json({ error: "Token inválido o expirado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Error en la API de imágenes" });
+  }
+});
 module.exports = app; // ✅ Vercel necesita esta línea para reconocer el archivo
