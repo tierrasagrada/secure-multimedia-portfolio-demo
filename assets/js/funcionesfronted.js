@@ -73,7 +73,7 @@ let sentences = 0;
       imagesarray = Object.values(imagesarray);
     
     }      
-        imagesarray.forEach((image,index) => {
+        imagesarray.forEach((image) => {
            sentences++;
           if (!image.secureUrl) {
             return;
@@ -85,22 +85,22 @@ let sentences = 0;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "200px";
 		wanderitodiv.appendChild(imgsw);
-		   image.splice(index, 1);
-	    //const index = image.findIndex(image1 => image1.filename === "wanderers.png");
-	    //if (index !== -1) {
-	        //image.splice(index, 1);
-	    //}				  
+		   //image.splice(index, 1);
+	    const index = image.findIndex(image1 => image1.filename === "wanderers.png");
+	    if (index !== -1) {
+	        image.splice(index, 1);
+	    }				  
 	  }
 	  if(image.filename === "img-01.jpg"){
 		const imgsw2 = document.createElement("img");
 		imgsw2.src = image.secureUrl;
  		imgsw2.className = "img-responsive";
 		wanderitodiv2.appendChild(imgsw2);
-		  image.splice(index, 1);
-	    //const index = image.findIndex(image1 => image1.filename === "img-01.jpg");
-	    //if (index !== -1) {
-	        //image.splice(index, 1);
-	    //}		  
+		  //image.splice(index, 1);
+	    const index = image.findIndex(image1 => image1.filename === "img-01.jpg");
+	    if (index !== -1) {
+	        image.splice(index, 1);
+	    }		  
 	  }
 		
           const li = document.createElement("li");
