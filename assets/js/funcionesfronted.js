@@ -97,9 +97,9 @@ let sentences = 0;
  		imgsw2.className = "img-responsive";
 		wanderitodiv2.appendChild(imgsw2);
 		  //image.splice(index, 1);
-	    const index = image.findIndex(image1 => image1.filename === "img-01.jpg");
-	    if (index !== -1) {
-	        image.splice(index, 1);
+	    const index3 = image.findIndex(image1 => image1.filename === "img-01.jpg");
+	    if (index3 !== -1) {
+	        image.splice(index3, 1);
 	    }		  
 	  }
 		
