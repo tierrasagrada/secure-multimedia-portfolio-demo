@@ -72,8 +72,10 @@ let sentences = 0;
     if (!Array.isArray(imagesarray)) {
       imagesarray = Object.values(imagesarray);
     
-    }      
-        imagesarray.forEach((image) => {
+    }     
+for (let i = imagesarray.length - 1; i >= 0; i--) {	
+	const image = imagesarray[i];
+        //imagesarray.forEach((image) => {
            sentences++;
           if (!image.secureUrl) {
             return;
@@ -85,22 +87,14 @@ let sentences = 0;
 		imgsw.style.width = "250px";
 		imgsw.style.height = "200px";
 		wanderitodiv.appendChild(imgsw);
-		   //image.splice(index, 1);
-	    const index = image.findIndex(image1 => image1.filename === "wanderers.png");
-	    if (index !== -1) {
-	        imagesarray.splice(index, 1);
-	    }				  
+		imagesarray.splice(i, 1); // Eliminar del array  
 	  }
 	  if(image.filename === "img-01.jpg"){
 		const imgsw2 = document.createElement("img");
 		imgsw2.src = image.secureUrl;
  		imgsw2.className = "img-responsive";
 		wanderitodiv2.appendChild(imgsw2);
-		  //image.splice(index, 1);
-	    const index3 = image.findIndex(image1 => image1.filename === "img-01.jpg");
-	    if (index3 !== -1) {
-	        imagesarray.splice(index3, 1);
-	    }		  
+  		imagesarray.splice(i, 1); // Eliminar del array
 	  }
 		
           const li = document.createElement("li");
@@ -118,8 +112,8 @@ let sentences = 0;
              sliderContainer.appendChild(li);		
 		console.log( {sentences} );  
 	//  }
-        });        
-	     
+       // });        
+	}   
         nslider.init ();
         protectedContent.style.display = "block";
         document.getElementById("security-container").style.display = "none";  	    
