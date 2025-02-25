@@ -87,7 +87,8 @@ for (let i = imagesarray.length - 1; i >= 0; i--) {
 		imgsw.style.width = "250px";
 		imgsw.style.height = "200px";
 		wanderitodiv.appendChild(imgsw);
-		imagesarray.splice(i, 1); // Eliminar del array  
+		imagesarray.splice(i, 1); // Eliminar del array 
+		continue; // 🔥 Saltar el resto del código y pasar al siguiente elemento
 	  }
 	  if(image.filename === "img-01.jpg"){
 		const imgsw2 = document.createElement("img");
@@ -95,6 +96,7 @@ for (let i = imagesarray.length - 1; i >= 0; i--) {
  		imgsw2.className = "img-responsive";
 		wanderitodiv2.appendChild(imgsw2);
   		imagesarray.splice(i, 1); // Eliminar del array
+		continue; // 🔥 Saltar el resto del código y pasar al siguiente elemento
 	  }
 		
           const li = document.createElement("li");
