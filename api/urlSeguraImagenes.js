@@ -1,91 +1,74 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
+const jwt = require("jsonwebtoken");
 
-const app = express();
-const SECRET_KEY = "laclave"; // 🔐 Clave secreta para firmar los tokens
-const imageFolder = path.join(__dirname, "protectedimages"); // 📂 Asegúrate de que esta carpeta existe
+const SECRET_KEY = process.env.SECRET_KEY;
+const imageFolder = path.join(__dirname, "protectedimages");
 
-app.use(express.json()); // ✅ Middleware para parsear JSON
-
-//app.all("/api/urlSeguraImagenes", async (req, res) => {
-app.post("/api/urlSeguraImagenes", async (req, res) => {  
-  try {
-    const { token, filename } = req.body;
-    // 📌 1️⃣ Si NO se envían parámetros, devolver la lista de imágenes con URLs seguras
-    if (!token && !filename) {
-      if (!fs.existsSync(imageFolder)) {
-        return res.status(500).json({ error: "La carpeta de imágenes no existe" });
-      }    
-    /*if (!req.query.token && !req.query.filename) {
-      if (!fs.existsSync(imageFolder)) {
-        return res.status(500).json({ error: "La carpeta de imágenes no existe" });
-      }*/
-
-      const imageFiles = fs.readdirSync(imageFolder);
-      const images = imageFiles.map((filename) => {
-        const token = jwt.sign({ filename }, SECRET_KEY, { expiresIn: "1h" });// secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}&filename=${filename}`
-        return { filename, secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}&filename=${encodeURIComponent(filename)}` };
-      });
-
-      return res.json(images);
-    }
-
-    // 📌 2️⃣ Si se envían `token` y `filename`, validar el token y devolver la imagen
-    //if (req.query.token && req.query.filename) {
-    if (token && filename) {
-      //const { filename, token } = req.query;
-
-      try {
-        const decoded = jwt.verify(token, SECRET_KEY);
-        if (decoded.filename !== filename) {
-          return res.status(403).json({ error: "Acceso no autorizado" });
-        }
-
-        const filePath = path.join(imageFolder, filename);
-        if (fs.existsSync(filePath)) {
-          return res.sendFile(filePath);
-        } else {
-          return res.status(404).json({ error: "Imagen no encontrada" });
-        }
-      } catch (error) {
-        return res.status(403).json({ error: "Token inválido o expirado" });
-      }
-    }
-
-    return res.status(400).json({ error: "Parámetros incorrectos" });
-  } catch (error) {
-    res.status(500).json({ error: "Error en la API de imágenes" });
+export default function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Método no permitido." });
   }
-});
-//nueva llamada get
-// ✅ Permitir GET para cargar imágenes en <img> o <a>
-app.get("/api/urlSeguraImagenes", async (req, res) => {
-  try {
-    const { token, filename } = req.query;
 
-    if (!token || !filename) {
-      return res.status(400).json({ error: "Faltan parámetros" });
-    }
-
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-      if (decoded.filename !== filename) {
-        return res.status(403).json({ error: "Acceso no autorizado" });
-      }
-
-      const filePath = path.join(imageFolder, filename);
-      if (fs.existsSync(filePath)) {
-        return res.sendFile(filePath);
-      } else {
-        return res.status(404).json({ error: "Imagen no encontrada" });
-      }
-    } catch (error) {
-      return res.status(403).json({ error: "Token inválido o expirado" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error en la API de imágenes" });
+  if (!req.body || typeof req.body !== "object") {
+    return res.status(400).json({ error: "Solicitud inválida." });
   }
-});
-module.exports = app; // ✅ Vercel necesita esta línea para reconocer el archivo
+
+  // Si no se envía un token ni filename, asumimos que se solicita la lista de imágenes
+  if (!req.body.token && !req.body.filename) {
+    return obtenerListaImagenes(res);
+  }
+
+  const { token, filename } = req.body;
+  if (!token || !filename) {
+    return res.status(400).json({ error: "Faltan parámetros." });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    if (decoded.filename !== filename) {
+      return res.status(403).json({ error: "Acceso no autorizado." });
+    }
+
+    const filePath = path.join(imageFolder, filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Imagen no encontrada." });
+    }
+
+    // 🔥 Configurar cabeceras de seguridad
+    res.setHeader("Content-Type", getContentType(filename));
+    res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
+
+    // 🔥 Enviar imagen como stream
+    const stream = fs.createReadStream(filePath);
+    stream.pipe(res);
+  } catch (error) {
+    return res.status(403).json({ error: "Token inválido o expirado." });
+  }
+}
+
+// 🔹 Obtener lista de imágenes
+function obtenerListaImagenes(res) {
+  const imageFiles = fs.readdirSync(imageFolder).filter((file) =>
+    /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
+  );
+
+  const images = imageFiles.map((filename) => {
+    const token = jwt.sign({ filename }, SECRET_KEY, { expiresIn: "1h" });
+    return { filename, token };
+  });
+
+  return res.status(200).json(images);
+}
+
+// 🔹 Obtener tipo de contenido de la imagen
+function getContentType(filename) {
+  const ext = filename.split(".").pop().toLowerCase();
+  return {
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    gif: "image/gif",
+    webp: "image/webp",
+  }[ext] || "application/octet-stream";
+}
