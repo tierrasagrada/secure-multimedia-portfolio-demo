@@ -79,14 +79,29 @@ protectedContent.innerHTML = diveo.innerHTML;
     // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
     const sliderContainer = document.getElementById("unDiv");     
 	    
-for (let i = imagesarray.length - 1; i >= 0; i--) {	
-	const image = imagesarray[i];
-        //imagesarray.forEach((image) => {
+	for (let i = imagesarray.length - 1; i >= 0; i--) {	
+	   const image = imagesarray[i];
+           //imagesarray.forEach((image) => {
            sentences++;
-          if (!image.secureUrl) {
+          /*if (!image.secureUrl) {
             return;
-          }
+          }*/
+	if (!image.token) continue;
+	    // 🔹 Realizar petición POST para obtener la imagen como blob
+	    const response = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes", {
+	      method: "POST",
+	      headers: { "Content-Type": "application/json" },
+	      body: JSON.stringify({ token: image.token, filename: image.filename }),
+	    });
+	
+	    if (!response.ok) {
+	      console.error("Error al obtener imagen:", response.status);
+	      continue;
+	    }
 
+	    const blob = await response.blob();
+	    const imageUrl = URL.createObjectURL(blob); // 🔥 Convertir en URL temporal
+	
 	  if(image.filename === "wanderers.png"){
 		const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
@@ -108,7 +123,7 @@ for (let i = imagesarray.length - 1; i >= 0; i--) {
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.className = "ns-img";
-          a.href = image.secureUrl; // Usamos el Blob URL
+          a.href = imageUrl; // Usamos el Blob URL
           a.alt = image.filename || "Imagen protegida";
           const div = document.createElement("div");          
 
