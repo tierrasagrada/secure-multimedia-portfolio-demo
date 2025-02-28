@@ -58,18 +58,18 @@ protectedContent.innerHTML = diveo.innerHTML;
       `;
       protectedContent2.innerHTML =  DOMPurify.sanitize(ninjadiv);
 
-    // 🔹 Realizar petición POST al backend
-    const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes", {
+    const response = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}) // No enviamos datos para obtener la lista de imágenes
+      body: JSON.stringify({ filenames: ["wanderers.png", "img-08.jpg"] }) // Lista de imágenes
     });
 	    
     //const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
       
-    if (!response2.ok) throw new Error("Error HTTP:", response2.status);  
+    //if (!response.ok) throw new Error("Error HTTP:", response.status);  
+    if (!response.ok) throw new Error("Error al obtener imágenes");
       
-    let imagesarray = await response2.json();
+    const imagesArray = await response.json();
     let sentences = 0;
 
     // Si la respuesta es un objeto con claves numéricas, convertirlo en array
@@ -81,27 +81,10 @@ protectedContent.innerHTML = diveo.innerHTML;
 	    
 	for (let i = imagesarray.length - 1; i >= 0; i--) {	
 	   const image = imagesarray[i];
+	   if (!image.secureUrl) return;
            //imagesarray.forEach((image) => {
            sentences++;
-          /*if (!image.secureUrl) {
-            return;
-          }*/
-	if (!image.token) continue;
-	    // 🔹 Realizar petición POST para obtener la imagen como blob
-	    const response = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes", {
-	      method: "POST",
-	      headers: { "Content-Type": "application/json" },
-	      body: JSON.stringify({ token: image.token, filename: image.filename }),
-	    });
-	
-	    if (!response.ok) {
-	      console.error("Error al obtener imagen:", response.status);
-	      continue;
-	    }
-
-	    const blob = await response.blob();
-	    const imageUrl = URL.createObjectURL(blob); // 🔥 Convertir en URL temporal
-	
+		
 	  if(image.filename === "wanderers.png"){
 		const imgsw = document.createElement("img");
 		imgsw.src = image.secureUrl;
@@ -123,7 +106,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.className = "ns-img";
-          a.href = imageUrl; // Usamos el Blob URL
+          a.href = image.imageUrl;
           a.alt = image.filename || "Imagen protegida";
           const div = document.createElement("div");          
 
