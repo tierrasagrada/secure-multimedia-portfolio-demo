@@ -99,7 +99,7 @@ protectedContent.innerHTML = diveo.innerHTML;
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.className = "ns-img";
-          a.href = image.imageUrl;
+          a.href = image.secureUrl;
           a.alt = image.filename || "Imagen protegida";
           const div = document.createElement("div");          
 
