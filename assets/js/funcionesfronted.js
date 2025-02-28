@@ -58,25 +58,18 @@ protectedContent.innerHTML = diveo.innerHTML;
       `;
       protectedContent2.innerHTML =  DOMPurify.sanitize(ninjadiv);
 
-    const response = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes", {
+       // 🔹 Obtener lista de imágenes con URLs seguras
+    const response = await fetch("https://inchallah.vercel.app/api/obtenerImagenes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filenames: ["wanderers.png", "img-08.jpg"] }) // Lista de imágenes
+      credentials: "include",
+      body: JSON.stringify({})
     });
 	    
-    //const response2 = await fetch("https://inchallah.vercel.app/api/urlSeguraImagenes"); // Llamada al backend en Vercel
-      
-    //if (!response.ok) throw new Error("Error HTTP:", response.status);  
     if (!response.ok) throw new Error("Error al obtener imágenes");
       
-    const imagesArray = await response.json();
+    let imagesarray = await response.json();
     let sentences = 0;
-
-    // Si la respuesta es un objeto con claves numéricas, convertirlo en array
-    if (!Array.isArray(imagesarray)) {
-      imagesarray = Object.values(imagesarray);
-    }
-    // 2. Construir el slider dinámicamente en el frontend con las imágenes recibidas
     const sliderContainer = document.getElementById("unDiv");     
 	    
 	for (let i = imagesarray.length - 1; i >= 0; i--) {	
