@@ -1,74 +1,68 @@
-const fs = require("fs");
-const path = require("path");
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import rateLimit from "express-rate-limit";
+import { promisify } from "util";
+import fs from "fs";
+import path from "path";
 
-const SECRET_KEY = process.env.SECRET_KEY;
-const imageFolder = path.join(__dirname, "protectedimages");
+const secretKey = process.env.SECRET_KEY || "clave-segura"; // Usa variables de entorno
+const verifyJWT = promisify(jwt.verify);
 
-export default function handler(req, res) {
-  if (req.method !== "POST") {
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // 100 peticiones por IP
+  message: { success: false, message: "Demasiadas solicitudes, intenta más tarde." },
+  keyGenerator: (req) => req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+});
+
+export default async function handler(req, res) {
+  if (req.method === "POST") {
+    // Generar URLs seguras con tokens
+    const { filenames } = req.body;
+    if (!Array.isArray(filenames)) {
+      return res.status(400).json({ success: false, message: "Solicitud inválida." });
+    }
+
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    const images = filenames.map((filename) => {
+      const token = jwt.sign({ filename, ip }, secretKey, { expiresIn: "10m" }); // Expira en 10 minutos
+      return { filename, secureUrl: `https://inchallah.vercel.app/api/urlSeguraImagenes?token=${token}` };
+    });
+
+    return res.json(images);
+  }
+
+  if (req.method === "GET") {
+    // Servir imagen validando el token
+    const { token } = req.query;
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Token no proporcionado." });
+    }
+
+    try {
+      const decoded = await verifyJWT(token, secretKey);
+      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      
+      // Verificar que el token pertenece a la misma IP
+      if (decoded.ip !== ip) {
+        return res.status(403).json({ success: false, message: "Acceso no autorizado." });
+      }
+
+      const imagePath = path.join(process.cwd(), "assets/images", decoded.filename);
+      if (!fs.existsSync(imagePath)) {
+        return res.status(404).json({ success: false, message: "Imagen no encontrada." });
+      }
+
+      // Configurar caché para 5 minutos sin afectar seguridad
+      res.setHeader("Cache-Control", "public, max-age=300, must-revalidate");
+      res.setHeader("Content-Type", "image/jpeg");
+      res.setHeader("Referrer-Policy", "no-referrer");
+
+      fs.createReadStream(imagePath).pipe(res);
+    } catch (error) {
+      return res.status(403).json({ success: false, message: "Token inválido o expirado." });
+    }
+  } else {
     return res.status(405).json({ success: false, message: "Método no permitido." });
   }
-
-  if (!req.body || typeof req.body !== "object") {
-    return res.status(400).json({ error: "Solicitud inválida." });
-  }
-
-  // Si no se envía un token ni filename, asumimos que se solicita la lista de imágenes
-  if (!req.body.token && !req.body.filename) {
-    return obtenerListaImagenes(res);
-  }
-
-  const { token, filename } = req.body;
-  if (!token || !filename) {
-    return res.status(400).json({ error: "Faltan parámetros." });
-  }
-
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    if (decoded.filename !== filename) {
-      return res.status(403).json({ error: "Acceso no autorizado." });
-    }
-
-    const filePath = path.join(imageFolder, filename);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: "Imagen no encontrada." });
-    }
-
-    // 🔥 Configurar cabeceras de seguridad
-    res.setHeader("Content-Type", getContentType(filename));
-    res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
-
-    // 🔥 Enviar imagen como stream
-    const stream = fs.createReadStream(filePath);
-    stream.pipe(res);
-  } catch (error) {
-    return res.status(403).json({ error: "Token inválido o expirado." });
-  }
-}
-
-// 🔹 Obtener lista de imágenes
-function obtenerListaImagenes(res) {
-  const imageFiles = fs.readdirSync(imageFolder).filter((file) =>
-    /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
-  );
-
-  const images = imageFiles.map((filename) => {
-    const token = jwt.sign({ filename }, SECRET_KEY, { expiresIn: "1h" });
-    return { filename, token };
-  });
-
-  return res.status(200).json(images);
-}
-
-// 🔹 Obtener tipo de contenido de la imagen
-function getContentType(filename) {
-  const ext = filename.split(".").pop().toLowerCase();
-  return {
-    jpg: "image/jpeg",
-    jpeg: "image/jpeg",
-    png: "image/png",
-    gif: "image/gif",
-    webp: "image/webp",
-  }[ext] || "application/octet-stream";
 }
