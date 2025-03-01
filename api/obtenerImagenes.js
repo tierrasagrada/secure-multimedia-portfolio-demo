@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const userIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
     // 📌 Leer imágenes en la carpeta segura
-    const files = fs.readdirSync(imagePath).filter((file) => file.endsWith(".jpg") || file.endsWith(".png"));
+    const files = fs.readdirSync(imagePath).filter((file) => file.endsWith(".jpg") || file.endsWith(".jpeg") || file.endsWith(".png"));
 
     // 📌 Generar URLs seguras con JWT
     const images = files.map((filename) => {
