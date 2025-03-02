@@ -3,7 +3,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 
-const secretKey = process.env.SECRET_KEY || "clave-super-segura";
+const secretKey = process.env.SECRET_KEY;
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
 export default async function handler(req, res) {
