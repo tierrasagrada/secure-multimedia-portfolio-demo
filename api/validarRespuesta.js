@@ -1,7 +1,23 @@
 import rateLimit from "express-rate-limit";
 import csurf from "csurf";
 import cookieParser from "cookie-parser";
+import express from "express";
 
+const app = express();
+app.use(cookieParser());
+
+// Configurar protección CSRF con cookies
+const csrfProtection = csurf({
+  cookie: {
+    httpOnly: true, // No accesible desde JavaScript
+    secure: true, // Solo en HTTPS
+    sameSite: "Strict", // Evita ataques CSRF desde otros sitios
+  },
+});
+
+app.use(csrfProtection);
+
+// Configuración de intentos fallidos
 const MAX_ATTEMPTS = 5;
 const BLOCK_TIME = 15 * 60 * 1000; // 15 minutos
 const ANSWER = "amarillo"; // Respuesta correcta
@@ -14,27 +30,24 @@ const limiter = rateLimit({
   message: { success: false, message: "Demasiadas solicitudes. Intenta más tarde." },
 });
 
-// Middleware de protección CSRF
-const csrfProtection = csurf({ cookie: true });
 
-export default function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ success: false, message: "Método no permitido." });
-  }
 
-    // Aplicar Rate Limiting
-  limiter(req, res, async () => {
+
+
+  // Endpoint para validar la respuesta
+  app.post("/api/validarRespuesta", limiter, async (req, res) => {
     try {
       const userIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      
+
+      // Validar el token CSRF
+      csrfProtection(req, res, () => {});
+
+      // Validar el body
       if (!req.body || typeof req.body !== "object") {
         return res.status(400).json({ success: false, message: "Solicitud inválida." });
       }
 
-      const { respuesta, _csrf } = req.body;
-
-      // Validar CSRF Token
-      csrfProtection(req, res, () => {});
+      const { respuesta } = req.body;
 
       if (typeof respuesta !== "string" || !/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
         return res.status(400).json({ success: false, message: "Respuesta inválida." });
@@ -156,7 +169,7 @@ export default function handler(req, res) {
                 </div>
               </footer>`;
 
-      // Respuesta al frontend      
+      // Respuesta correcta  
       if (respuesta.toLowerCase() === ANSWER) {
         failedAttempts.delete(userIP); // Restablecer intentos tras éxito
         return res.status(200).json({ success: true, message: "Correcto", content: protectedContent });
@@ -171,4 +184,5 @@ export default function handler(req, res) {
       return res.status(500).json({ success: false, message: "Error interno del servidor." });
     }
   });
-}
+
+export default app;
