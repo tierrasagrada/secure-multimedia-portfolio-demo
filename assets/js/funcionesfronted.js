@@ -1,6 +1,10 @@
 const submitButton = document.getElementById("submit");
+let attemptCount = 0;
+let delay = 1000; // Inicialmente 1s de espera tras error
+
 submitButton.addEventListener("click", async () => {
   const userAnswer = document.getElementById("answer").value;
+  const errorDiv = document.getElementById("error");
     if (!userAnswer) {
       document.getElementById("error").textContent = "La respuesta no puede estar vacía";
       return;
@@ -10,14 +14,41 @@ submitButton.addEventListener("click", async () => {
 	return;
      }	
   try {
+    const csrfToken = document.cookie.split("; ").find(row => row.startsWith("XSRF-TOKEN="))?.split("=")[1];
+
+    if (!csrfToken) {
+      errorDiv.textContent = "Error de autenticación. Recarga la página.";
+      return;
+    }	  
     // Llamada al backend para validar la respuesta y obtener todo el contenido necesario
       const response1 = await fetch("https://inchallah.vercel.app/api/validarRespuesta", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ respuesta: userAnswer })
+        body: JSON.stringify({ respuesta: userAnswer, _csrf: csrfToken })
       });
     
-    //if (!response1.ok) throw new Error("Error al obtener los datos del backend"); 
+    if (response.status === 429) {
+      errorDiv.textContent = "Demasiados intentos. Intenta más tarde.";
+      submitButton.disabled = true;
+      return;
+    }
+
+    if (response.status === 401) {
+      attemptCount++;
+      delay = Math.min(delay * 2, 30000); // Aumenta el tiempo de espera exponencialmente hasta 30s
+      errorDiv.textContent = "Respuesta incorrecta.";
+      submitButton.disabled = true;
+
+      setTimeout(() => {
+        submitButton.disabled = false;
+      }, delay);
+
+      return;
+    }
+
+   if (!response.ok) {
+      throw new Error("Error en el servidor");
+    }	  
 
     const data = await response1.json();
 
@@ -25,23 +56,23 @@ submitButton.addEventListener("click", async () => {
     if (data.success) {// 1. Mostrar el contenido HTML oculto
       const protectedContent = document.getElementById("protected-content");
 	    
-const cleanHTML = DOMPurify.sanitize(data.content, {
-  ADD_TAGS: ["iframe"],
-  ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src", "title", "referrerpolicy"],
-  FORBID_ATTR: ["onload", "onclick"], // Bloquea eventos inseguros
-  FORBID_TAGS: ["script"], // Evita inyecciones de JS
-});
+	const cleanHTML = DOMPurify.sanitize(data.content, {
+	  ADD_TAGS: ["iframe"],
+	  ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src", "title", "referrerpolicy"],
+	  FORBID_ATTR: ["onload", "onclick"], // Bloquea eventos inseguros
+	  FORBID_TAGS: ["script"], // Evita inyecciones de JS
+	});
 
-const diveo = document.createElement("div");
-diveo.innerHTML = cleanHTML;
+	const diveo = document.createElement("div");
+	diveo.innerHTML = cleanHTML;
 
-// Validar que el iframe es de YouTube
-const iframes = diveo.getElementsByTagName("iframe");
-for (let iframe of iframes) {
-  if (!iframe.src.startsWith("https://www.youtube.com/embed/")) {
-    iframe.remove(); // Elimina iframes no seguros
-  }
-}
+	// Validar que el iframe es de YouTube
+	const iframes = diveo.getElementsByTagName("iframe");
+	for (let iframe of iframes) {
+	  if (!iframe.src.startsWith("https://www.youtube.com/embed/")) {
+	    iframe.remove(); // Elimina iframes no seguros
+	  }
+	}
 
 protectedContent.innerHTML = diveo.innerHTML;
 	    
