@@ -2,6 +2,20 @@ const submitButton = document.getElementById("submit");
 let attemptCount = 0;
 let delay = 1000; // Inicialmente 1s de espera tras error
 
+async function obtenerCSRFToken() {
+  try {
+    const response = await fetch("https://inchallah.vercel.app/api/csrf-token", {
+      method: "GET",
+      credentials: "include", // Necesario para recibir cookies HTTP-Only
+    });
+    const data = await response.json();
+    return data.csrfToken;
+  } catch (error) {
+    console.error("Error al obtener el token CSRF:", error);
+    return null;
+  }
+}
+
 submitButton.addEventListener("click", async () => {
 	const userAnswer = document.getElementById("answer").value;
 	const errorDiv = document.getElementById("error");
@@ -36,13 +50,13 @@ submitButton.addEventListener("click", async () => {
       		body: JSON.stringify({ respuesta: userAnswer }),
    		});	  
     
-      if (response.status === 429) {
+      if (response1.status === 429) {
         errorDiv.textContent = "Demasiados intentos. Intenta más tarde.";
         submitButton.disabled = true;
         return;
       }
 
-	    if (response.status === 401) {
+	    if (response1.status === 401) {
 	      attemptCount++;
 	      delay = Math.min(delay * 2, 30000); // Aumenta el tiempo de espera exponencialmente hasta 30s
 	      errorDiv.textContent = "Respuesta incorrecta.";
@@ -55,7 +69,7 @@ submitButton.addEventListener("click", async () => {
 	      return;
 	    }
 
-	   	if (!response.ok) {
+	   	if (!response1.ok) {
 	      throw new Error("Error en el servidor");
 	    }	  
 
