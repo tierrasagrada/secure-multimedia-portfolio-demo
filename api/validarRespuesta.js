@@ -1,20 +1,60 @@
+import rateLimit from "express-rate-limit";
+import csurf from "csurf";
+import cookieParser from "cookie-parser";
+
+const MAX_ATTEMPTS = 5;
+const BLOCK_TIME = 15 * 60 * 1000; // 15 minutos
+const ANSWER = "amarillo"; // Respuesta correcta
+const failedAttempts = new Map(); // Para rastrear intentos por IP
+
+// Middleware de Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // 100 peticiones por IP en 15 min
+  message: { success: false, message: "Demasiadas solicitudes. Intenta más tarde." },
+});
+
+// Middleware de protección CSRF
+const csrfProtection = csurf({ cookie: true });
+
 export default function handler(req, res) {
-  if(req.method === "POST") {
-      // 2️⃣ Validar el body
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Método no permitido." });
+  }
+
+    // Aplicar Rate Limiting
+  limiter(req, res, async () => {
+    try {
+      const userIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      
       if (!req.body || typeof req.body !== "object") {
         return res.status(400).json({ success: false, message: "Solicitud inválida." });
       }
-    
-      const { respuesta } = req.body;
+
+      const { respuesta, _csrf } = req.body;
+
+      // Validar CSRF Token
+      csrfProtection(req, res, () => {});
+
       if (typeof respuesta !== "string" || !/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
         return res.status(400).json({ success: false, message: "Respuesta inválida." });
-      }    
-      // Validar si la respuesta es igual a "amarillo"
-      if(respuesta && respuesta.toLowerCase() === "amarillo") {
-        // Ruta donde se encuentran las imágenes protegidas
-        // Usa process.cwd() para obtener la ruta correcta
-        
-        // HTML protegido (ejemplo básico)
+      }
+      
+      // Verificar intentos fallidos
+      if (failedAttempts.has(userIP)) {
+        const { attempts, lastAttempt } = failedAttempts.get(userIP);
+
+        if (attempts >= MAX_ATTEMPTS) {
+          const remainingTime = BLOCK_TIME - (Date.now() - lastAttempt);
+          if (remainingTime > 0) {
+            return res.status(429).json({ success: false, message: "Has alcanzado el límite de intentos. Inténtalo más tarde." });
+          } else {
+            failedAttempts.delete(userIP);
+          }
+        }
+      }      
+
+        // HTML protegido
         const protectedContent = `<div class="responsive-container">
           <h1>Manuel Teodoro Córdova Tapia</h1>
           <p class="classy">Silvester Stallone - Denzel Washington - Rambo - Condoro - Oso - Rimbi - Pichón</p>
@@ -116,18 +156,19 @@ export default function handler(req, res) {
                 </div>
               </footer>`;
 
-        // Respuesta al frontend      
-        return res.status(200).json({
-          success: true,
-          message: "Respuesta correcta.",
-          content: protectedContent
-          //images, 
-        });
-      }
-      // Respuesta incorrecta
-      return res.status(401).json({ success: false, message: "Respuesta incorrecta. Por favor, inténtalo de nuevo." });
-  }
-  // Método no permitido
-  res.setHeader("Allow", ["POST"]);
-  res.status(405).json({ success: false, message: "Acceso denegado." });
-} 
+      // Respuesta al frontend      
+      if (respuesta.toLowerCase() === ANSWER) {
+        failedAttempts.delete(userIP); // Restablecer intentos tras éxito
+        return res.status(200).json({ success: true, message: "Correcto", content: protectedContent });
+      }            
+  
+      // Registrar intento fallido
+      const attempts = failedAttempts.get(userIP) || { attempts: 0, lastAttempt: 0 };
+      failedAttempts.set(userIP, { attempts: attempts.attempts + 1, lastAttempt: Date.now() });
+
+      return res.status(401).json({ success: false, message: "Respuesta incorrecta." });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: "Error interno del servidor." });
+    }
+  });
+}
