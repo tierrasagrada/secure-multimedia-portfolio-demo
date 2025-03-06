@@ -5,6 +5,7 @@ import express from "express";
 
 const app = express();
 app.use(cookieParser());
+app.use(express.json()); // <-- Agregar esto para que el backend pueda leer JSON
 
 // Configurar protección CSRF con cookies
 const csrfProtection = csurf({
