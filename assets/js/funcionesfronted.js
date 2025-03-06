@@ -14,18 +14,24 @@ submitButton.addEventListener("click", async () => {
 	return;
      }	
   try {
-    const csrfToken = document.cookie.split("; ").find(row => row.startsWith("XSRF-TOKEN="))?.split("=")[1];
+	// Obtener el token CSRF antes de enviar la solicitud
+	const csrfToken = await obtenerCSRFToken();
 
-    if (!csrfToken) {
-      errorDiv.textContent = "Error de autenticación. Recarga la página.";
-      return;
-    }	  
+	if (!csrfToken) {
+	errorDiv.textContent = "Error de autenticación. Recarga la página.";
+	return;
+	}
+	  
     // Llamada al backend para validar la respuesta y obtener todo el contenido necesario
-      const response1 = await fetch("https://inchallah.vercel.app/api/validarRespuesta", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ respuesta: userAnswer, _csrf: csrfToken })
-      });
+    const response1 = await fetch("https://inchallah.vercel.app/api/validarRespuesta", {
+      method: "POST",
+      credentials: "include", // Enviar cookies HTTP-Only
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken, // Enviar el token CSRF en los headers
+      },
+      body: JSON.stringify({ respuesta: userAnswer }),
+    });	  
     
     if (response.status === 429) {
       errorDiv.textContent = "Demasiados intentos. Intenta más tarde.";
@@ -74,7 +80,7 @@ submitButton.addEventListener("click", async () => {
 	  }
 	}
 
-protectedContent.innerHTML = diveo.innerHTML;
+	protectedContent.innerHTML = diveo.innerHTML;
 	    
       const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
       const wanderitodiv = document.getElementById("wanderito");
