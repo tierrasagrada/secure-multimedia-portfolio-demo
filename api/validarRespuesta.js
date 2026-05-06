@@ -137,7 +137,7 @@ const limiter = rateLimit({
                             </div>
                           </div>
                         </div>
-                        <h2>Fotos Bellas</h2>
+                        <h2>Proyectos Destacados</h2>
                  <!-- ninja--><div id="sliker"></div>
                     </div>
                   </div>
