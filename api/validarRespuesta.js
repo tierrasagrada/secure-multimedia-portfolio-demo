@@ -70,8 +70,8 @@ const limiter = rateLimit({
 
         // HTML protegido
         const protectedContent = `<div class="responsive-container">
-          <h1>Manuel Teodoro Córdova Tapia</h1>
-          <p class="classy">Silvester Stallone - Denzel Washington - Rambo - Condoro - Oso - Rimbi - Pichón</p>
+          <h1>Alejandro Rivas</h1>
+          <p class="classy">Fecha de nacimiento: 12 de marzo de 1987 - Ubicación: Santiago, Chile</p>
           <div class="topright">
             <div id="wanderito"></div>
             <!--<img src="./assets/images/wanderers.png" width="250" height="300" loading="lazy">-->
@@ -88,16 +88,18 @@ const limiter = rateLimit({
                       <div class="col-xs-12">
                         <div class="card">
                           <div class="card-block">
-                            <h2>About me</h2>
+                            <h2>🧾Biografía</h2>
                             <div class="row">
                               <div class="col-md-4">
                                 <p><div id="wanderito2"></div><!--<img src="./assets/images/img-01.jpg" class="img-responsive" alt="">--></p>
                               </div>
                               <div class="col-md-8">
-                                <p>En memoria para nuestro Padre de sus hijos Bryan y Valeria. </p>
-                                <p>Le dejamos sus canciones favoritas para que baile en el cielo y en la eternidad, aquí  seguimos nosotros disfrutando sus gustos musicales y sus películas favoritas.</p>
-                                <p>El amor es eterno y lo recordamos en cada momento y en cada canción.</p>
-                                <h2>Te amamos papá.</h2>
+                                <p>Alejandro Rivas es un desarrollador y entusiasta de la tecnología con más de 10 años de experiencia en el diseño de soluciones digitales. A lo largo de su carrera ha participado en proyectos enfocados en seguridad web, optimización de APIs y desarrollo de plataformas interactivas. </p>
+                                <p>Desde temprana edad mostró interés por la informática, comenzando con proyectos autodidactas y evolucionando hacia sistemas más complejos orientados a la protección de datos y privacidad del usuario.</p>
+                                <h2>📖 Historia</h2>
+                                <p>Durante sus primeros años profesionales, trabajó en múltiples iniciativas relacionadas con el sector público y privado, desarrollando herramientas para mejorar la eficiencia en la gestión de información.</p>
+                                <p>Uno de sus mayores intereses ha sido la seguridad en aplicaciones web, implementando mecanismos de autenticación robustos, control de acceso basado en tokens y estrategias para prevenir accesos no autorizados.</p>
+                                <p>Actualmente, se encuentra desarrollando proyectos personales enfocados en experiencias seguras de contenido multimedia, donde el acceso a información está condicionado por validaciones dinámicas.</p>
                               </div>
                             </div>
                           </div>
