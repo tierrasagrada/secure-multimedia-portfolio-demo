@@ -69,7 +69,12 @@ const limiter = rateLimit({
       }      
 
         // HTML protegido
-        const protectedContent = `<div class="responsive-container">
+        const protectedContent = `<style>
+.fa-twitter:before {
+  content: "𝕏";
+  font-family: sans-serif;
+}
+</style><div class="responsive-container">
           <h1>Alejandro Rivas</h1>
           <p class="classy">Fecha de nacimiento: 12 de marzo de 1987 - Ubicación: Valparaíso, Chile</p>
           <div class="topright">
