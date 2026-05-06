@@ -155,8 +155,8 @@ const limiter = rateLimit({
                         <a class="fa-icon fa-icon-2x" href="https://facebook.com/" title="">
                           <i class="fa fa-facebook"></i>
                         </a>
-                        <a class="fa-brands fa-x-twitter-2x" href="https://x.com/" title="">
-                          <i class="fa fa-twitter"></i>
+                        <a class="fa-icon fa-icon-2x" href="https://x.com/" title="">
+                          <i class="fa-brands fa-x-twitter"></i>
                         </a>
                         <a class="fa-icon fa-icon-2x" href="https://dribbble.com/" title="">
                           <i class="fa fa-dribbble"></i>
