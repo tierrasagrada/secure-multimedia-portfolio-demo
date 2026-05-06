@@ -71,7 +71,7 @@ const limiter = rateLimit({
         // HTML protegido
         const protectedContent = `<div class="responsive-container">
           <h1>Alejandro Rivas</h1>
-          <p class="classy">Fecha de nacimiento: 12 de marzo de 1987 - Ubicación: Santiago, Chile</p>
+          <p class="classy">Fecha de nacimiento: 12 de marzo de 1987 - Ubicación: Valparaíso, Chile</p>
           <div class="topright">
             <div id="wanderito"></div>
             <!--<img src="./assets/images/wanderers.png" width="250" height="300" loading="lazy">-->
