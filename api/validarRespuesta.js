@@ -91,7 +91,7 @@ const limiter = rateLimit({
                             <h2>🧾Biografía</h2>
                             <div class="row">
                               <div class="col-md-4">
-                                <p><div id="wanderito2"></div><!--<img src="./assets/images/img-01.jpg" class="img-responsive" alt="">--></p>
+                                <p><div id="wanderito2"></div><!--<img src="./assets/images/img-01.png" class="img-responsive" alt="">--></p>
                               </div>
                               <div class="col-md-8">
                                 <p>Alejandro Rivas es un desarrollador y entusiasta de la tecnología con más de 10 años de experiencia en el diseño de soluciones digitales. A lo largo de su carrera ha participado en proyectos enfocados en seguridad web, optimización de APIs y desarrollo de plataformas interactivas. </p>
