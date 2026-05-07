@@ -134,7 +134,7 @@ const limiter = rateLimit({
                               <div class="col-md-4">
                               <iframe class="img-responsive"
                                 loading="lazy"
-                                src="https://www.youtube.com/embed/7YcW25PHnAA?si=XSDv4AYIuMrTzi_n"
+                                src="https://www.youtube.com/embed/7YcW25PHnAA?si=DD4WK-hk1_w9gT35"
                                 title="YouTube video player"
                                 frameborder="0"
                                 allowfullscreen>
@@ -167,7 +167,7 @@ const limiter = rateLimit({
                               <div class="col-md-4">              
                                 <iframe class="img-responsive"
                                   loading="lazy"
-                                  src="https://www.youtube.com/embed/mbsmsi7l3r4"
+                                  src="https://www.youtube.com/embed/mbsmsi7l3r4?si=FUQjqijgaV9ffzOD"
                                   title="YouTube video player"
                                   frameborder="0"
                                   allowfullscreen>
