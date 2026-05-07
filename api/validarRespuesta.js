@@ -119,13 +119,25 @@ const limiter = rateLimit({
                                 <h3 class="h5">JWT Authentication & Secure Access</h3>
                                 <p>Overview of token-based authentication and protected resource access in modern web applications.</p>
                               </div>
-                              <div class="col-md-4">              
-                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/7YcW25PHnAA?si=XSDv4AYIuMrTzi_n" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                              <div class="col-md-4">
+                              <iframe class="img-responsive"
+                                loading="lazy"
+                                src="https://www.youtube.com/embed/7YcW25PHnAA?si=XSDv4AYIuMrTzi_n"
+                                title="YouTube video player"
+                                frameborder="0"
+                                allowfullscreen>
+                              </iframe>                                
                                 <h3 class="h5">REST API Design Principles</h3>
                                 <p>Best practices for designing scalable and secure REST APIs using Express.js.</p>
                               </div>
                               <div class="col-md-4">              
-                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/S-4hwfyK-XQ?si=YmJz3RlPZU2Uh3h2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                <iframe class="img-responsive"
+                                  loading="lazy"
+                                  src="https://www.youtube.com/embed/S-4hwfyK-XQ?si=YmJz3RlPZU2Uh3h2"
+                                  title="YouTube video player"
+                                  frameborder="0"
+                                  allowfullscreen>
+                                </iframe>                                
                                 <h3 class="h5">Developer Focus Session</h3>
                                 <p>Ambient lo-fi music frequently used during coding and development sessions.</p>
                               </div>          
