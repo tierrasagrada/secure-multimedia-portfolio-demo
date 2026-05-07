@@ -109,80 +109,29 @@ const limiter = rateLimit({
                           <div class="card-block">
                             <h2>Mi Música</h2>
                             <div class="row">
-                              <div class="col-md-4">
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/TlB_eWDSMt4?si=5EiVTZQVqhQue6IC"
-                                  title="Node.js Backend Development"
-                                  frameborder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  referrerpolicy="strict-origin-when-cross-origin"
-                                  allowfullscreen>
-                                </iframe>                                                           
-                                <h3 class="h5">Node.js Backend Development</h3>
-                                <p>Introduction to backend architecture using Node.js and Express for scalable web applications.</p>
-                              </div>
-                              <div class="col-md-4">
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/7nafaH9SddU?si=tQ7_NzygZD_TnrRe"
-                                  title="JWT Authentication"
-                                  frameborder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  referrerpolicy="strict-origin-when-cross-origin"
-                                  allowfullscreen>
-                                </iframe>                                                             
-                                <h3 class="h5">JWT Authentication & Secure Access</h3>
-                                <p>Token-based authentication concepts and protected access implementation.</p>
-                              </div>
-                              <div class="col-md-4">
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/-MTSQjw5DrM?si=ELHk1tx4UZQiFUPS"
-                                  title="REST API Design"
-                                  frameborder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  referrerpolicy="strict-origin-when-cross-origin"
-                                  allowfullscreen>
-                                </iframe>                            
-                                <h3 class="h5">REST API Design Principles</h3>
-                                <p>Best practices for designing scalable and maintainable REST APIs.</p>
-                              </div>
-                              <div class="col-md-4">              
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/S-4hwfyK-XQ?si=YmJz3RlPZU2Uh3h2"
-                                  title="Developer Focus Session"
-                                  frameborder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  referrerpolicy="strict-origin-when-cross-origin"
-                                  allowfullscreen>
-                                </iframe>                             
-                                <h3 class="h5">Developer Focus Session</h3>
-                                <p>Ambient lo-fi music frequently used during coding and development sessions.</p>
-                              </div>
-                              <div class="col-md-4">              
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/6a84f9ITDfs"
-                                  title="YouTube video player"
-                                  frameborder="0"
-                                  allowfullscreen>
-                                </iframe>                                
-                                <h3 class="h5">Secure API Architecture</h3>
-                                <p>Overview of scalable backend architecture and secure API communication using Node.js and Express.</p>
-                              </div>
-                              <div class="col-md-4">              
-                                <iframe class="img-responsive"
-                                  loading="lazy"
-                                  src="https://www.youtube.com/embed/mbsmsi7l3r4?si=FUQjqijgaV9ffzOD"
-                                  title="YouTube video player"
-                                  frameborder="0"
-                                  allowfullscreen>
-                                </iframe>                                
-                                <h3 class="h5">Modern Web Authentication</h3>
-                                <p>Modern authentication concepts including token validation and protected resource access.</p>
-                              </div>                               
+ <div class="col-md-4">
+
+  <div class="youtube-lite" data-video-id="fBNz5xF-Kx4">
+
+    <img
+      src="https://img.youtube.com/vi/fBNz5xF-Kx4/hqdefault.jpg"
+      alt="Node.js Backend Development"
+      class="youtube-thumb"
+    >
+
+    <div class="play-button">
+      ▶
+    </div>
+
+  </div>
+
+  <h3 class="h5">Node.js Backend Development</h3>
+
+  <p>
+    Introduction to backend development using Node.js and Express.
+  </p>
+
+</div>                          
                             </div>
                           </div>
                         </div>
@@ -219,8 +168,78 @@ const limiter = rateLimit({
                     content: "𝕏";
                     font-family: sans-serif;
                   }
+.youtube-lite {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+}
+
+.youtube-thumb {
+  width: 100%;
+  display: block;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 70px;
+  height: 70px;
+
+  border-radius: 50%;
+
+  background: rgba(0,0,0,0.7);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+
+  transition: 0.3s;
+}
+
+.youtube-lite:hover .play-button {
+  background: rgba(255,0,0,0.85);
+  transform: translate(-50%, -50%) scale(1.1);
+}                  
                 </style>
-              </footer>`;
+              </footer>
+              <script>
+
+document.querySelectorAll('.youtube-lite').forEach(video => {
+
+  video.addEventListener('click', () => {
+
+    const videoId = video.dataset.videoId;
+
+    const iframe = document.createElement('iframe');
+
+    iframe.src =
+      'https://www.youtube.com/embed/' +
+      videoId +
+      '?autoplay=1';
+
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+
+    iframe.allowFullscreen = true;
+
+    video.innerHTML = '';
+
+    video.appendChild(iframe);
+
+  });
+
+});
+
+</script>
+              `;
 
       // Respuesta correcta  
       if (respuesta.toLowerCase() === ANSWER) {
