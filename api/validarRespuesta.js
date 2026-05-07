@@ -120,20 +120,15 @@ const limiter = rateLimit({
                                 <p>Overview of token-based authentication and protected resource access in modern web applications.</p>
                               </div>
                               <div class="col-md-4">              
-                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/dRnNpLOhn1Q?si=qCKgZ6jA0LS6mdJO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                <h3 class="h5">Cock Robin</h3>
-                                <p>When Your Heart Is Weak</p>
+                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/7YcW25PHnAA?si=XSDv4AYIuMrTzi_n" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                <h3 class="h5">REST API Design Principles</h3>
+                                <p>Best practices for designing scalable and secure REST APIs using Express.js.</p>
                               </div>
                               <div class="col-md-4">              
-                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/jS3tWFd5bew?si=MyK8Oegn4CfauODp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                <h3 class="h5">Upa! - Sueldos</h3>
-                                <p>ROCK CHILENO. Upa! (1986)</p>
-                              </div> 
-                              <div class="col-md-4">              
-                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/HXvQmPdc-30?si=h9svW1HOZXYnxqz5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                <h3 class="h5">G I T</h3>
-                                <p> Oro - Grandes Éxitos</p>
-                              </div>               
+                                <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/S-4hwfyK-XQ?si=YmJz3RlPZU2Uh3h2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                <h3 class="h5">Developer Focus Session</h3>
+                                <p>Ambient lo-fi music frequently used during coding and development sessions.</p>
+                              </div>          
                             </div>
                           </div>
                         </div>
