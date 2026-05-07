@@ -111,7 +111,38 @@ submitButton.addEventListener("click", async () => {
 	        </div>
 	      	`;
       		protectedContent2.innerHTML =  DOMPurify.sanitize(ninjadiv);
+//nueva funcion
+// ACTIVAR VIDEOS LAZY LOAD
+document.querySelectorAll('.youtube-lite').forEach(video => {
 
+  video.addEventListener('click', () => {
+
+    const videoId = video.dataset.videoId;
+
+    const iframe = document.createElement('iframe');
+
+    iframe.src =
+      'https://www.youtube.com/embed/' +
+      videoId +
+      '?autoplay=1';
+
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+
+    iframe.allowFullscreen = true;
+
+    iframe.style.width = '100%';
+    iframe.style.aspectRatio = '16 / 9';
+    iframe.style.border = '0';
+
+    video.innerHTML = '';
+
+    video.appendChild(iframe);
+
+  });
+
+});
+			//fin nueva funcion
        		// 🔹 Obtener lista de imágenes con URLs seguras
     		const response = await fetch("https://inchallah.vercel.app/api/obtenerImagenes", {
 				method: "POST",
