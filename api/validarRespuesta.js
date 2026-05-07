@@ -110,46 +110,54 @@ const limiter = rateLimit({
                             <h2>Mi Música</h2>
                             <div class="row">
                               <div class="col-md-4">
-                              <iframe class="img-responsive"
-                                loading="lazy"
-                                src="https://www.youtube.com/embed/Oe421EPjeBE?si=VMpQFdOzfZo41c9C"
-                                title="YouTube video player"
-                                frameborder="0"
-                                allowfullscreen>
-                              </iframe>                                                               
+                                <iframe class="img-responsive"
+                                  loading="lazy"
+                                  src="https://www.youtube.com/embed/TlB_eWDSMt4?si=5EiVTZQVqhQue6IC"
+                                  title="Node.js Backend Development"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  referrerpolicy="strict-origin-when-cross-origin"
+                                  allowfullscreen>
+                                </iframe>                                                           
                                 <h3 class="h5">Node.js Backend Development</h3>
                                 <p>Introduction to backend architecture using Node.js and Express for scalable web applications.</p>
                               </div>
                               <div class="col-md-4">
-                              <iframe class="img-responsive"
-                                loading="lazy"
-                                src="https://www.youtube.com/embed/7Q17ubqLfaM"
-                                title="JWT Authentication"
-                                frameborder="0"
-                                allowfullscreen>
-                              </iframe>                                                               
+                                <iframe class="img-responsive"
+                                  loading="lazy"
+                                  src="https://www.youtube.com/embed/7nafaH9SddU?si=tQ7_NzygZD_TnrRe"
+                                  title="JWT Authentication"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  referrerpolicy="strict-origin-when-cross-origin"
+                                  allowfullscreen>
+                                </iframe>                                                             
                                 <h3 class="h5">JWT Authentication & Secure Access</h3>
-                                <p>Overview of token-based authentication and protected resource access in modern web applications.</p>
+                                <p>Token-based authentication concepts and protected access implementation.</p>
                               </div>
                               <div class="col-md-4">
-                              <iframe class="img-responsive"
-                                loading="lazy"
-                                src="https://www.youtube.com/embed/7YcW25PHnAA?si=DD4WK-hk1_w9gT35"
-                                title="YouTube video player"
-                                frameborder="0"
-                                allowfullscreen>
-                              </iframe>                                
+                                <iframe class="img-responsive"
+                                  loading="lazy"
+                                  src="https://www.youtube.com/embed/-MTSQjw5DrM?si=ELHk1tx4UZQiFUPS"
+                                  title="REST API Design"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  referrerpolicy="strict-origin-when-cross-origin"
+                                  allowfullscreen>
+                                </iframe>                            
                                 <h3 class="h5">REST API Design Principles</h3>
-                                <p>Best practices for designing scalable and secure REST APIs using Express.js.</p>
+                                <p>Best practices for designing scalable and maintainable REST APIs.</p>
                               </div>
                               <div class="col-md-4">              
                                 <iframe class="img-responsive"
                                   loading="lazy"
                                   src="https://www.youtube.com/embed/S-4hwfyK-XQ?si=YmJz3RlPZU2Uh3h2"
-                                  title="YouTube video player"
+                                  title="Developer Focus Session"
                                   frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  referrerpolicy="strict-origin-when-cross-origin"
                                   allowfullscreen>
-                                </iframe>                                
+                                </iframe>                             
                                 <h3 class="h5">Developer Focus Session</h3>
                                 <p>Ambient lo-fi music frequently used during coding and development sessions.</p>
                               </div>
