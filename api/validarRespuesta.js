@@ -111,8 +111,8 @@ const limiter = rateLimit({
                             <div class="row">
                               <div class="col-md-4">              
                                 <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/y626CKZs28I?si=ew1GWvqSJHPa0dkl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                <h3 class="h5">Bruce Springsteen</h3>
-                                <p>Dancing In The Dark Extended Version</p>
+                                <h3 class="h5">Node.js Backend Development</h3>
+                                <p>Introduction to backend architecture using Node.js and Express for scalable web applications.</p>
                               </div>
                               <div class="col-md-4">              
                                 <iframe class="img-responsive" alt="" src="https://www.youtube.com/embed/UM-sIozHT2k?si=9HsQYW3QE5AjMzWZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
