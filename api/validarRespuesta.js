@@ -149,6 +149,7 @@ const limiter = rateLimit({
                                 <h3 class="h5">REST API Design Principles</h3>
                                 <p>Best practices for designing scalable and maintainable REST APIs.</p>
                               </div>
+                              <!--
                               <div class="col-md-4">              
                                 <iframe class="img-responsive"
                                   loading="lazy"
@@ -183,7 +184,7 @@ const limiter = rateLimit({
                                 </iframe>                                
                                 <h3 class="h5">Modern Web Authentication</h3>
                                 <p>Modern authentication concepts including token validation and protected resource access.</p>
-                              </div>        
+                              </div>  -->      
 <!--Fin Iframe -->
                             </div>
                           </div>
