@@ -59,7 +59,8 @@ submitButton.addEventListener("click", async () => {
 	    if (response1.status === 401) {
 	      attemptCount++;
 	      delay = Math.min(delay * 2, 30000); // Aumenta el tiempo de espera exponencialmente hasta 30s
-	      errorDiv.textContent = "Respuesta incorrecta.";
+		  errorDiv.style.display = "block";
+	      errorDiv.textContent = "Respuesta incorrecta. Intentar de nuevo";
 	      submitButton.disabled = true;
 
 	      setTimeout(() => {
@@ -78,7 +79,7 @@ submitButton.addEventListener("click", async () => {
 	    // Si la respuesta es correcta
 	    if (data.success) {// 1. Mostrar el contenido HTML oculto
       		const protectedContent = document.getElementById("protected-content");
-	    
+	    	errorDiv.style.display = "none";
 			const cleanHTML = DOMPurify.sanitize(data.content, {
 			  ADD_TAGS: ["iframe"],
 			  ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src", "title", "referrerpolicy"],
