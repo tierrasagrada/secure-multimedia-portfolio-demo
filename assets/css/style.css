@@ -8,14 +8,10 @@
 
     position:absolute;
 
-    left:0;
-    right:0;
+    left:20px;
+    right:20px;
 
-    bottom:-70px;
-
-    margin:auto;
-
-    width:100%;
+    bottom:85px;
 
     background:rgba(239,68,68,0.12);
 
@@ -23,11 +19,11 @@
 
     color:#f87171 !important;
 
-    padding:14px;
+    padding:12px;
 
     border-radius:12px;
 
-    font-size:1.3rem !important;
+    font-size:1.2rem !important;
 
     font-weight:600;
 
@@ -37,5 +33,5 @@
 
     pointer-events:none;
 
-    box-sizing:border-box;
+    z-index:20;
 }
