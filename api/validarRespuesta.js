@@ -218,7 +218,12 @@ const limiter = rateLimit({
                   </div>
                 </div>
               </footer>
-              `;
+                <style>
+                  .fa-twitter:before {
+                    content: "𝕏";
+                    font-family: sans-serif;
+                  }
+                </style>`;
 
       // Respuesta correcta  
       if (respuesta.toLowerCase() === ANSWER) {
