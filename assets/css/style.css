@@ -46,22 +46,32 @@
 
     #security-container .error{
 
-        bottom:-10px;
+        position:relative;
 
-        width:88%;
+        left:auto;
 
-        font-size:1rem !important;
+        transform:none;
+
+        bottom:auto;
+
+        width:100%;
+
+        margin-top:18px;
+
+        font-size:1.1rem !important;
     }
 }
 .security-footer{
 
     text-align:center;
 
-    margin-top:30px;
+    margin-top:80px;
 
-    color:rgba(255,255,255,.45);
+    padding-bottom:30px;
 
-    font-size:.95rem;
+    color:rgba(255,255,255,.55);
 
-    letter-spacing:.5px;
+    font-size:1.1rem;
+
+    letter-spacing:1px;
 }
