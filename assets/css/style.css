@@ -39,20 +39,12 @@
 
     z-index:50;
 }
-#security-container::before{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
+#security-container{
 
     background:
     radial-gradient(circle at top left,#22c55e22,transparent 30%),
     radial-gradient(circle at bottom right,#16a34a22,transparent 30%),
     linear-gradient(135deg,#07130d,#0f172a);
-
-    z-index:-1;
 }
 @media (max-width:768px){
     .contenedor{
