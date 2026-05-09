@@ -289,4 +289,28 @@
         font-size:20px;
     }
 }
+/*Nueva Funcion para adaptar responsive boton slider derecho*/
+/* Responsive slider controls */
+@media (max-width: 768px) {
 
+  #ninja-slider-prev {
+    left: 5px;
+  }
+
+  #ninja-slider-next {
+    right: 5px;
+  }
+
+  #ninja-slider-prev,
+  #ninja-slider-next {
+
+    width: 36px;
+    height: 48px;
+    line-height: 48px;
+
+    margin-top: -24px;
+
+    opacity: 0.7;
+  }
+
+}
