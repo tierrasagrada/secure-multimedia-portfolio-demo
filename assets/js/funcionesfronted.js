@@ -59,7 +59,7 @@ submitButton.addEventListener("click", async () => {
 	    if (response1.status === 401) {
 	      attemptCount++;
 	      delay = Math.min(delay * 2, 30000); // Aumenta el tiempo de espera exponencialmente hasta 30s
-		  errorDiv.style.opacity = "0";
+		  errorDiv.style.opacity = "1";
 		  errorDiv.textContent = "⚠ Incorrect answer. Try again.";
 	      submitButton.disabled = true;
 
