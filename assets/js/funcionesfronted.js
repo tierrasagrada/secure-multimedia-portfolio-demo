@@ -1,186 +1,507 @@
 const submitButton = document.getElementById("submit");
-let attemptCount = 0;
-let delay = 1000; // Inicialmente 1s de espera tras error
+
+let isSubmitting = false;
+
+let delay = 1000;
+
+/* =========================
+   GET CSRF TOKEN
+========================= */
 
 async function obtenerCSRFToken() {
+
   try {
-    const response = await fetch("https://inchallah.vercel.app/api/csrf-token", {
+
+    const response = await fetch("/api/csrf-token", {
       method: "GET",
-      credentials: "include", // Necesario para recibir cookies HTTP-Only
+
+      credentials: "include",
     });
+
+    if (!response.ok) {
+      throw new Error("CSRF request failed");
+    }
+
     const data = await response.json();
+
     return data.csrfToken;
+
   } catch (error) {
-    console.error("Error al obtener el token CSRF:", error);
+
+    console.error("CSRF Error:", error);
+
     return null;
   }
 }
 
+/* =========================
+   ERROR UI
+========================= */
+
+function mostrarError(message) {
+
+  const errorDiv = document.getElementById("error");
+
+  errorDiv.style.opacity = "1";
+
+  errorDiv.textContent = message;
+}
+
+/* =========================
+   CLEAR ERROR
+========================= */
+
+function limpiarError() {
+
+  const errorDiv = document.getElementById("error");
+
+  errorDiv.style.opacity = "0";
+
+  errorDiv.textContent = "";
+}
+
+/* =========================
+   DISABLE BUTTON
+========================= */
+
+function bloquearBoton() {
+
+  submitButton.disabled = true;
+
+  submitButton.style.opacity = "0.6";
+
+  submitButton.style.cursor = "not-allowed";
+}
+
+/* =========================
+   ENABLE BUTTON
+========================= */
+
+function desbloquearBoton() {
+
+  submitButton.disabled = false;
+
+  submitButton.style.opacity = "1";
+
+  submitButton.style.cursor = "pointer";
+}
+
+/* =========================
+   MAIN EVENT
+========================= */
+
 submitButton.addEventListener("click", async () => {
-	const userAnswer = document.getElementById("answer").value;
-	const errorDiv = document.getElementById("error");
+
+  /* =========================
+     PREVENT MULTIPLE REQUESTS
+  ========================= */
+
+  if (isSubmitting) return;
+
+  isSubmitting = true;
+
+  bloquearBoton();
+
+  try {
+
+    const userAnswer =
+      document.getElementById("answer")
+      .value
+      .trim();
+
+    /* =========================
+       VALIDATION
+    ========================= */
 
     if (!userAnswer) {
-      document.getElementById("error").textContent = "La respuesta no puede estar vacía";
+
+      mostrarError("⚠ The answer cannot be empty.");
+
       return;
     }
 
     if (!/^[a-zA-Z0-9\s]+$/.test(userAnswer)) {
-	  	document.getElementById("error").textContent = "Respuesta no válida. Usa solo letras y números.";
-		return;
- 	}
 
-  	try {
-      // Obtener el token CSRF antes de enviar la solicitud
-      const csrfToken = await obtenerCSRFToken();
+      mostrarError(
+        "⚠ Invalid input. Use only letters and numbers."
+      );
 
-      if (!csrfToken) {
-        errorDiv.textContent = "Error de autenticación. Recarga la página.";
-        return;
+      return;
+    }
+
+    limpiarError();
+
+    /* =========================
+       GET CSRF TOKEN
+    ========================= */
+
+    const csrfToken = await obtenerCSRFToken();
+
+    if (!csrfToken) {
+
+      mostrarError(
+        "⚠ Authentication error. Reload the page."
+      );
+
+      return;
+    }
+
+    /* =========================
+       VALIDATE ANSWER
+    ========================= */
+
+    const response1 = await fetch(
+      "/api/validarRespuesta",
+      {
+        method: "POST",
+
+        credentials: "include",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          "X-CSRF-Token": csrfToken,
+        },
+
+        body: JSON.stringify({
+          respuesta: userAnswer,
+        }),
       }
-	  
-    	// Llamada al backend para validar la respuesta y obtener todo el contenido necesario
-    	const response1 = await fetch("https://inchallah.vercel.app/api/validarRespuesta", {
-      		method: "POST",
-      		credentials: "include", // Enviar cookies HTTP-Only
-      		headers: {
-				        "Content-Type": "application/json",
-				        "X-CSRF-Token": csrfToken, // Enviar el token CSRF en los headers
-				      },
-      		body: JSON.stringify({ respuesta: userAnswer }),
-   		});	  
-    
-      if (response1.status === 429) {
-        errorDiv.textContent = "Demasiados intentos. Intenta más tarde.";
-        submitButton.disabled = true;
-        return;
+    );
+
+    /* =========================
+       RATE LIMIT
+    ========================= */
+
+    if (response1.status === 429) {
+
+      mostrarError(
+        "⚠ Too many attempts. Please try again later."
+      );
+
+      return;
+    }
+
+    /* =========================
+       WRONG ANSWER
+    ========================= */
+
+    if (response1.status === 401) {
+
+      mostrarError(
+        "⚠ Incorrect answer. Try again."
+      );
+
+      delay = Math.min(delay * 2, 30000);
+
+      await new Promise(resolve =>
+        setTimeout(resolve, delay)
+      );
+
+      return;
+    }
+
+    /* =========================
+       SERVER ERROR
+    ========================= */
+
+    if (!response1.ok) {
+
+      throw new Error("Server error");
+    }
+
+    const data = await response1.json();
+
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    if (!data.success) {
+
+      mostrarError(
+        "⚠ Invalid server response."
+      );
+
+      return;
+    }
+
+    limpiarError();
+
+    /* =========================
+       HIDE SECURITY UI
+    ========================= */
+
+    document.getElementById(
+      "security-footer"
+    ).style.display = "none";
+
+    document.getElementById(
+      "security-container"
+    ).style.display = "none";
+
+    /* =========================
+       SANITIZE HTML
+    ========================= */
+
+    const cleanHTML = DOMPurify.sanitize(
+      data.content,
+      {
+        ADD_TAGS: ["iframe"],
+
+        ADD_ATTR: [
+          "allow",
+          "allowfullscreen",
+          "frameborder",
+          "src",
+          "title",
+          "referrerpolicy",
+        ],
+
+        FORBID_ATTR: [
+          "onload",
+          "onclick",
+        ],
+
+        FORBID_TAGS: ["script"],
       }
+    );
 
-	    if (response1.status === 401) {
-	      attemptCount++;
-	      delay = Math.min(delay * 2, 30000); // Aumenta el tiempo de espera exponencialmente hasta 30s
-		  errorDiv.style.opacity = "1";
-		  errorDiv.textContent = "⚠ Incorrect answer. Try again.";
-	      submitButton.disabled = true;
+    const tempDiv = document.createElement("div");
 
-	      setTimeout(() => {
-	        submitButton.disabled = false;
-	      }, delay);
+    tempDiv.innerHTML = cleanHTML;
 
-	      return;
-	    }
+    /* =========================
+       VALIDATE IFRAMES
+    ========================= */
 
-	   	if (!response1.ok) {
-	      throw new Error("Error en el servidor");
-	    }	  
+    const iframes =
+      tempDiv.getElementsByTagName("iframe");
 
-    	const data = await response1.json();
+    for (const iframe of iframes) {
 
-	    // Si la respuesta es correcta
-	    if (data.success) {// 1. Mostrar el contenido HTML oculto
-      		const protectedContent = document.getElementById("protected-content");
-			errorDiv.style.opacity = "0";
-			errorDiv.textContent = "";
-			const cleanHTML = DOMPurify.sanitize(data.content, {
-			  ADD_TAGS: ["iframe"],
-			  ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "src", "title", "referrerpolicy"],
-			  FORBID_ATTR: ["onload", "onclick"], // Bloquea eventos inseguros
-			  FORBID_TAGS: ["script"], // Evita inyecciones de JS
-			});
+      if (
+        !iframe.src.startsWith(
+          "https://www.youtube.com/embed/"
+        )
+      ) {
 
-			const diveo = document.createElement("div");
-			diveo.innerHTML = cleanHTML;
+        iframe.remove();
+      }
+    }
 
-			// Validar que el iframe es de YouTube
-			const iframes = diveo.getElementsByTagName("iframe");
-			for (let iframe of iframes) {
-			  if (!iframe.src.startsWith("https://www.youtube.com/embed/")) {
-			    iframe.remove(); // Elimina iframes no seguros
-			  }
-			}
+    /* =========================
+       RENDER HTML
+    ========================= */
 
-			protectedContent.innerHTML = diveo.innerHTML;
-	    
-      		const protectedContent2 = document.getElementById("sliker");//Obtener div enviado del backend
-      		const wanderitodiv = document.getElementById("wanderito");
-      		const wanderitodiv2 = document.getElementById("wanderito2");	
-      		const ninjadiv = `
-	        <div id="ninja-slider">
-	          <div class="slider-inner">
-	            <ul id="unDiv"></ul>
-	            <div class="fs-icon" title="Expand/Close"></div>
-	          </div>
-	        </div>
-	      	`;
-      		protectedContent2.innerHTML =  DOMPurify.sanitize(ninjadiv);
+      const protectedContent =
+        document.getElementById(
+          "protected-content"
+        );
 
-       		// 🔹 Obtener lista de imágenes con URLs seguras
-    		const response = await fetch("https://inchallah.vercel.app/api/obtenerImagenes", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				credentials: "include",
-				body: JSON.stringify({})
-    		});
-	    
-    		if (!response.ok) throw new Error("Error al obtener imágenes");
-      
-		    let imagesarray = await response.json();
-		    let sentences = 0;
-		    const sliderContainer = document.getElementById("unDiv");     
-	    
-        for (let i = imagesarray.length - 1; i >= 0; i--) {	
-            const image = imagesarray[i];
-            if (!image.secureUrl) return;
-      
-            if(image.filename === "wanderers.png"){
-            const imgsw = document.createElement("img");
-            imgsw.src = image.secureUrl;
-            imgsw.style.width = "250px";
-            imgsw.style.height = "200px";
-            wanderitodiv.appendChild(imgsw);
-            imagesarray.splice(i, 1); // Eliminar del array 
-            continue; // 🔥 Saltar el resto del código y pasar al siguiente elemento
-            }
-            if(image.filename === "img-01.jpg"){
-            const imgsw2 = document.createElement("img");
-            imgsw2.src = image.secureUrl;
-            imgsw2.className = "img-responsive";
-            wanderitodiv2.appendChild(imgsw2);
-              imagesarray.splice(i, 1); // Eliminar del array
-            continue; // 🔥 Saltar el resto del código y pasar al siguiente elemento
-            }
-      
-                const li = document.createElement("li");
-                const a = document.createElement("a");
-                a.className = "ns-img";
-                a.href = image.secureUrl;
-                a.alt = image.filename || "Imagen protegida";
-                const div = document.createElement("div");          
+      protectedContent.innerHTML =
+        tempDiv.innerHTML;
 
-                div.className = "caption";
-                div.textContent = "@colerise";
-                li.appendChild(a);
-                li.appendChild(div);
-            sliderContainer.appendChild(li); 
-        }   
-        	nslider.init ();
-        	protectedContent.style.display = "block";
-        	document.getElementById("security-container").style.display = "none"; 
+      protectedContent.style.display = "block";
 
-    	} else {
-     		document.getElementById("error").textContent = data.message;
-    	}
-  	} catch (error){
-	document.getElementById("error").textContent = "Ocurrió un error. Inténtalo nuevamente más tarde.";
+		/* =========================
+		SLIDER CONTAINER
+		========================= */
+
+		const protectedContent2 =
+		document.getElementById("sliker");
+
+		const wanderitodiv =
+		document.getElementById("wanderito");
+
+		const wanderitodiv2 =
+		document.getElementById("wanderito2");
+
+		if (
+		!protectedContent2 ||
+		!wanderitodiv ||
+		!wanderitodiv2
+		) {
+
+		throw new Error(
+			"Protected containers not found."
+		);
+		}
+		
+		protectedContent2.innerHTML = `
+		<div id="ninja-slider">
+			<div class="slider-inner">
+			<ul id="unDiv"></ul>
+			<div class="fs-icon"
+				title="Expand/Close"></div>
+			</div>
+		</div>
+		`;	  
+
+    /* =========================
+       GET IMAGES
+    ========================= */
+
+    const response2 = await fetch(
+      "/api/obtenerImagenes",
+      {
+        method: "POST",
+
+        credentials: "include",
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+
+        body: JSON.stringify({}),
+      }
+    );
+
+    if (!response2.ok) {
+      throw new Error(
+        "Error loading images"
+      );
+    }
+
+    const imagesarray =
+      await response2.json();
+
+    const sliderContainer =
+      document.getElementById("unDiv");
+
+/* =========================
+   RENDER IMAGES
+========================= */
+
+for (const image of imagesarray) {
+
+  if (!image.secureUrl) continue;
+
+  /* =========================
+     SPECIAL IMAGE 1
+  ========================= */
+
+  if (image.filename === "wanderers.png") {
+
+    const imgsw =
+      document.createElement("img");
+
+    imgsw.src = image.secureUrl;
+
+    imgsw.width = 250;
+
+    imgsw.height = 200;
+
+    imgsw.loading = "lazy";
+
+    imgsw.decoding = "async";
+
+    wanderitodiv.appendChild(imgsw);
+
+    continue;
+  }
+
+  /* =========================
+     SPECIAL IMAGE 2
+  ========================= */
+
+  if (image.filename === "img-01.jpg") {
+
+    const imgsw2 =
+      document.createElement("img");
+
+    imgsw2.src = image.secureUrl;
+
+    imgsw2.className = "img-responsive";
+
+    imgsw2.loading = "lazy";
+
+    imgsw2.decoding = "async";
+
+    wanderitodiv2.appendChild(imgsw2);
+
+    continue;
+  }
+
+  /* =========================
+     SLIDER IMAGES
+  ========================= */
+
+  const li =
+    document.createElement("li");
+
+  const a =
+    document.createElement("a");
+
+  a.className = "ns-img";
+
+  a.href = image.secureUrl;
+
+  a.alt =
+    image.filename ||
+    "Protected image";
+
+  const div =
+    document.createElement("div");
+
+  div.className = "caption";
+
+  div.textContent = "@colerise";
+
+  li.appendChild(a);
+
+  li.appendChild(div);
+
+  sliderContainer.appendChild(li);
+}
+
+    /* =========================
+       INIT SLIDER
+    ========================= */
+
+    if (
+      typeof nslider !== "undefined"
+    ) {
+
+      nslider.init();
+    setTimeout(() => {
+        triggerWanderitoFX();
+    }, 50);
+        
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    mostrarError(
+      "⚠ An error occurred. Please try again later."
+    );
+
+  } finally {
+
+    isSubmitting = false;
+
+    desbloquearBoton();
   }
 });
 
+/* =========================
+   IMAGE LOAD EFFECT
+========================= */
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const images = document.querySelectorAll("img");
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const images =
+      document.querySelectorAll("img");
+
     images.forEach((img) => {
-      img.onload = function () {
-        img.style.opacity = "1"; // Muestra la imagen cuando esté lista
+
+      img.onload = () => {
+        img.style.opacity = "1";
       };
     });
-  });
+  }
+);

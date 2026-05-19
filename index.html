@@ -12,7 +12,7 @@
   <!-- Disable tap highlight on IE -->
   <meta name="msapplication-tap-highlight" content="no">
   <link href="./assets/favicon.ico" rel="icon">
-  <title>Title page</title>  
+  <title>Secure Multimedia Portfolio</title>  
     <link href="/assets/css/ninja-slider.css" rel="stylesheet" type="text/css" />
     <link href="/main.d8e0d294.css" rel="stylesheet" />
     <link href="/assets/css/style.css" rel="stylesheet" type="text/css" />  
@@ -21,10 +21,10 @@
 <body class="">
     <!-- Formulario de pregunta de seguridad -->
   <div class="contenedor active" id="security-container">
-    <h1>Pregunta de Seguridad</h1>
-    <p>¿Cuál es el color del equipo de fútbol SW de Valparaíso?</p>
-    <input type="text" id="answer" placeholder="Escribe tu respuesta aquí">
-    <button id="submit">Enviar</button>
+    <h1>Security Validation</h1>
+    <p>What is the color of the SW football team from Valparaíso?</p>
+    <input type="text" id="answer" placeholder="Enter your answer">
+    <button id="submit">Continue</button>
     <p id="error" class="error"></p>
   </div>
 
@@ -38,14 +38,307 @@
                   </div>
                 </div>
               </div>-->
-    <div class="security-footer">
+
+</div>
+    <div class="security-footer" id="security-footer">
         Protected multimedia biography system · Node.js · Express · JWT
     </div>    
-</div>
   <script type="text/javascript" src="./assets/js/funcionesfronted.js"></script>
   <script src="./assets/js/ninja-slider.js" type="text/javascript"></script>
   <script type="text/javascript" src="./main.bc58148c.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+<script>
+const isFirefox =
+    navigator.userAgent.toLowerCase().includes("firefox");
+/* =========================
+   ENGINE STATE
+========================= */
+
+const FX = {
+
+    canvas:null,
+    ctx:null,
+
+    particles:[],
+
+    running:false,
+    raf:null,
+
+    bound:false
+};
+
+/* =========================
+   INIT
+========================= */
+
+function initFX(){
+
+    const wrapper = document.querySelector(".fireworks");
+
+    if(!wrapper) return null;
+
+    if(FX.bound) return wrapper;
+
+    FX.canvas = wrapper.querySelector(".fireworks-canvas");
+
+    if(!FX.canvas){
+
+        FX.canvas = document.createElement("canvas");
+        FX.canvas.className = "fireworks-canvas";
+
+        wrapper.appendChild(FX.canvas);
+    }
+
+    FX.ctx = FX.canvas.getContext("2d");
+
+    FX.bound = true;
+
+    /* replay hover */
+    wrapper.addEventListener("pointerenter", () => {
+
+        explodeFX(wrapper);
+    });
+
+    return wrapper;
+}
+
+/* =========================
+   RESIZE
+========================= */
+
+function resizeFX(){
+
+    const wrapper = document.querySelector(".fireworks");
+
+    if(!wrapper || !FX.canvas) return;
+
+    const rect = wrapper.getBoundingClientRect();
+
+    FX.canvas.width = rect.width;
+    FX.canvas.height = rect.height;
+}
+
+/* =========================
+   PARTICLE CREATION
+========================= */
+
+function explodeFX(wrapper){
+
+    initFX();
+    resizeFX();
+
+    const cx = FX.canvas.width / 2;
+    const cy = FX.canvas.height / 2;
+
+    const colors = [
+
+        "#ffb703",
+        "#fb8500",
+        "#ff6b35",
+        "#ffd166",
+
+        "#ffffff",
+        "#86efac"
+    ];
+
+    for(let i=0;i<65;i++){
+
+        const angle = Math.random() * Math.PI * 2;
+
+        const speed = Math.random() * 7 + 3;
+
+        FX.particles.push({
+
+            x:cx,
+            y:cy,
+
+            vx:Math.cos(angle) * speed,
+            vy:Math.sin(angle) * speed,
+
+            life:140,
+            maxLife:140,
+
+            size:Math.random()*2 + 1.8,
+
+            color:colors[
+                Math.floor(Math.random()*colors.length)
+            ],
+
+            trail:[]
+        });
+    }
+
+    startFX();
+}
+
+/* =========================
+   CINEMATIC AAA LOOP
+========================= */
+
+function startFX(){
+
+    if(FX.running) return;
+
+    FX.running = true;
+    let lastTime = 0;
+function loop(timestamp){
+
+    if(timestamp - lastTime < 16){
+
+        FX.raf = requestAnimationFrame(loop);
+        return;
+    }
+
+    lastTime = timestamp;
+
+        FX.ctx.clearRect(
+            0,
+            0,
+            FX.canvas.width,
+            FX.canvas.height
+        );
+
+        for(let i=FX.particles.length-1;i>=0;i--){
+
+            const p = FX.particles[i];
+
+            /* =========================
+               SAVE TRAIL
+            ========================= */
+
+            p.trail.push({
+                x:p.x,
+                y:p.y
+            });
+
+            if(p.trail.length > 7){
+
+                p.trail.shift();
+            }
+
+            /* =========================
+               PHYSICS
+            ========================= */
+
+            p.x += p.vx;
+            p.y += p.vy;
+
+            p.vy += 0.025;
+
+            p.life--;
+
+            const alpha = Math.max(
+                p.life / p.maxLife,
+                0
+            );
+
+            /* =========================
+               CINEMATIC TRAIL
+            ========================= */
+
+            for(let t=0;t<p.trail.length-1;t++){
+
+                const pt1 = p.trail[t];
+                const pt2 = p.trail[t+1];
+
+                const trailAlpha =
+                    (t / p.trail.length) * alpha;
+
+                FX.ctx.globalAlpha = trailAlpha;
+
+
+
+                FX.ctx.beginPath();
+
+       FX.ctx.strokeStyle = p.color;
+
+                FX.ctx.lineWidth = 1.4;
+
+                FX.ctx.shadowBlur = 0;
+                FX.ctx.shadowColor = p.color;
+
+                FX.ctx.moveTo(pt1.x, pt1.y);
+                FX.ctx.lineTo(pt2.x, pt2.y);
+
+                FX.ctx.stroke();
+            }
+
+            /* =========================
+               PARTICLE CORE
+            ========================= */
+
+            FX.ctx.globalAlpha = alpha;
+
+            FX.ctx.beginPath();
+
+            FX.ctx.fillStyle = p.color;
+
+            FX.ctx.shadowBlur = isFirefox ? 10 : 28;
+            FX.ctx.shadowColor = p.color;
+
+            FX.ctx.arc(
+
+                p.x,
+                p.y,
+
+                p.size,
+
+                0,
+                Math.PI * 2
+            );
+
+            FX.ctx.fill();
+
+            /* =========================
+               CLEANUP
+            ========================= */
+
+            if(p.life <= 0){
+
+                FX.particles.splice(i,1);
+            }
+        }
+
+        FX.ctx.globalAlpha = 1;
+
+        /* stop loop */
+        if(FX.particles.length === 0){
+
+            FX.running = false;
+
+            FX.ctx.clearRect(
+                0,
+                0,
+                FX.canvas.width,
+                FX.canvas.height
+            );
+
+            return;
+        }
+
+        FX.raf = requestAnimationFrame(loop);
+    }
+
+    loop();
+}
+
+/* =========================
+   BACKEND TRIGGER
+========================= */
+
+function triggerWanderitoFX(){
+
+    const wrapper = initFX();
+
+    if(!wrapper) return;
+
+    requestAnimationFrame(() => {
+
+        explodeFX(wrapper);
+    });
+}
+
+</script>
 </body>
  
 </html>

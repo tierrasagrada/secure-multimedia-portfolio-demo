@@ -2,17 +2,28 @@
   "name": "miproyecto",
   "version": "1.0.0",
   "description": "Mi aplicación en Vercel con backend",
-  "main": "api/validarRespuesta.js",
+  "type": "module",
+  "main": "api/server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
   "dependencies": {
-    "mime": "^3.0.0",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.0",
     "cookie-parser": "^1.4.6",
-    "express-rate-limit": "^6.7.0",
+    "cors": "^2.8.6",
     "csurf": "^1.11.0",
-    "helmet": "^7.0.0"
+    "dotenv": "^17.4.2",
+    "express": "^4.22.2",
+    "express-rate-limit": "^6.7.0",
+    "express-slow-down": "^3.1.0",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mime": "^3.0.0"
   },
   "engines": {
     "node": "22.x"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
