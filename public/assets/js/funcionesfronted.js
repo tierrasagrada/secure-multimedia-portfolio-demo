@@ -462,12 +462,10 @@ for (const image of imagesarray) {
     if (
       typeof nslider !== "undefined"
     ) {
-
-      nslider.init();
-    setTimeout(() => {
-        triggerWanderitoFX();
-    }, 50);
-        
+        nslider.init();      
+        setTimeout(() => {
+            triggerWanderitoFX();
+        }, 50);
     }
 
   } catch (error) {

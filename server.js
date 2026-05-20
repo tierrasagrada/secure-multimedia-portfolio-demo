@@ -2,26 +2,28 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
-import csurf from "csurf";
-import rateLimit from "express-rate-limit";
+import globalLimiter from "./api/middleware/globalRateLimit.js";
+import csrfProtection from "./api/middleware/csrfProtection.js";
+import errorHandler from "./api/middleware/errorHandler.js";
 import path from "path";
 import { fileURLToPath } from "url";
-
 
 /* =========================
    IMPORT API ROUTES
 ========================= */
 
-import validarRespuesta from "./api/validarRespuesta.js";
-import csrfToken from "./api/csrf-token.js";
-import obtenerImagenes from "./api/obtenerImagenes.js";
-import urlSeguraImagenes from "./api/urlSeguraImagenes.js";
+import validarRespuesta from "./api/routes/validarRespuesta.js";
+import csrfToken from "./api/routes/csrf-token.js";
+import obtenerImagenes from "./api/routes/obtenerImagenes.js";
+import urlSeguraImagenes from "./api/routes/urlSeguraImagenes.js";
 
 /* =========================
    EXPRESS APP
 ========================= */
 
 const app = express();
+
+app.disable("x-powered-by");
 
 const PORT = 3000;
 
@@ -42,65 +44,29 @@ const __dirname =
 app.set("trust proxy", 1);
 
 /* =========================
-   GLOBAL MIDDLEWARES
+   MIDDLEWARES
 ========================= */
+
 app.use(cookieParser());
 
-/* =========================
-   JSON
-========================= */
+app.use(express.json({
 
-app.use(express.json());
+  limit: "10kb",
+}));
 
 /* =========================
    STATIC FILES
 ========================= */
 
 app.use(
-  express.static(__dirname)
+  express.static(
+    path.join(__dirname, "public")
+  )
 );
 
-
-
-/* =========================
-   CSRF GLOBAL
-========================= */
-
-const csrfProtection = csurf({
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
-  },
-});
-
+ //SECURITY
 app.use(csrfProtection);
-
-/* =========================
-   GLOBAL RATE LIMIT
-========================= */
-const isProduction = process.env.NODE_ENV === "production";
-const globalLimiter = rateLimit({
-
-  windowMs: isProduction ? 15 * 60 * 1000: 1 * 60 * 1000,
-
-   max: isProduction ? 15 : 100,
-
-  standardHeaders: true,
-
-  legacyHeaders: false,
-  skip: (req, res) => {
-    return req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-  },
-  message: {
-    success: false,
-    message:
-      "Too many requests. Please try again later.",
-  },
-});
-
-app.use("/api/", globalLimiter);
-
+app.use("/api", globalLimiter);
 
 /* =========================
    API ROUTES
@@ -125,6 +91,9 @@ app.use(
   "/api/urlSeguraImagenes",
   urlSeguraImagenes
 );
+
+//ERROR HANDLER
+app.use(errorHandler);
 
 /* =========================
    START SERVER

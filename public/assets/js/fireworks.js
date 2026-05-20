@@ -1,53 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible">
-  <meta content="width=device-width,initial-scale=1" name="viewport">
-  <meta content="description" name="description">
-  <meta name="google" content="notranslate" />
-  <meta content="Mashup templates have been developped by Orson.io team" name="author">
-
-  <!-- Disable tap highlight on IE -->
-  <meta name="msapplication-tap-highlight" content="no">
-  <link href="./assets/favicon.ico" rel="icon">
-  <title>Secure Multimedia Portfolio</title>  
-    <link href="/assets/css/ninja-slider.css" rel="stylesheet" type="text/css" />
-    <link href="/main.d8e0d294.css" rel="stylesheet" />
-    <link href="/assets/css/style.css" rel="stylesheet" type="text/css" />  
-</head>
-
-<body class="">
-    <!-- Formulario de pregunta de seguridad -->
-  <div class="contenedor active" id="security-container">
-    <h1>Security Validation</h1>
-    <p>What is the color of the SW football team from Valparaíso?</p>
-    <input type="text" id="answer" placeholder="Enter your answer">
-    <button id="submit">Continue</button>
-    <p id="error" class="error"></p>
-  </div>
-
-<div class="protected-content" id="protected-content">                 
-              <!--<div id="ninja-slider"  style="display: none;">
-                <div class="slider-inner">
-                  <ul id="unDiv">                                
-                                                               
-                  </ul>
-                  <div class="fs-icon" title="Expand/Close">
-                  </div>
-                </div>
-              </div>-->
-
-</div>
-    <div class="security-footer" id="security-footer">
-        Protected multimedia biography system · Node.js · Express · JWT
-    </div>    
-  <script type="text/javascript" src="./assets/js/funcionesfronted.js"></script>
-  <script src="./assets/js/ninja-slider.js" type="text/javascript"></script>
-  <script type="text/javascript" src="./main.bc58148c.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
-<script>
 const isFirefox =
     navigator.userAgent.toLowerCase().includes("firefox");
 /* =========================
@@ -338,7 +288,9 @@ function triggerWanderitoFX(){
     });
 }
 
-</script>
-</body>
- 
-</html>
+/* =========================
+   GLOBAL EXPORT
+========================= */
+
+window.triggerWanderitoFX =
+  triggerWanderitoFX;
