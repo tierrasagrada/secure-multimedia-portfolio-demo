@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import globalLimiter from "./api/middleware/globalRateLimit.js";
 import csrfProtection from "./api/middleware/csrfProtection.js";
 import errorHandler from "./api/middleware/errorHandler.js";
+import securityHeaders from "./api/middleware/securityHeaders.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -53,6 +54,8 @@ app.use(express.json({
 
   limit: "10kb",
 }));
+
+app.use(securityHeaders);
 
 /* =========================
    STATIC FILES
