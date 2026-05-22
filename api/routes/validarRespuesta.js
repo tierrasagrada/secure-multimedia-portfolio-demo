@@ -4,6 +4,8 @@ import slowDown from "express-slow-down";
 import {
   generateAccessToken
 } from "../services/tokenService.js";
+import logger from
+"../utils/logger.js";
 //import csurf from "csurf";
 //import cookieParser from "cookie-parser";
 
@@ -160,6 +162,10 @@ router.post("/",
           }
         );
 
+        logger.info(
+          `Successful authentication from IP: ${req.ip}`
+        );
+        
         /* =========================
           SUCCESS RESPONSE
         ========================= */
@@ -178,6 +184,10 @@ router.post("/",
         });*/
       }
 
+      logger.security(
+        `Invalid answer attempt from IP: ${req.ip}`
+      );
+
       // WRONG ANSWER
       return res.status(401).json({
         success: false,
@@ -186,7 +196,10 @@ router.post("/",
 
     } catch (error) {
 
-      console.error(error);
+      logger.error(
+        "Validation route failed.",
+        error
+      );
       return res.status(500).json({
         success: false,
         message: "Internal server error.",

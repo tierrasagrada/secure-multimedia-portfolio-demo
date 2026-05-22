@@ -1,3 +1,6 @@
+import logger from
+"../utils/logger.js";
+
 const errorHandler = (
   err,
   req,
@@ -42,7 +45,10 @@ const errorHandler = (
      SERVER LOG
   ========================= */
 
-  console.error(err);
+    logger.error(
+      "Global error handler triggered.",
+      err
+    );
 
   /* =========================
      GENERIC ERROR

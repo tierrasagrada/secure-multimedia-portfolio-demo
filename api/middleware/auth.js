@@ -1,7 +1,8 @@
 import {
   verifyAccessToken
 } from "../services/tokenService.js";
-
+import logger from
+"../utils/logger.js";
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
@@ -26,7 +27,9 @@ export default function auth(
     ========================= */
 
     if (!token) {
-
+      logger.security(
+        `Invalid JWT from IP: ${req.ip}`
+      );
       return res.status(401).json({
 
         success: false,

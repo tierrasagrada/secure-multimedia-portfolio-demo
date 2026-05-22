@@ -4,11 +4,11 @@ import path from "path";
 import {
   verifyImageToken
 } from "../services/tokenService.js";
+import logger from
+"../utils/logger.js";
 import express from "express";
 
 const router = express.Router();
-
-
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
 //export default async function handler(req, res) {
@@ -20,8 +20,15 @@ router.get("/", async (req, res) => {
   //console.log(process.env.SECRET_KEY);
   try {
     const { token } = req.query;
-    if (!token) return res.status(401).json({ success: false, message: "Acceso no autorizado." });
 
+    if (!token){ 
+      logger.security(
+        `Invalid image token from IP: ${req.ip}`
+      );
+      return res.status(401).json({ 
+        success: false, message: "Acceso no autorizado." 
+      });
+    }
     // 📌 Validar el token
     //const decoded = jwt.verify(token, secretKey);
     const decoded =
@@ -32,7 +39,12 @@ router.get("/", async (req, res) => {
 
     // 📌 Verificar la IP para evitar que la URL se comparta
     if (userIP !== ip) {
-      return res.status(403).json({ success: false, message: "Invalid token." });
+      logger.security(
+        `IP mismatch detected for protected image. Request IP: ${req.ip}`//IP DISTINTA
+      );
+      return res.status(403).json({ 
+        success: false, message: "Invalid token." 
+      });
     }
 
     // 📌 Verificar que la imagen existe
