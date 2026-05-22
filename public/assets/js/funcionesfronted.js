@@ -213,6 +213,34 @@ submitButton.addEventListener("click", async () => {
     const data = await response1.json();
 
     /* =========================
+   GET PROTECTED CONTENT
+========================= */
+
+const contentResponse =
+  await fetch(
+
+    "/api/contenido",
+
+    {
+
+      method: "GET",
+
+      credentials:
+        "include",
+    }
+  );
+
+if (!contentResponse.ok) {
+
+  throw new Error(
+    "Protected content error"
+  );
+}
+
+const protectedData =
+  await contentResponse.json();
+
+    /* =========================
        SUCCESS
     ========================= */
 
@@ -244,7 +272,7 @@ submitButton.addEventListener("click", async () => {
     ========================= */
 
     const cleanHTML = DOMPurify.sanitize(
-      data.content,
+      protectedData.content,
       {
         ADD_TAGS: ["iframe"],
 

@@ -17,7 +17,8 @@ import validarRespuesta from "./api/routes/validarRespuesta.js";
 import csrfToken from "./api/routes/csrf-token.js";
 import obtenerImagenes from "./api/routes/obtenerImagenes.js";
 import urlSeguraImagenes from "./api/routes/urlSeguraImagenes.js";
-
+import contenido from
+"./api/routes/contenido.js"; //esta bien aqui la ruta de contenido?
 /* =========================
    EXPRESS APP
 ========================= */
@@ -93,6 +94,11 @@ app.use(
 app.use(
   "/api/urlSeguraImagenes",
   urlSeguraImagenes
+);
+
+app.use(
+  "/api/contenido",
+  contenido
 );
 
 //ERROR HANDLER

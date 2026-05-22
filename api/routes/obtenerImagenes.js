@@ -1,7 +1,12 @@
 import express from "express";
 import * as fs from "fs";
 import path from "path";
-import jwt from "jsonwebtoken";
+//import jwt from "jsonwebtoken";
+import auth from
+"../middleware/auth.js"; //va antes o despues de ../services/tokenService.js";?
+import {
+  generateImageToken
+} from "../services/tokenService.js";
 //import cookie from "cookie";
 
 const router = express.Router();
@@ -9,11 +14,11 @@ const router = express.Router();
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
 //export default async function handler(req, res) {
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   /*if (req.method !== "POST") {
     return res.status(405).json({ success: false, message: "Método no permitido." });
   }*/
-  const secretKey = process.env.SECRET_KEY;
+  //const secretKey = process.env.SECRET_KEY;
   //console.log(process.env.SECRET_KEY);
   try {
     // 📌 Obtener IP del usuario
@@ -35,7 +40,14 @@ router.post("/", async (req, res) => {
       });*/
     // 📌 Generar URLs seguras con JWT
     const images = files.map((filename) => {
-      const token = jwt.sign({ filename, ip: userIP }, secretKey, { expiresIn: "5m" });
+      //const token = jwt.sign({ filename, ip: userIP }, secretKey, { expiresIn: "5m" });
+      const token =
+        generateImageToken({
+
+          filename,
+
+          ip: userIP,
+        });
       return { filename, secureUrl: `/api/urlSeguraImagenes?token=${token}` };
     });
 

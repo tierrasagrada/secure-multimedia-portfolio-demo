@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
-import jwt from "jsonwebtoken";
+//import jwt from "jsonwebtoken";
+import {
+  verifyImageToken
+} from "../services/tokenService.js";
 import express from "express";
 
 const router = express.Router();
@@ -13,14 +16,16 @@ router.get("/", async (req, res) => {
   /*if (req.method !== "GET") {
     return res.status(405).json({ success: false, message: "Método no permitido." });
   }*/
-  const secretKey = process.env.SECRET_KEY;
+  //const secretKey = process.env.SECRET_KEY;
   //console.log(process.env.SECRET_KEY);
   try {
     const { token } = req.query;
     if (!token) return res.status(401).json({ success: false, message: "Acceso no autorizado." });
 
     // 📌 Validar el token
-    const decoded = jwt.verify(token, secretKey);
+    //const decoded = jwt.verify(token, secretKey);
+    const decoded =
+      verifyImageToken(token);
     const { filename, ip } = decoded;
     //const userIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     const userIP = req.ip;
