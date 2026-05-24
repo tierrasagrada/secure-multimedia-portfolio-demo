@@ -1064,3 +1064,11 @@ body h2#titulode-ninja{
 
     color:rgb(243,244,246) !important;
 }
+/* =========================
+   INITIAL APP HIDE
+========================= */
+
+body.auth-loading {
+
+  visibility: hidden;
+}
