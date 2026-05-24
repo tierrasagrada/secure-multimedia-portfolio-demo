@@ -91,7 +91,19 @@ router.get("/", async (req, res) => {
     /*res.setHeader("Content-Type", "image/jpeg");
     res.send(fs.readFileSync(filePath));*/
   } catch (error) {
-    res.status(403).json({ success: false, message: "Token inválido o expirado." });
+    //res.status(403).json({ success: false, message: "Token inválido o expirado." });
+    logger.security(
+
+      `Invalid or expired image token from IP: ${req.ip}`
+    );
+
+    return res.status(403).json({
+
+      success: false,
+
+      message:
+        "Invalid or expired token.",
+    });    
   }
 });
 

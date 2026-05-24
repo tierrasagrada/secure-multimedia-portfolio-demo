@@ -6,6 +6,12 @@ import {
 } from "../services/tokenService.js";
 import logger from
 "../utils/logger.js";
+import {
+  validateAnswer
+} from "../middleware/validateInput.js";
+import {
+  sanitizeText
+} from "../utils/sanitize.js";
 //import csurf from "csurf";
 //import cookieParser from "cookie-parser";
 
@@ -73,7 +79,7 @@ app.use("/api/", globalLimiter);*/
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 50,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -97,36 +103,43 @@ const speedLimiter = slowDown({
 router.post("/",
   speedLimiter,
   authLimiter,
+  validateAnswer,
   async (req, res) => {
     try {
+            
       const ANSWER = process.env.SECURITY_ANSWER;
+      
       // BODY VALIDATION
-      if ( !req.body || typeof req.body !== "object") {
+      /*if ( !req.body || typeof req.body !== "object") {
         return res.status(400).json({
           success: false,
           message: "Invalid request.",
         });
-      }
-      
-      const { respuesta } = req.body;
-      
-      // INPUT VALIDATION
-      if (!respuesta || typeof respuesta !== "string"){
-        return res.status(400).json({
-          success: false,
-          message: "Invalid request.",
-        });
-      }      
+      }*/
 
-      if (!/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
+      /*const { respuesta } = req.body;
+      console.log("ANSWER:", ANSWER);
+      console.log("RESPUESTA:", respuesta);*/
+      const cleanUserAnswer = sanitizeText(req.body.respuesta);
+      // INPUT VALIDATION
+      /*if (!respuesta || typeof respuesta !== "string"){
+        return res.status(400).json({
+          success: false,
+          message: "Invalid request.",
+        });
+      }      */
+
+      /*if (!/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
         return res.status(400).json({
           success: false,
           message: "Invalid input.",
         });
-      }
+      }*/
 
       // CORRECT ANSWER
-      if (respuesta.toLowerCase().trim() === ANSWER) {
+//const normalizedAnswer = ANSWER.toLowerCase().trim();
+      const cleanServerAnswer = sanitizeText(ANSWER);
+if (cleanUserAnswer === cleanServerAnswer) {
         /* =========================
           GENERATE ACCESS TOKEN
         ========================= */
