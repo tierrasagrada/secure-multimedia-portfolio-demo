@@ -1,3 +1,7 @@
+import { apiFetch } from "./api.js";
+
+import { getCSRFToken } from "./csrf.js";
+
 const submitButton = document.getElementById("submit");
 
 let isSubmitting = false;
@@ -8,7 +12,7 @@ let delay = 1000;
    GET CSRF TOKEN
 ========================= */
 
-async function obtenerCSRFToken() {
+/*async function obtenerCSRFToken() {
 
   try {
 
@@ -32,7 +36,7 @@ async function obtenerCSRFToken() {
 
     return null;
   }
-}
+}*/
 
 /* =========================
    ERROR UI
@@ -99,7 +103,7 @@ async function renderProtectedContent() {
     ========================= */
 
     const contentResponse =
-      await fetch(
+      await apiFetch(
 
         "/api/contenido",
 
@@ -278,14 +282,14 @@ async function renderProtectedContent() {
     ========================= */
 
     const csrfToken =
-      await obtenerCSRFToken();
+      await getCSRFToken();
 
     /* =========================
        GET IMAGES
     ========================= */
 
     const response2 =
-      await fetch(
+      await apiFetch(
 
         "/api/obtenerImagenes",
 
@@ -504,7 +508,7 @@ submitButton.addEventListener("click", async () => {
        GET CSRF TOKEN
     ========================= */
 
-    const csrfToken = await obtenerCSRFToken();
+    const csrfToken = await getCSRFToken();
 
     if (!csrfToken) {
 
@@ -519,7 +523,7 @@ submitButton.addEventListener("click", async () => {
        VALIDATE ANSWER
     ========================= */
 
-    const response1 = await fetch(
+    const response1 = await apiFetch(
       "/api/validarRespuesta",
       {
         method: "POST",
