@@ -5,6 +5,11 @@ import {
 import logger from
 "../utils/logger.js";
 
+import {
+  SESSION_VERSION
+}
+from "../config/sessionConfig.js";
+
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
@@ -51,6 +56,25 @@ export default function auth(
     ========================= */
 
     req.user = decoded;
+
+    /* =========================
+    SESSION VERSION CHECK
+    ========================= */
+
+    if (
+
+      decoded.sessionVersion !==
+      SESSION_VERSION
+    ) {
+
+      return res.status(401).json({
+
+        success: false,
+
+        message:
+          "Session invalidated.",
+      });
+    }
 
     next();
 

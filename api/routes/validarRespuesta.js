@@ -197,9 +197,9 @@ if (cleanUserAnswer === cleanServerAnswer) {
         });*/
       }
 
-      logger.security(
+      /*logger.security(
         `Invalid answer attempt from IP: ${req.ip}`
-      );
+      );*/
 
       // WRONG ANSWER
       return res.status(401).json({

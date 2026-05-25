@@ -1,93 +1,13 @@
 import { login, restoreSession } from "./auth.js"
 import { renderProtectedContent } from "./protectedContent.js";
+import { mostrarError, limpiarError, bloquearBoton, desbloquearBoton } from "./security-ui.js";
+import { restoreProtectedSession } from "./session.js";
 
 const submitButton = document.getElementById("submit");
 
 let isSubmitting = false;
 
 let delay = 1000;
-
-/* =========================
-   GET CSRF TOKEN
-========================= */
-
-/*async function obtenerCSRFToken() {
-
-  try {
-
-    const response = await fetch("/api/csrf-token", {
-      method: "GET",
-
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("CSRF request failed");
-    }
-
-    const data = await response.json();
-
-    return data.csrfToken;
-
-  } catch (error) {
-
-    console.error("CSRF Error:", error);
-
-    return null;
-  }
-}*/
-
-/* =========================
-   ERROR UI
-========================= */
-
-function mostrarError(message) {
-
-  const errorDiv = document.getElementById("error");
-
-  errorDiv.style.opacity = "1";
-
-  errorDiv.textContent = message;
-}
-
-/* =========================
-   CLEAR ERROR
-========================= */
-
-function limpiarError() {
-
-  const errorDiv = document.getElementById("error");
-
-  errorDiv.style.opacity = "0";
-
-  errorDiv.textContent = "";
-}
-
-/* =========================
-   DISABLE BUTTON
-========================= */
-
-function bloquearBoton() {
-
-  submitButton.disabled = true;
-
-  submitButton.style.opacity = "0.6";
-
-  submitButton.style.cursor = "not-allowed";
-}
-
-/* =========================
-   ENABLE BUTTON
-========================= */
-
-function desbloquearBoton() {
-
-  submitButton.disabled = false;
-
-  submitButton.style.opacity = "1";
-
-  submitButton.style.cursor = "pointer";
-}
 
 /* =========================
    MAIN EVENT
@@ -135,42 +55,9 @@ submitButton.addEventListener("click", async () => {
     limpiarError();
 
     /* =========================
-       GET CSRF TOKEN
-    ========================= */
-
-    //const csrfToken = await getCSRFToken();
-
-    /*if (!csrfToken) {
-
-      mostrarError(
-        "⚠ Authentication error. Reload the page."
-      );
-
-      return;
-    }*/
-
-    /* =========================
        VALIDATE ANSWER
     ========================= */
     const response1 = await login(userAnswer);
-    /*const response1 = await apiFetch(
-      "/api/validarRespuesta",
-      {
-        method: "POST",
-
-        credentials: "include",
-
-        headers: {
-          "Content-Type": "application/json",
-
-          "X-CSRF-Token": csrfToken,
-        },
-
-        body: JSON.stringify({
-          respuesta: userAnswer,
-        }),
-      }
-    );*/
 
     /* =========================
        RATE LIMIT
@@ -272,24 +159,12 @@ document.addEventListener(
   }
 );
 
-/* =========================
-   AUTO RESTORE SESSION
-========================= */
-
 document.addEventListener(
 
   "DOMContentLoaded",
 
   async () => {
 
-    await renderProtectedContent();
-
-    /* =========================
-      SHOW APP
-    ========================= */
-
-    document.body.classList.remove(
-      "auth-loading"
-    );
+    await restoreProtectedSession();
   }
 );

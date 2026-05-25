@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { SESSION_VERSION } from "../config/sessionConfig.js";
 
 /* =========================
    GENERATE IMAGE TOKEN
@@ -47,13 +48,19 @@ export const generateAccessToken = (
 
   return jwt.sign(
 
-    payload,
+    {
+
+      ...payload,
+
+      sessionVersion:
+        SESSION_VERSION
+    },
 
     process.env.JWT_SECRET,
 
     {
 
-      expiresIn: "1m",
+      expiresIn: "1m",//EN PRODUCCION expiresIn: "10m",
     }
   );
 };
