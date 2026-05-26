@@ -1,7 +1,7 @@
 import { login, restoreSession } from "./auth.js"
 import { renderProtectedContent } from "./protectedContent.js";
 import { mostrarError, limpiarError, bloquearBoton, desbloquearBoton } from "./security-ui.js";
-import { restoreProtectedSession } from "./session.js";
+import { restoreProtectedSession, startSessionWatcher } from "./session.js";
 
 const submitButton = document.getElementById("submit");
 
@@ -121,7 +121,13 @@ if (!data.success) {
    LOAD PROTECTED SESSION
 ========================= */
 
-await renderProtectedContent();
+  const restored =
+    await renderProtectedContent();
+
+  if (restored) {
+
+    startSessionWatcher();
+  }
 
   } catch (error) {
 

@@ -132,16 +132,26 @@ renderProtectedContent() {
         "protected-content"
       );
 
-    protectedContent.innerHTML =
-      tempDiv.innerHTML;
+if (!protectedContent.dataset.loaded) {
+
+  protectedContent.innerHTML =
+    tempDiv.innerHTML;
+
+  protectedContent.dataset.loaded =
+    "true";
+}
 
     protectedContent.style.display =
       "block";
-
+      
+console.log(
+  "HTML already loaded:",
+  protectedContent.dataset.loaded
+);
     /* =========================
        LOAD IMAGES
     ========================= */
-
+console.log("LOAD PROTECTED IMAGES START");
     await loadProtectedImages();
 
     return true;

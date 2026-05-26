@@ -5,13 +5,62 @@ import { getCSRFToken }
 from "./csrf.js";
 
 /* =========================
+   LOAD NINJA SLIDER SCRIPT
+========================= */
+
+async function ensureNinjaSliderLoaded() {
+
+  /* =========================
+     REMOVE OLD SCRIPT
+  ========================= */
+
+  const oldScript =
+    document.getElementById(
+      "ninja-slider-script"
+    );
+
+  if (oldScript) {
+
+    oldScript.remove();
+  }
+
+  /* =========================
+     LOAD NEW SCRIPT
+  ========================= */
+
+  await new Promise((resolve, reject) => {
+
+    const script =
+      document.createElement(
+        "script"
+      );
+
+    script.id =
+      "ninja-slider-script";
+
+    script.src =
+      "/assets/js/ninja-slider.js";
+
+    script.onload =
+      resolve;
+
+    script.onerror =
+      reject;
+
+    document.body.appendChild(
+      script
+    );
+  });
+}
+
+/* =========================
    LOAD PROTECTED IMAGES
 ========================= */
 
 export async function
 loadProtectedImages() {
 
-  const protectedContent2 =
+  const sliker =
     document.getElementById(
       "sliker"
     );
@@ -28,7 +77,7 @@ loadProtectedImages() {
 
   if (
 
-    !protectedContent2 ||
+    !sliker ||
 
     !wanderitodiv ||
 
@@ -40,7 +89,45 @@ loadProtectedImages() {
     );
   }
 
-  protectedContent2.innerHTML = `
+  /* =========================
+     RESET VISUALS
+  ========================= */
+
+  wanderitodiv.innerHTML = "";
+
+  wanderitodiv2.innerHTML = "";
+
+  /* =========================
+     FULL RESET SLIDER
+  ========================= */
+
+  sliker.innerHTML = "";
+
+  /* =========================
+     REMOVE OLD CONTROLS
+  ========================= */
+
+  document.getElementById(
+    "ninja-slider-pager"
+  )?.remove();
+
+  document.getElementById(
+    "ninja-slider-prev"
+  )?.remove();
+
+  document.getElementById(
+    "ninja-slider-next"
+  )?.remove();
+
+  document.getElementById(
+    "ninja-slider-pause-play"
+  )?.remove();
+
+  /* =========================
+     REBUILD SLIDER HTML
+  ========================= */
+
+  sliker.innerHTML = `
 
     <div id="ninja-slider">
 
@@ -55,6 +142,36 @@ loadProtectedImages() {
 
     </div>
   `;
+
+  await new Promise(resolve =>
+    requestAnimationFrame(resolve)
+  );
+
+  const sliderContainer =
+    document.getElementById(
+      "unDiv"
+    );
+
+  if (!sliderContainer) {
+
+    throw new Error(
+      "Slider container not found."
+    );
+  }
+
+  /* =========================
+     RESET INLINE STYLES
+  ========================= */
+
+  sliderContainer.removeAttribute(
+    "style"
+  );
+
+  /* =========================
+     LOAD SCRIPT AGAIN
+  ========================= */
+
+  await ensureNinjaSliderLoaded();
 
   /* =========================
      GET CSRF TOKEN
@@ -86,6 +203,11 @@ loadProtectedImages() {
       }
     );
 
+  console.log(
+    "response2 status:",
+    response2.status
+  );
+
   if (!response2.ok) {
 
     throw new Error(
@@ -96,10 +218,15 @@ loadProtectedImages() {
   const imagesarray =
     await response2.json();
 
-  const sliderContainer =
-    document.getElementById(
-      "unDiv"
-    );
+  console.log(
+    "imagesarray:",
+    imagesarray
+  );
+
+  console.log(
+    "total images:",
+    imagesarray.length
+  );
 
   /* =========================
      RENDER IMAGES
@@ -109,6 +236,10 @@ loadProtectedImages() {
 
     if (!image.secureUrl)
       continue;
+
+    /* =========================
+       FIREWORK IMAGE
+    ========================= */
 
     if (
       image.filename ===
@@ -137,6 +268,10 @@ loadProtectedImages() {
 
       continue;
     }
+
+    /* =========================
+       STATIC IMAGE
+    ========================= */
 
     if (
       image.filename ===
@@ -167,6 +302,10 @@ loadProtectedImages() {
       continue;
     }
 
+    /* =========================
+       SLIDER IMAGE
+    ========================= */
+
     const li =
       document.createElement(
         "li"
@@ -177,7 +316,8 @@ loadProtectedImages() {
         "a"
       );
 
-    a.className = "ns-img";
+    a.className =
+      "ns-img";
 
     a.href =
       image.secureUrl;
@@ -198,7 +338,70 @@ loadProtectedImages() {
     li.appendChild(div);
 
     sliderContainer.appendChild(li);
+
+    console.log(
+      "slides count:",
+      sliderContainer.children.length
+    );
   }
+
+  console.log(
+    "slider HTML:",
+    document.getElementById(
+      "ninja-slider"
+    )
+  );
+
+  console.log(
+    "total slides final:",
+    document.querySelectorAll(
+      "#unDiv li"
+    ).length
+  );
+
+  /* =========================
+     PRELOAD SLIDER IMAGES
+  ========================= */
+
+  await Promise.all(
+
+    imagesarray
+      .filter(image =>
+
+        image.filename !==
+        "wanderers.png"
+
+        &&
+
+        image.filename !==
+        "img-01.jpg"
+      )
+      .map(image => {
+
+        return new Promise(resolve => {
+
+          const img =
+            new Image();
+
+          img.onload =
+            resolve;
+
+          img.onerror =
+            resolve;
+
+          img.src =
+            image.secureUrl;
+        });
+      })
+  );
+
+  /* =========================
+     WAIT FINAL RENDER
+  ========================= */
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 300)
+  );
 
   /* =========================
      INIT SLIDER
@@ -209,12 +412,46 @@ loadProtectedImages() {
     "undefined"
   ) {
 
-    nslider.init();
+    try {
 
-    setTimeout(() => {
+      nslider.init();
 
-      triggerWanderitoFX();
+      console.log(
+        "nslider initialized"
+      );
 
-    }, 50);
+    } catch (error) {
+
+      console.error(
+        "Slider init error:",
+        error
+      );
+    }
+  }
+
+  /* =========================
+     REINIT FIREWORKS
+  ========================= */
+
+  if (
+    typeof triggerWanderitoFX !==
+    "undefined"
+  ) {
+
+    try {
+
+      setTimeout(() => {
+
+        triggerWanderitoFX();
+
+      }, 100);
+
+    } catch (error) {
+
+      console.error(
+        "Fireworks init error:",
+        error
+      );
+    }
   }
 }
