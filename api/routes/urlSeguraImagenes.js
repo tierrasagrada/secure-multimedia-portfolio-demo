@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-//import jwt from "jsonwebtoken";
 import {
   verifyImageToken
 } from "../services/tokenService.js";
@@ -11,13 +10,8 @@ import express from "express";
 const router = express.Router();
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
-//export default async function handler(req, res) {
 router.get("/", async (req, res) => {
-  /*if (req.method !== "GET") {
-    return res.status(405).json({ success: false, message: "Método no permitido." });
-  }*/
-  //const secretKey = process.env.SECRET_KEY;
-  //console.log(process.env.SECRET_KEY);
+
   try {
     const { token } = req.query;
 
@@ -30,11 +24,9 @@ router.get("/", async (req, res) => {
       });
     }
     // 📌 Validar el token
-    //const decoded = jwt.verify(token, secretKey);
     const decoded =
       verifyImageToken(token);
     const { filename, ip } = decoded;
-    //const userIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     const userIP = req.ip;
 
     // 📌 Verificar la IP para evitar que la URL se comparta
@@ -48,13 +40,49 @@ router.get("/", async (req, res) => {
     }
 
     // 📌 Verificar que la imagen existe
-    const filePath = path.join(imagePath, filename);
+    const safeFilename =
+      path.basename(filename);
+
+    const filePath =
+      path.join(
+        imagePath,
+        safeFilename
+      );
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ success: false, message: "Image not found." });
     }
 
     const ext = path.extname(filename).toLowerCase();
+    /* =========================
+      ALLOWED EXTENSIONS
+    ========================= */
 
+    const allowedExtensions = [
+
+      ".jpg",
+      ".jpeg",
+      ".png",
+    ];
+
+    if (
+      !allowedExtensions.includes(ext)
+    ) {
+
+      logger.security(
+
+        `Blocked invalid extension from IP: ${req.ip}`
+      );
+
+      return res
+        .status(403)
+        .json({
+
+          success: false,
+
+          message:
+            "Invalid file type."
+        });
+    }
     const mimeTypes = {
       ".jpg": "image/jpeg",
       ".jpeg": "image/jpeg",
@@ -79,6 +107,20 @@ router.get("/", async (req, res) => {
       "nosniff"
     );
 
+    res.setHeader(
+      "Cross-Origin-Resource-Policy",
+      "same-origin"
+    );
+
+    res.setHeader(
+      "Referrer-Policy",
+      "no-referrer"
+    );
+
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'none'; img-src 'self';"
+    );    
     /* =========================
        STREAM FILE
     ========================= */
@@ -87,23 +129,18 @@ router.get("/", async (req, res) => {
 
     stream.pipe(res);
     
-    // 📌 Servir la imagen protegida
-    /*res.setHeader("Content-Type", "image/jpeg");
-    res.send(fs.readFileSync(filePath));*/
   } catch (error) {
     //res.status(403).json({ success: false, message: "Token inválido o expirado." });
-    logger.security(
+      logger.security(
 
-      `Invalid or expired image token from IP: ${req.ip}`
-    );
+        `Invalid or expired image token from IP: ${req.ip}`
+      );
 
-    return res.status(403).json({
-
-      success: false,
-
-      message:
-        "Invalid or expired token.",
-    });    
+      return res.status(403).json({
+        success: false,
+        message:
+          "Invalid or expired token.",
+      });    
   }
 });
 

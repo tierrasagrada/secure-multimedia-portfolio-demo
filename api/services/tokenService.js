@@ -1,5 +1,15 @@
 import jwt from "jsonwebtoken";
-import { SESSION_VERSION } from "../config/sessionConfig.js";
+
+import {
+  SESSION_VERSION
+} from "../config/sessionConfig.js";
+
+/* =========================
+   USED IMAGE TOKENS
+========================= */
+
+const usedImageTokens =
+  new Set();
 
 /* =========================
    GENERATE IMAGE TOKEN
@@ -30,12 +40,52 @@ export const verifyImageToken = (
   token
 ) => {
 
-  return jwt.verify(
+  /* =========================
+     REPLAY PROTECTION
+  ========================= */
 
-    token,
+  if (
+    usedImageTokens.has(token)
+  ) {
 
-    process.env.SECRET_KEY
+    throw new Error(
+      "Replay attack detected."
+    );
+  }
+
+  /* =========================
+     VERIFY JWT
+  ========================= */
+
+  const decoded =
+    jwt.verify(
+
+      token,
+
+      process.env.SECRET_KEY
+    );
+
+  /* =========================
+     MARK TOKEN AS USED
+  ========================= */
+
+  usedImageTokens.add(
+    token
   );
+
+  /* =========================
+     AUTO CLEANUP
+  ========================= */
+
+  setTimeout(() => {
+
+    usedImageTokens.delete(
+      token
+    );
+
+  }, 5 * 60 * 1000);
+
+  return decoded;
 };
 
 /* =========================
@@ -60,7 +110,7 @@ export const generateAccessToken = (
 
     {
 
-      expiresIn: "1m",//EN PRODUCCION expiresIn: "10m",
+      expiresIn: "1m",
     }
   );
 };
