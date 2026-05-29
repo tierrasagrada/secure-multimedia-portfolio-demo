@@ -85,6 +85,65 @@ export function destroySession() {
 
     protectedContent.style.display =
       "none";
+  /* =========================
+      RESET DATASET
+    ========================= */
+
+    delete protectedContent.dataset.loaded;
+
+    /* =========================
+      DESTROY IFRAMES
+    ========================= */
+
+    const iframes =
+      protectedContent.querySelectorAll(
+        "iframe"
+      );
+
+    iframes.forEach(iframe => {
+
+      iframe.src = "";
+
+      iframe.remove();
+    });
+
+    /* =========================
+      RESET SLIDER CONTENT
+    ========================= */
+
+    const sliker =
+      document.getElementById(
+        "sliker"
+      );
+
+    if (sliker) {
+
+      sliker.innerHTML = "";
+    }
+
+    /* =========================
+      RESET FIREWORKS
+    ========================= */
+
+    const wanderito =
+      document.getElementById(
+        "wanderito"
+      );
+
+    if (wanderito) {
+
+      wanderito.innerHTML = "";
+    }
+
+    const wanderito2 =
+      document.getElementById(
+        "wanderito2"
+      );
+
+    if (wanderito2) {
+
+      wanderito2.innerHTML = "";
+    }      
   }
 
   /* =========================
