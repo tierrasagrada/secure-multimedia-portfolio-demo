@@ -1,15 +1,32 @@
 import jwt from "jsonwebtoken";
-
-import {
-  SESSION_VERSION
-} from "../config/sessionConfig.js";
+import crypto from "crypto";
+import { SESSION_VERSION }
+from "../config/sessionConfig.js";
 
 /* =========================
    USED IMAGE TOKENS
 ========================= */
 
 const usedImageTokens =
-  new Set();
+  new Map();
+
+/* =========================
+   CLEANUP EXPIRED JTIs
+========================= */
+
+setInterval(() => {
+
+  const now = Date.now();
+
+  for (const [jti, exp] of usedImageTokens) {
+
+    if (now > exp) {
+
+      usedImageTokens.delete(jti);
+    }
+  }
+
+}, 60 * 1000);
 
 /* =========================
    GENERATE IMAGE TOKEN
@@ -19,9 +36,17 @@ export const generateImageToken = (
   payload
 ) => {
 
+  const jti =
+    crypto.randomUUID();
+
   return jwt.sign(
 
-    payload,
+    {
+
+      ...payload,
+
+      jti,
+    },
 
     process.env.SECRET_KEY,
 
@@ -40,23 +65,6 @@ export const verifyImageToken = (
   token
 ) => {
 
-  /* =========================
-     REPLAY PROTECTION
-  ========================= */
-
-  if (
-    usedImageTokens.has(token)
-  ) {
-
-    throw new Error(
-      "Replay attack detected."
-    );
-  }
-
-  /* =========================
-     VERIFY JWT
-  ========================= */
-
   const decoded =
     jwt.verify(
 
@@ -65,25 +73,35 @@ export const verifyImageToken = (
       process.env.SECRET_KEY
     );
 
-  /* =========================
-     MARK TOKEN AS USED
-  ========================= */
-
-  usedImageTokens.add(
-    token
-  );
+  const now =
+    Date.now();
 
   /* =========================
-     AUTO CLEANUP
+     REPLAY DETECTION
   ========================= */
 
-  setTimeout(() => {
+  if (
 
-    usedImageTokens.delete(
-      token
+    usedImageTokens.has(
+      decoded.jti
+    )
+  ) {
+
+    throw new Error(
+      "Replay attack detected."
     );
+  }
 
-  }, 5 * 60 * 1000);
+  /* =========================
+     STORE USED JTI
+  ========================= */
+
+  usedImageTokens.set(
+
+    decoded.jti,
+
+    now + (5 * 60 * 1000)
+  );
 
   return decoded;
 };
