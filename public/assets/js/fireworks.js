@@ -74,6 +74,10 @@ function resizeFX(){
 
 function explodeFX(wrapper){
 
+    if(FX.running){
+        return;
+    }
+    
     initFX();
     resizeFX();
 
@@ -287,6 +291,31 @@ function triggerWanderitoFX(){
         explodeFX(wrapper);
     });
 }
+
+function destroyFireworks(){
+
+    if(FX.raf){
+
+        cancelAnimationFrame(
+            FX.raf
+        );
+    }
+
+    FX.particles = [];
+
+    FX.running = false;
+
+    FX.raf = null;
+
+    FX.canvas = null;
+
+    FX.ctx = null;
+
+    FX.bound = false;
+}
+
+window.destroyFireworks =
+  destroyFireworks;
 
 /* =========================
    GLOBAL EXPORT

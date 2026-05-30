@@ -59,7 +59,15 @@ async function ensureNinjaSliderLoaded() {
 
 export async function
 loadProtectedImages() {
+if (
 
+  typeof destroyFireworks ===
+  "function"
+
+) {
+
+  destroyFireworks();
+}
   const sliker =
     document.getElementById(
       "sliker"
