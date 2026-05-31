@@ -17,6 +17,10 @@ const errorHandler = (
     "EBADCSRFTOKEN"
   ) {
 
+    logger.security(
+      `Invalid CSRF token from IP: ${req.ip}`
+    );    
+    
     return res.status(403).json({
 
       success: false,

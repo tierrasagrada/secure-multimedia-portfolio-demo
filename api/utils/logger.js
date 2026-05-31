@@ -1,63 +1,80 @@
+import pino from "pino";
+
 /* =========================
-   TIMESTAMP
+   LOGGER INSTANCE
 ========================= */
 
-function getTimestamp() {
+const logger = pino({
 
-  return new Date().toISOString();
-}
+  level: process.env.LOG_LEVEL || "info",
+
+  timestamp: pino.stdTimeFunctions.isoTime,
+
+  base: null
+});
 
 /* =========================
    INFO
 ========================= */
 
-function info(message) {
+function info(message, extra = {}) {
 
-  console.log(
+  logger.info({
 
-    `[INFO] [${getTimestamp()}] ${message}`
-  );
+    event: "info",
+
+    ...extra
+
+  }, message);
 }
 
 /* =========================
    WARNING
 ========================= */
 
-function warn(message) {
+function warn(message, extra = {}) {
 
-  console.warn(
+  logger.warn({
 
-    `[WARNING] [${getTimestamp()}] ${message}`
-  );
+    event: "warning",
+
+    ...extra
+
+  }, message);
 }
 
 /* =========================
    ERROR
 ========================= */
 
-function error(message, err = null) {
+function error(message, err = null, extra = {}) {
 
-  console.error(
+  logger.error({
 
-    `[ERROR] [${getTimestamp()}] ${message}`
-  );
+    event: "error",
 
-  if (err) {
+    error: err?.message,
 
-    console.error(err);
-  }
+    stack: err?.stack,
+
+    ...extra
+
+  }, message);
 }
 
 /* =========================
    SECURITY
 ========================= */
 
-function security(message) {
+function security(message, extra = {}) {
 
-  console.warn(
+  logger.warn({
 
-    `[SECURITY] [${getTimestamp()}] ${message}`
-  );
+    event: "security",
+
+    ...extra
+
+  }, message);
 }
 
 /* =========================
@@ -69,5 +86,5 @@ export default {
   info,
   warn,
   error,
-  security,
+  security
 };

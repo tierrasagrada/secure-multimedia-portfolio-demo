@@ -1,77 +1,12 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
-import {
-  generateAccessToken
-} from "../services/tokenService.js";
-import logger from
-"../utils/logger.js";
-import {
-  validateAnswer
-} from "../middleware/validateInput.js";
-import {
-  sanitizeText
-} from "../utils/sanitize.js";
-//import csurf from "csurf";
-//import cookieParser from "cookie-parser";
+import { generateAccessToken } from "../services/tokenService.js";
+import logger from "../utils/logger.js";
+import { validateAnswer } from "../middleware/validateInput.js";
+import { sanitizeText } from "../utils/sanitize.js";
 
-//const app = express(); //iniciar app express
 const router = express.Router();
-
-//app.set("trust proxy", 1);
-
-//app.use(cookieParser());
-//app.use(express.json()); // <-- Agregar esto para que el backend pueda leer JSON
-
-// Configurar protección CSRF con cookies
-/*const csrfProtection = csurf({
-  cookie: {
-    httpOnly: true, // No accesible desde JavaScript
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict", // Evita ataques CSRF desde otros sitios
-  },
-});*/
-
-//app.use(csrfProtection);
-
-// Configuración de intentos fallidos
-/*const MAX_ATTEMPTS = 5;
-const BLOCK_TIME = 15 * 60 * 1000; // 15 minutos
-const ANSWER = "verde"; // Respuesta correcta
-const failedAttempts = new Map(); // Para rastrear intentos por IP*/
-
-/* =========================
-   CSRF TOKEN ENDPOINT
-========================= */
-/*app.get("/api/csrf-token", (req, res) => {
-  try {
-
-    res.json({
-      csrfToken: req.csrfToken(),
-    });
-    
-  } catch (error) {
-
-    return res.status(500).json({
-      success: false,
-      message: "Server error.",
-    });
-  }
-});*/
-
-// Middleware de Rate Limiting
-/*const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // 100 peticiones por IP en 15 min
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many requests. Please try again later.",
-  },
-});
-
-app.use("/api/", globalLimiter);*/
 
 /* =========================
    AUTH RATE LIMIT
@@ -82,10 +17,20 @@ const authLimiter = rateLimit({
   max: 50,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many failed attempts. Please try again later.",
-  },
+  handler: (req, res, next, options) => {
+
+    logger.warn({
+      event: "rate_limit",
+      ip: req.ip,
+      path: req.originalUrl,
+      method: req.method
+    });
+
+    return res.status(429).json({
+      success: false,
+      message: "Too many failed attempts. Please try again later."
+    });
+  }
 });
 
 /* =========================
@@ -108,38 +53,12 @@ router.post("/",
     try {
             
       const ANSWER = process.env.SECURITY_ANSWER;
-      
-      // BODY VALIDATION
-      /*if ( !req.body || typeof req.body !== "object") {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid request.",
-        });
-      }*/
-
-      /*const { respuesta } = req.body;
-      console.log("ANSWER:", ANSWER);
-      console.log("RESPUESTA:", respuesta);*/
       const cleanUserAnswer = sanitizeText(req.body.respuesta);
-      // INPUT VALIDATION
-      /*if (!respuesta || typeof respuesta !== "string"){
-        return res.status(400).json({
-          success: false,
-          message: "Invalid request.",
-        });
-      }      */
-
-      /*if (!/^[a-zA-Z0-9\s]+$/.test(respuesta)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid input.",
-        });
-      }*/
 
       // CORRECT ANSWER
-//const normalizedAnswer = ANSWER.toLowerCase().trim();
       const cleanServerAnswer = sanitizeText(ANSWER);
-if (cleanUserAnswer === cleanServerAnswer) {
+      if (cleanUserAnswer === cleanServerAnswer) {
+        
         /* =========================
           GENERATE ACCESS TOKEN
         ========================= */
@@ -174,15 +93,15 @@ if (cleanUserAnswer === cleanServerAnswer) {
               10 * 60 * 1000,
           }
         );
-
-        logger.info(
-          `Successful authentication from IP: ${req.ip}`
-        );
         
         /* =========================
           SUCCESS RESPONSE
         ========================= */
 
+        logger.info(
+          `Successful authentication from IP: ${req.ip}`
+        );
+        
         return res.status(200).json({
 
           success: true,
@@ -190,16 +109,12 @@ if (cleanUserAnswer === cleanServerAnswer) {
           message:
             "Access granted.",
         });
-        /*return res.status(200).json({
-          success: true,
-          message: "Correct answer.",
-          content: protectedContent,
-        });*/
+
       }
 
-      /*logger.security(
-        `Invalid answer attempt from IP: ${req.ip}`
-      );*/
+      logger.warn(
+        `Failed authentication attempt from IP: ${req.ip}`
+      );
 
       // WRONG ANSWER
       return res.status(401).json({
