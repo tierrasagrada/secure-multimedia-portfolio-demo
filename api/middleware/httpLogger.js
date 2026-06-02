@@ -5,7 +5,8 @@ const httpLogger = pinoHttp({
   base: null,
 
   customProps: (req) => ({
-    ip: req.ip
+    ip: req.ip,
+    requestId: req.requestId    
   }),
 
   serializers: {

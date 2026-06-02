@@ -9,6 +9,7 @@ import securityHeaders from "./api/middleware/securityHeaders.js";
 import httpLogger from "./api/middleware/httpLogger.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import requestId from "./api/middleware/requestId.js";
 
 /* =========================
    IMPORT API ROUTES
@@ -56,6 +57,8 @@ app.use(express.json({
 
   limit: "10kb",
 }));
+
+app.use(requestId);
 
 app.use(httpLogger);
 
