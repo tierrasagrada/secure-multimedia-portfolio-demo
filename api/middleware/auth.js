@@ -10,6 +10,10 @@ import {
 }
 from "../config/sessionConfig.js";
 
+import {
+  increment
+} from "../utils/securityMetrics.js";
+
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
@@ -84,10 +88,20 @@ export default function auth(
        INVALID TOKEN LOG
     ========================= */
 
-    logger.security(
+    /*logger.security(
 
       `Invalid JWT from IP: ${req.ip}`
-    );
+    );*/
+    increment("invalidJwt");
+
+    logger.security(
+      "Invalid JWT",
+      {
+        ip: req.ip,
+        requestId: req.requestId,
+        path: req.originalUrl
+      }
+    );    
 
     return res.status(403).json({
 

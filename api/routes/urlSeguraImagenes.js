@@ -1,10 +1,17 @@
 import fs from "fs";
 import path from "path";
+
 import {
   verifyImageToken
 } from "../services/tokenService.js";
+
 import logger from
 "../utils/logger.js";
+
+import {
+  increment
+} from "../utils/securityMetrics.js";
+
 import express from "express";
 
 const router = express.Router();
@@ -16,9 +23,19 @@ router.get("/", async (req, res) => {
     const { token } = req.query;
 
     if (!token){ 
-      logger.security(
+      /*logger.security(
         `Invalid image token from IP: ${req.ip}`
-      );
+      );*/
+      increment("missingImageToken");
+      logger.security(
+        "Missing image token",
+        {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+        }
+      );      
+
       return res.status(401).json({ 
         success: false, message: "Acceso no autorizado." 
       });
@@ -31,9 +48,18 @@ router.get("/", async (req, res) => {
 
     // 📌 Verificar la IP para evitar que la URL se comparta
     if (userIP !== ip) {
-      logger.security(
+      /*logger.security(
         `IP mismatch detected for protected image. Request IP: ${req.ip}`//IP DISTINTA
+      );*/
+      logger.security(
+        "Image IP mismatch",
+        {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+        }
       );
+
       return res.status(403).json({ 
         success: false, message: "Invalid token." 
       });
@@ -64,13 +90,18 @@ router.get("/", async (req, res) => {
       ".png",
     ];
 
-    if (
-      !allowedExtensions.includes(ext)
-    ) {
+    if ( !allowedExtensions.includes(ext) ) {
 
-      logger.security(
-
+      /*logger.security(
         `Blocked invalid extension from IP: ${req.ip}`
+      );*/
+      logger.security(
+        "Invalid image extension",{
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl,
+          extension: ext
+        }
       );
 
       return res
@@ -131,10 +162,19 @@ router.get("/", async (req, res) => {
     
   } catch (error) {
     //res.status(403).json({ success: false, message: "Token inválido o expirado." });
-      logger.security(
+      /*logger.security(
 
         `Invalid or expired image token from IP: ${req.ip}`
-      );
+      );*/
+      increment("invalidImageToken");
+      logger.security(
+        "Invalid or expired image token",
+        {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+        }
+      );     
 
       return res.status(403).json({
         success: false,

@@ -47,37 +47,6 @@ export async function login(
     }
   );
 }
-/*export async function login(
-  respuesta
-) {
-
-  const csrfToken =
-    await getCSRFToken();
-
-  const response =
-    await apiFetch(
-
-      "/api/validarRespuesta",
-
-      {
-
-        method: "POST",
-
-        headers: {
-
-          "X-CSRF-Token":
-            csrfToken,
-        },
-
-        body: JSON.stringify({
-
-          respuesta,
-        }),
-      }
-    );
-
-  return response;
-}*/
 
 /* =========================
    RESTORE SESSION

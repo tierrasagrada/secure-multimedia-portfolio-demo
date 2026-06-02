@@ -1,6 +1,10 @@
 import logger from
 "../utils/logger.js";
 
+import {
+  increment
+} from "../utils/securityMetrics.js";
+
 const errorHandler = (
   err,
   req,
@@ -12,14 +16,21 @@ const errorHandler = (
      CSRF ERROR
   ========================= */
 
-  if (
-    err.code ===
-    "EBADCSRFTOKEN"
-  ) {
+  if ( err.code === "EBADCSRFTOKEN" ) {
+
+    increment("csrfBlocked");
 
     logger.security(
-      `Invalid CSRF token from IP: ${req.ip}`
+      "Invalid CSRF token",
+      {
+        ip: req.ip,
+        requestId: req.requestId,
+        path: req.originalUrl
+      }
     );    
+    /*logger.security(
+      `Invalid CSRF token from IP: ${req.ip}`
+    );*/    
     
     return res.status(403).json({
 
@@ -49,11 +60,20 @@ const errorHandler = (
      SERVER LOG
   ========================= */
 
-    logger.error(
+    /*logger.error(
       "Global error handler triggered.",
       err
-    );
+    );*/
 
+    logger.error(
+      "Global error handler triggered",
+      err,{
+        ip: req.ip,
+        requestId: req.requestId,
+        path: req.originalUrl
+      }
+    );
+        
   /* =========================
      GENERIC ERROR
   ========================= */

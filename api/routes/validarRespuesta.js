@@ -5,6 +5,7 @@ import { generateAccessToken } from "../services/tokenService.js";
 import logger from "../utils/logger.js";
 import { validateAnswer } from "../middleware/validateInput.js";
 import { sanitizeText } from "../utils/sanitize.js";
+import { increment } from "../utils/securityMetrics.js";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res, next, options) => {
-
+    increment("rateLimitTriggered");
     logger.warn({
       event: "rate_limit",
       ip: req.ip,
@@ -97,10 +98,18 @@ router.post("/",
         /* =========================
           SUCCESS RESPONSE
         ========================= */
+        increment("authSuccess");
 
         logger.info(
+          "Successful authentication",
+          {
+            ip: req.ip,
+            requestId: req.requestId
+          }
+        );        
+        /*logger.info(
           `Successful authentication from IP: ${req.ip}`
-        );
+        );*/
         
         return res.status(200).json({
 

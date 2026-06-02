@@ -10,6 +10,7 @@ import httpLogger from "./api/middleware/httpLogger.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import requestId from "./api/middleware/requestId.js";
+import securityMetrics from "./api/routes/securityMetrics.js";
 
 /* =========================
    IMPORT API ROUTES
@@ -105,6 +106,11 @@ app.use(
 app.use(
   "/api/contenido",
   contenido
+);
+
+app.use(
+  "/api/security-metrics",
+  securityMetrics
 );
 
 //ERROR HANDLER
