@@ -11,13 +11,23 @@ const httpLogger = pinoHttp({
 
   serializers: {
 
-    req(req) {
+req(req) {
 
-      return {
-        method: req.method,
-        url: req.url
-      };
-    },
+  let url = req.url;
+
+  if (url.includes("token=")) {
+
+    url = url.replace(
+      /token=[^&]+/,
+      "token=[REDACTED]"
+    );
+  }
+
+  return {
+    method: req.method,
+    url
+  };
+},
 
     res(res) {
 
@@ -40,30 +50,8 @@ autoLogging: {
       req.url === "/favicon.ico"
     );
   }
-},
+}
 
-  serializers: {
-
-    req(req) {
-
-      return {
-
-        method: req.method,
-
-        url: req.url,
-
-        ip: req.ip,
-      };
-    },
-
-    res(res) {
-
-      return {
-
-        statusCode: res.statusCode,
-      };
-    },
-  },
 });
 
 export default httpLogger;
