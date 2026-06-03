@@ -120,12 +120,19 @@ router.post("/",
         });
 
       }
-
-      logger.warn(
+      increment("authFailure");
+      /*logger.warn(
         `Failed authentication attempt from IP: ${req.ip}`
+      );*/
+      logger.warn(
+        "Failed authentication attempt",
+        {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+        }
       );
-
-      // WRONG ANSWER
+            // WRONG ANSWER
       return res.status(401).json({
         success: false,
         message: "Incorrect answer.",
@@ -134,9 +141,18 @@ router.post("/",
     } catch (error) {
 
       logger.error(
+        "Validation route failed",
+        error,
+        {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+        }
+      );      
+      /*logger.error(
         "Validation route failed.",
         error
-      );
+      );*/
       return res.status(500).json({
         success: false,
         message: "Internal server error.",

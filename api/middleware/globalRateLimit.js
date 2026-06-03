@@ -14,7 +14,7 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res, next, options) => {
-
+    increment("rateLimitTriggered");
     logger.warn({
       event: "global_rate_limit",
       ip: req.ip,
