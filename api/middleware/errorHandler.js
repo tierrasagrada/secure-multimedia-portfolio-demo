@@ -32,6 +32,14 @@ const errorHandler = (
       `Invalid CSRF token from IP: ${req.ip}`
     );*/    
     
+    addAuditEvent(
+      "CSRF_BLOCKED",
+      {
+        ip: req.ip,
+        requestId: req.requestId
+      }
+    );
+
     return res.status(403).json({
 
       success: false,

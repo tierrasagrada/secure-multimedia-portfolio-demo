@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
 import requestId from "./api/middleware/requestId.js";
 import securityMetrics from "./api/routes/securityMetrics.js";
 import health from "./api/routes/health.js";
+import auditTrail from "./api/routes/auditTrail.js";
 
 /* =========================
    IMPORT API ROUTES
@@ -110,13 +111,18 @@ app.use(
 );
 
 app.use(
+  "/api/health",
+  health
+);
+
+app.use(
   "/api/security-metrics",
   securityMetrics
 );
 
 app.use(
-  "/api/health",
-  health
+  "/api/auditTrail",
+  auditTrail
 );
 
 //ERROR HANDLER

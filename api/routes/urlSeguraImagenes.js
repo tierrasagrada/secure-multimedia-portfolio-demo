@@ -12,6 +12,10 @@ import {
   increment
 } from "../utils/securityMetrics.js";
 
+import {
+  addAuditEvent
+} from "../utils/auditTrail.js";
+
 import express from "express";
 
 const router = express.Router();
@@ -175,6 +179,14 @@ router.get("/", async (req, res) => {
           path: req.originalUrl
         }
       );     
+
+      addAuditEvent(
+        "INVALID_IMAGE_TOKEN",
+        {
+          ip: req.ip,
+          requestId: req.requestId
+        }
+      );
 
       return res.status(403).json({
         success: false,

@@ -14,6 +14,10 @@ import {
   increment
 } from "../utils/securityMetrics.js";
 
+import {
+  addAuditEvent
+} from "../utils/auditTrail.js";
+
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
@@ -102,6 +106,14 @@ export default function auth(
         path: req.originalUrl
       }
     );    
+
+    addAuditEvent(
+      "INVALID_JWT",
+      {
+        ip: req.ip,
+        requestId: req.requestId
+      }
+    );
 
     return res.status(403).json({
 

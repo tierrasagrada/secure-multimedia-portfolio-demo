@@ -6,6 +6,7 @@ import logger from "../utils/logger.js";
 import { validateAnswer } from "../middleware/validateInput.js";
 import { sanitizeText } from "../utils/sanitize.js";
 import { increment } from "../utils/securityMetrics.js";
+import { addAuditEvent } from "../utils/auditTrail.js";
 
 const router = express.Router();
 
@@ -106,7 +107,14 @@ router.post("/",
             ip: req.ip,
             requestId: req.requestId
           }
-        );        
+        );
+        addAuditEvent(
+          "AUTH_SUCCESS",
+          {
+            ip: req.ip,
+            requestId: req.requestId
+          }
+        );                
         /*logger.info(
           `Successful authentication from IP: ${req.ip}`
         );*/
@@ -132,6 +140,13 @@ router.post("/",
           path: req.originalUrl
         }
       );
+      addAuditEvent(
+        "AUTH_FAILURE",
+        {
+          ip: req.ip,
+          requestId: req.requestId
+        }
+      );      
             // WRONG ANSWER
       return res.status(401).json({
         success: false,
