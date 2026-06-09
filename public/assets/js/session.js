@@ -1,18 +1,8 @@
-import {
+import { apiFetch } from "./api.js";
 
-  apiFetch
+import { renderProtectedContent } from "./protectedContent.js";
 
-} from "./api.js";
-
-import {
-
-  renderProtectedContent
-
-} from "./protectedContent.js";
-
-import {
-  getCSRFToken
-} from "./csrf.js";
+import { getCSRFToken } from "./csrf.js";
 
 /* =========================
    SESSION TIMEOUT
@@ -34,8 +24,19 @@ let sessionEndsAt = 0;
    SESSION DURATION
 ========================= */
 
-const SESSION_LIMIT =
-  5 * 60 * 1000;
+const SESSION_LIMIT = 5 * 60 * 1000;
+
+/* ==========================================
+   EVENTS TO RESET WATCHER SESSION INACTIVE
+============================================ */
+
+const SESSION_EVENTS = [
+  "click",
+  "mousemove",
+  "keydown",
+  "scroll",
+  "touchstart"
+];
 
 /* =========================
    RESET SESSION TIMER
@@ -43,12 +44,10 @@ const SESSION_LIMIT =
 export function resetSessionTimer() {
 
   if (!sessionWatcherActive) {
-
     return;
   }
 
   if (sessionWarningActive) {
-
     return;
   }
 
@@ -56,8 +55,7 @@ export function resetSessionTimer() {
 
   clearTimeout(warningTimeout);
 
-  sessionEndsAt =
-  Date.now() + SESSION_LIMIT;
+  sessionEndsAt = Date.now() + SESSION_LIMIT;
 
   warningTimeout =
     setTimeout(() => {
@@ -78,34 +76,17 @@ export function resetSessionTimer() {
    START SESSION WATCHER
 ========================= */
 
-export function startSessionWatcher() {
-
-  if (sessionWatcherActive) {
-
+export function startSessionWatcher() { 
+  if (sessionWatcherActive) { 
     return;
   }
 
   sessionWatcherActive = true;
 
-  const events = [
+  SESSION_EVENTS.forEach((event) => {
 
-    "click",
-
-    "mousemove",
-
-    "keydown",
-
-    "scroll",
-
-    "touchstart",
-  ];
-
-  events.forEach((event) => {
-
-    document.addEventListener(
-
-      event,
-
+    document.addEventListener( 
+      event, 
       resetSessionTimer
     );
   });
@@ -119,18 +100,11 @@ export function startSessionWatcher() {
 
 function showSessionWarning() {
 
-  const modal =
-    document.getElementById(
-      "session-modal"
-    );
+  const modal = document.getElementById("session-modal");
 
-  const countdown =
-    document.getElementById(
-      "session-countdown"
-    );
+  const countdown = document.getElementById("session-countdown");
 
   if (!modal || !countdown) {
-
     return;
   }
 
@@ -138,12 +112,7 @@ function showSessionWarning() {
 
   modal.classList.add("active");
 
-  /*const warningEndsAt =
-    Date.now() + 60000;*/
-
-  clearInterval(
-    countdownInterval
-  );
+  clearInterval(countdownInterval);
 
   countdown.textContent = "60";
   countdownInterval =
@@ -159,30 +128,14 @@ function showSessionWarning() {
           ) / 1000
         )
       );      
-     /* const remainingSeconds =
-        Math.max(
-          0,
-          Math.ceil(
-            (
-              warningEndsAt -
-              Date.now()
-            ) / 1000
-          )
-        );*/
 
-      countdown.textContent =
-        remainingSeconds;
+      countdown.textContent = remainingSeconds;
 
-      if (
-        remainingSeconds <= 0
-      ) {
-
-        clearInterval(
-          countdownInterval
-        );
+      if (remainingSeconds <= 0){
+        clearInterval(countdownInterval);
       }
 
-    }, 250);
+    }, 1000);
 }
 
 /* =========================
@@ -190,15 +143,7 @@ function showSessionWarning() {
 ========================= */
 function stopSessionWatcher() {
 
-  const events = [
-    "click",
-    "mousemove",
-    "keydown",
-    "scroll",
-    "touchstart"
-  ];
-
-  events.forEach(event => {
+  SESSION_EVENTS.forEach(event => {
 
     document.removeEventListener(
       event,
@@ -214,6 +159,7 @@ function stopSessionWatcher() {
 ========================= */
 
 export async function destroySession() {
+
 stopSessionWatcher();
 
 clearTimeout(sessionTimeout);
@@ -223,16 +169,13 @@ clearTimeout(warningTimeout);
 clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   try {
-    const csrfToken =
-    await getCSRFToken();
+    const csrfToken = await getCSRFToken();
 
     await apiFetch(
       "/api/logout",
       {
         method: "POST",
-
         headers: {
-
           "X-CSRF-Token":
             csrfToken
         }
@@ -240,23 +183,13 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     );
 
   } catch (error) {
-
-    console.error(
-      "Logout failed",
-      error
-    );
+    console.error("Logout failed",error);
   }
 
-  const modal =
-    document.getElementById(
-      "session-modal"
-    );
+  const modal = document.getElementById("session-modal");
 
   if (modal) {
-
-    modal.classList.remove(
-      "active"
-    );
+    modal.classList.remove("active");
   }
 
   sessionWarningActive = false;  
@@ -265,15 +198,11 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      HIDE PROTECTED CONTENT
   ========================= */
 
-  const protectedContent =
-    document.getElementById(
-      "protected-content"
-    );
+  const protectedContent = document.getElementById("protected-content");
 
   if (protectedContent) {
+    protectedContent.style.display = "none";
 
-    protectedContent.style.display =
-      "none";
   /* =========================
       RESET DATASET
     ========================= */
@@ -306,7 +235,6 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       );
 
     if (sliker) {
-
       sliker.innerHTML = "";
     }
 
@@ -315,22 +243,16 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     ========================= */
 
     const wanderito =
-      document.getElementById(
-        "wanderito"
-      );
+      document.getElementById("wanderito");
 
     if (wanderito) {
-
       wanderito.innerHTML = "";
     }
 
     const wanderito2 =
-      document.getElementById(
-        "wanderito2"
-      );
+      document.getElementById("wanderito2");
 
     if (wanderito2) {
-
       wanderito2.innerHTML = "";
     }      
   }
@@ -339,39 +261,25 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      SHOW LOGIN
   ========================= */
 
-  const securityContainer =
-    document.getElementById(
-      "security-container"
-    );
+  const securityContainer = document.getElementById("security-container");
 
-  const securityFooter =
-    document.getElementById(
-      "security-footer"
-    );
+  const securityFooter = document.getElementById("security-footer");
 
   if (securityContainer) {
-
-    securityContainer.style.display =
-      "block";
+    securityContainer.style.display = "block";
   }
 
   if (securityFooter) {
-
-    securityFooter.style.display =
-      "block";
+    securityFooter.style.display = "block";
   }
 
   /* =========================
      CLEAR INPUT
   ========================= */
 
-  const answerInput =
-    document.getElementById(
-      "answer"
-    );
+  const answerInput = document.getElementById("answer");
 
   if (answerInput) {
-
     answerInput.value = "";
   }
 
@@ -379,16 +287,10 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      USER MESSAGE
   ========================= */
 
-  const errorDiv =
-    document.getElementById(
-      "error"
-    );
+  const errorDiv = document.getElementById("error");
 
   if (errorDiv) {
-
-    errorDiv.textContent =
-      "⚠ Session expired.";
-
+    errorDiv.textContent = "⚠ Session expired.";
     errorDiv.style.opacity = "1";
   }
 }

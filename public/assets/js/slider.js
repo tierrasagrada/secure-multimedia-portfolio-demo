@@ -211,11 +211,6 @@ if (
       }
     );
 
-  console.log(
-    "response2 status:",
-    response2.status
-  );
-
   if (!response2.ok) {
 
     throw new Error(
@@ -223,18 +218,7 @@ if (
     );
   }
 
-  const imagesarray =
-    await response2.json();
-
-  console.log(
-    "imagesarray:",
-    imagesarray
-  );
-
-  console.log(
-    "total images:",
-    imagesarray.length
-  );
+  const imagesarray = await response2.json();
 
   /* =========================
      RENDER IMAGES
@@ -249,18 +233,11 @@ if (
        FIREWORK IMAGE
     ========================= */
 
-    if (
-      image.filename ===
-      "wanderers.png"
-    ) {
+    if (image.filename === "wanderers.png") {
 
-      const imgsw =
-        document.createElement(
-          "img"
-        );
+      const imgsw = document.createElement("img");
 
-      imgsw.src =
-        image.secureUrl;
+      imgsw.src = image.secureUrl;
 
       imgsw.width = 250;
 
@@ -281,31 +258,17 @@ if (
        STATIC IMAGE
     ========================= */
 
-    if (
-      image.filename ===
-      "img-01.jpg"
-    ) {
+    if (image.filename === "img-01.jpg") {
+      const imgsw2 = document.createElement("img");
+      imgsw2.src = image.secureUrl;
 
-      const imgsw2 =
-        document.createElement(
-          "img"
-        );
+      imgsw2.className = "img-responsive";
 
-      imgsw2.src =
-        image.secureUrl;
+      imgsw2.loading = "lazy";
 
-      imgsw2.className =
-        "img-responsive";
+      imgsw2.decoding = "async";
 
-      imgsw2.loading =
-        "lazy";
-
-      imgsw2.decoding =
-        "async";
-
-      wanderitodiv2.appendChild(
-        imgsw2
-      );
+      wanderitodiv2.appendChild(imgsw2);
 
       continue;
     }
@@ -314,58 +277,26 @@ if (
        SLIDER IMAGE
     ========================= */
 
-    const li =
-      document.createElement(
-        "li"
-      );
+    const li = document.createElement("li");
 
-    const a =
-      document.createElement(
-        "a"
-      );
+    const a = document.createElement("a");
 
-    a.className =
-      "ns-img";
+    a.className = "ns-img";
 
-    a.href =
-      image.secureUrl;
+    a.href = image.secureUrl;
 
-    const div =
-      document.createElement(
-        "div"
-      );
+    const div = document.createElement("div");
 
-    div.className =
-      "caption";
+    div.className = "caption";
 
-    div.textContent =
-      "@colerise";
+    div.textContent = "@colerise";
 
     li.appendChild(a);
 
     li.appendChild(div);
 
     sliderContainer.appendChild(li);
-
-    console.log(
-      "slides count:",
-      sliderContainer.children.length
-    );
   }
-
-  console.log(
-    "slider HTML:",
-    document.getElementById(
-      "ninja-slider"
-    )
-  );
-
-  console.log(
-    "total slides final:",
-    document.querySelectorAll(
-      "#unDiv li"
-    ).length
-  );
 
   /* =========================
      PRELOAD SLIDER IMAGES
@@ -376,29 +307,19 @@ if (
     imagesarray
       .filter(image =>
 
-        image.filename !==
-        "wanderers.png"
-
-        &&
-
-        image.filename !==
-        "img-01.jpg"
+        image.filename !== "wanderers.png" && image.filename !== "img-01.jpg"
       )
       .map(image => {
 
         return new Promise(resolve => {
 
-          const img =
-            new Image();
+          const img = new Image();
 
-          img.onload =
-            resolve;
+          img.onload = resolve;
 
-          img.onerror =
-            resolve;
+          img.onerror = resolve;
 
-          img.src =
-            image.secureUrl;
+          img.src = image.secureUrl;
         });
       })
   );
@@ -407,29 +328,16 @@ if (
      WAIT FINAL RENDER
   ========================= */
 
-  await new Promise(resolve =>
-    setTimeout(resolve, 300)
-  );
+  await new Promise(resolve => setTimeout(resolve, 300));
 
   /* =========================
      INIT SLIDER
   ========================= */
 
-  if (
-    typeof nslider !==
-    "undefined"
-  ) {
-
+  if (typeof nslider !== "undefined") {
     try {
-
       nslider.init();
-
-      console.log(
-        "nslider initialized"
-      );
-
     } catch (error) {
-
       console.error(
         "Slider init error:",
         error
@@ -441,25 +349,13 @@ if (
      REINIT FIREWORKS
   ========================= */
 
-  if (
-    typeof triggerWanderitoFX !==
-    "undefined"
-  ) {
-
+  if (typeof triggerWanderitoFX !== "undefined") {
     try {
-
       setTimeout(() => {
-
         triggerWanderitoFX();
-
       }, 100);
-
     } catch (error) {
-
-      console.error(
-        "Fireworks init error:",
-        error
-      );
+      console.error("Fireworks init error:", error);
     }
   }
 }
