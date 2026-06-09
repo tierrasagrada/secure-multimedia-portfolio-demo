@@ -13,6 +13,7 @@ import requestId from "./api/middleware/requestId.js";
 import securityMetrics from "./api/routes/securityMetrics.js";
 import health from "./api/routes/health.js";
 import auditTrail from "./api/routes/auditTrail.js";
+import logoutRoute from "./api/routes/logout.js";
 
 /* =========================
    IMPORT API ROUTES
@@ -108,6 +109,11 @@ app.use(
 app.use(
   "/api/contenido",
   contenido
+);
+
+app.use(
+  "/api/logout",
+  logoutRoute
 );
 
 app.use(

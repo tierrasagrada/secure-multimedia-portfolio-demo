@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -28,14 +27,36 @@
     <p id="error" class="error"></p>
   </div>
 
-    <div class="protected-content" id="protected-content"> </div>
-<!--<div
-  id="sliker"
-  style="display:none;">
-</div>    -->
-    <div class="security-footer" id="security-footer">
+  <div class="protected-content" id="protected-content"> </div>
+      <!--<div
+        id="sliker"
+        style="display:none;">
+      </div>    -->
+  <div class="security-footer" id="security-footer">
         Protected multimedia biography system · Node.js · Express · JWT
-    </div>    
+  </div>
+  <div id="session-modal" class="session-modal">
+
+    <div class="session-modal-content">
+
+      <h2>Session Warning</h2>
+
+      <p>
+          Your session will expire due to inactivity.
+      </p>
+
+      <p>
+        Time remaining:
+        <span id="session-countdown">60</span>
+        seconds
+      </p>
+
+      <button id="continue-session">
+        Continue Session
+      </button>
+
+    </div>
+  </div>        
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
     <script src="/assets/js/fireworks.js"></script>
     <script src="/assets/js/ninja-slider.js"></script>

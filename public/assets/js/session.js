@@ -1,9 +1,18 @@
 import {
 
+  apiFetch
+
+} from "./api.js";
+
+import {
+
   renderProtectedContent
 
 } from "./protectedContent.js";
 
+import {
+  getCSRFToken
+} from "./csrf.js";
 
 /* =========================
    SESSION TIMEOUT
@@ -11,20 +20,51 @@ import {
 
 let sessionTimeout;
 
+let warningTimeout;
+
+let sessionWarningActive = false;
+
+let countdownInterval;
+
+let sessionWatcherActive = false;
+
+let sessionEndsAt = 0;
+
 /* =========================
    SESSION DURATION
 ========================= */
 
 const SESSION_LIMIT =
-  1 * 60 * 1000;
+  5 * 60 * 1000;
 
 /* =========================
    RESET SESSION TIMER
 ========================= */
-
 export function resetSessionTimer() {
 
+  if (!sessionWatcherActive) {
+
+    return;
+  }
+
+  if (sessionWarningActive) {
+
+    return;
+  }
+
   clearTimeout(sessionTimeout);
+
+  clearTimeout(warningTimeout);
+
+  sessionEndsAt =
+  Date.now() + SESSION_LIMIT;
+
+  warningTimeout =
+    setTimeout(() => {
+
+      showSessionWarning();
+
+    }, SESSION_LIMIT - 60000);
 
   sessionTimeout =
     setTimeout(() => {
@@ -39,6 +79,13 @@ export function resetSessionTimer() {
 ========================= */
 
 export function startSessionWatcher() {
+
+  if (sessionWatcherActive) {
+
+    return;
+  }
+
+  sessionWatcherActive = true;
 
   const events = [
 
@@ -67,10 +114,152 @@ export function startSessionWatcher() {
 }
 
 /* =========================
+   Activar modal SessionWarning
+========================= */
+
+function showSessionWarning() {
+
+  const modal =
+    document.getElementById(
+      "session-modal"
+    );
+
+  const countdown =
+    document.getElementById(
+      "session-countdown"
+    );
+
+  if (!modal || !countdown) {
+
+    return;
+  }
+
+  sessionWarningActive = true;
+
+  modal.classList.add("active");
+
+  /*const warningEndsAt =
+    Date.now() + 60000;*/
+
+  clearInterval(
+    countdownInterval
+  );
+
+  countdown.textContent = "60";
+  countdownInterval =
+    setInterval(() => {
+
+    const remainingSeconds =
+      Math.max(
+        0,
+        Math.ceil(
+          (
+            sessionEndsAt -
+            Date.now()
+          ) / 1000
+        )
+      );      
+     /* const remainingSeconds =
+        Math.max(
+          0,
+          Math.ceil(
+            (
+              warningEndsAt -
+              Date.now()
+            ) / 1000
+          )
+        );*/
+
+      countdown.textContent =
+        remainingSeconds;
+
+      if (
+        remainingSeconds <= 0
+      ) {
+
+        clearInterval(
+          countdownInterval
+        );
+      }
+
+    }, 250);
+}
+
+/* =========================
+   CLEAN LISTENERS
+========================= */
+function stopSessionWatcher() {
+
+  const events = [
+    "click",
+    "mousemove",
+    "keydown",
+    "scroll",
+    "touchstart"
+  ];
+
+  events.forEach(event => {
+
+    document.removeEventListener(
+      event,
+      resetSessionTimer
+    );
+  });
+
+  sessionWatcherActive = false;
+}
+
+/* =========================
    DESTROY SESSION
 ========================= */
 
-export function destroySession() {
+export async function destroySession() {
+stopSessionWatcher();
+
+clearTimeout(sessionTimeout);
+
+clearTimeout(warningTimeout);
+
+clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
+
+  try {
+    const csrfToken =
+    await getCSRFToken();
+
+    await apiFetch(
+      "/api/logout",
+      {
+        method: "POST",
+
+        headers: {
+
+          "X-CSRF-Token":
+            csrfToken
+        }
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Logout failed",
+      error
+    );
+  }
+
+  const modal =
+    document.getElementById(
+      "session-modal"
+    );
+
+  if (modal) {
+
+    modal.classList.remove(
+      "active"
+    );
+  }
+
+  sessionWarningActive = false;  
 
   /* =========================
      HIDE PROTECTED CONTENT
@@ -236,34 +425,46 @@ restoreProtectedSession() {
     );
   }
 }
-/*import {
-  renderProtectedContent
-}
-from "./protectedContent.js";
 
 /* =========================
-   RESTORE SESSION
+   CONTINUE SESSION
 ========================= */
 
-/*export async function
-restoreProtectedSession() {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  try {
+    const continueButton =
+      document.getElementById(
+        "continue-session"
+      );
 
-    await renderProtectedContent();
+    if (!continueButton) return;
 
-  } catch (error) {
+    continueButton.addEventListener(
+      "click",
+      () => {
 
-    console.error(error);
+        sessionWarningActive = false;
 
-  } finally {
+        clearInterval(
+          countdownInterval
+        );   
 
-    /* =========================
-       SHOW APPLICATION
-    ========================= */
+        const modal =
+          document.getElementById(
+            "session-modal"
+          );
 
-   /* document.body.classList.remove(
-      "auth-loading"
+        if (modal) {
+
+          modal.classList.remove(
+            "active"
+          );
+        }
+
+        resetSessionTimer();
+      }
     );
   }
-}*/
+);

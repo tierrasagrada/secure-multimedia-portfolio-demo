@@ -5,6 +5,10 @@ import {
   increment
 } from "../utils/securityMetrics.js";
 
+import {
+  addAuditEvent
+} from "../utils/auditTrail.js";
+
 const errorHandler = (
   err,
   req,

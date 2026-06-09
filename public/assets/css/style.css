@@ -1072,3 +1072,59 @@ body.auth-loading {
 
   visibility: hidden;
 }
+
+/* =========================
+   SESSION MODAL
+========================= */
+
+.session-modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    z-index:10000;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+.session-modal.active{
+
+    display:flex;
+}
+
+.session-modal-content{
+
+    background:#1f2937;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    width:90%;
+
+    max-width:420px;
+
+    color:#fff;
+}
+
+.session-modal-content button{
+
+    margin-top:20px;
+
+    padding:12px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+}
