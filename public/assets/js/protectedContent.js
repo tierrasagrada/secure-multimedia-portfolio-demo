@@ -97,30 +97,31 @@ renderProtectedContent() {
         "div"
       );
 
-    tempDiv.innerHTML =
-      cleanHTML;
+    tempDiv.innerHTML = cleanHTML;
 
     /* =========================
        VALIDATE IFRAMES
     ========================= */
 
-    const iframes =
-      tempDiv.getElementsByTagName(
-        "iframe"
-      );
+    const iframes = tempDiv.getElementsByTagName("iframe");
+
+    const allowedHosts = [
+      "www.youtube.com"
+    ];      
 
     for (const iframe of iframes) {
-
-      if (
-
-        !iframe.src.startsWith(
-
-          "https://www.youtube.com/embed/"
-        )
-      ) {
-
+      try {
+        const url = new URL(iframe.src);
+        if (!allowedHosts.includes(url.hostname)) {
+            iframe.remove();
+            continue;
+        }
+        if (!url.pathname.startsWith("/embed/")) {
+          iframe.remove();
+        }
+      } catch {
         iframe.remove();
-      }
+      }      
     }
 
     /* =========================
