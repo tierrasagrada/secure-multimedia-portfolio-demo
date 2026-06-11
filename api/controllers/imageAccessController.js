@@ -20,6 +20,10 @@ import {
   sanitizeQueryForLogs
 } from "../utils/sanitizeQueryForLogs.js";
 
+import {
+  setImageSecurityHeaders
+} from "../utils/setImageSecurityHeaders.js";
+
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
 export async function serveProtectedImage(
@@ -122,39 +126,15 @@ export async function serveProtectedImage(
       ".jpeg": "image/jpeg",
       ".png": "image/png",
     };
+
     /* =========================
        SECURITY HEADERS
-    ========================= */
-
-    res.setHeader(
-      "Content-Type",
-      mimeTypes[ext] || "application/octet-stream"
-    );
-
-    res.setHeader(
-      "Cache-Control",
-      "private, max-age=300"
-    );
-
-    res.setHeader(
-      "X-Content-Type-Options",
-      "nosniff"
-    );
-
-    res.setHeader(
-      "Cross-Origin-Resource-Policy",
-      "same-origin"
-    );
-
-    res.setHeader(
-      "Referrer-Policy",
-      "no-referrer"
-    );
-
-    res.setHeader(
-      "Content-Security-Policy",
-      "default-src 'none'; img-src 'self';"
+    ========================= */    
+    setImageSecurityHeaders(
+        res,
+        mimeTypes[ext]
     );    
+
     /* =========================
        STREAM FILE
     ========================= */
