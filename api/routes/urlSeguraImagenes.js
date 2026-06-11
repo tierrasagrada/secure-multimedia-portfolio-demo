@@ -16,6 +16,10 @@ import {
   addAuditEvent
 } from "../utils/auditTrail.js";
 
+import {
+  sanitizeQueryForLogs
+} from "../utils/sanitizeQueryForLogs.js";
+
 import express from "express";
 
 const router = express.Router();
@@ -27,16 +31,15 @@ router.get("/", async (req, res) => {
     const { token } = req.query;
 
     if (!token){ 
-      /*logger.security(
-        `Invalid image token from IP: ${req.ip}`
-      );*/
       increment("missingImageToken");
       logger.security(
         "Missing image token",
         {
           ip: req.ip,
           requestId: req.requestId,
-          path: req.originalUrl
+          path: sanitizeQueryForLogs(
+            req.originalUrl
+          )
         }
       );      
 
@@ -52,15 +55,14 @@ router.get("/", async (req, res) => {
 
     // 📌 Verificar la IP para evitar que la URL se comparta
     if (userIP !== ip) {
-      /*logger.security(
-        `IP mismatch detected for protected image. Request IP: ${req.ip}`//IP DISTINTA
-      );*/
       logger.security(
         "Image IP mismatch",
         {
           ip: req.ip,
           requestId: req.requestId,
-          path: req.originalUrl
+          path: sanitizeQueryForLogs(
+            req.originalUrl
+          )
         }
       );
 
@@ -95,15 +97,13 @@ router.get("/", async (req, res) => {
     ];
 
     if ( !allowedExtensions.includes(ext) ) {
-
-      /*logger.security(
-        `Blocked invalid extension from IP: ${req.ip}`
-      );*/
       logger.security(
         "Invalid image extension",{
           ip: req.ip,
           requestId: req.requestId,
-          path: req.originalUrl,
+          path: sanitizeQueryForLogs(
+            req.originalUrl
+          ),
           extension: ext
         }
       );
@@ -165,18 +165,15 @@ router.get("/", async (req, res) => {
     stream.pipe(res);
     
   } catch (error) {
-    //res.status(403).json({ success: false, message: "Token inválido o expirado." });
-      /*logger.security(
-
-        `Invalid or expired image token from IP: ${req.ip}`
-      );*/
       increment("invalidImageToken");
       logger.security(
         "Invalid or expired image token",
         {
           ip: req.ip,
           requestId: req.requestId,
-          path: req.originalUrl
+          path: sanitizeQueryForLogs(
+            req.originalUrl
+          )
         }
       );     
 
