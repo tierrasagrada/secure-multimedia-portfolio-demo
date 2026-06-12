@@ -24,6 +24,10 @@ import {
   setImageSecurityHeaders
 } from "../utils/setImageSecurityHeaders.js";
 
+import {
+  validateProtectedImage
+} from "../utils/validateProtectedImage.js";
+
 const imagePath = path.join(process.cwd(), "api/protectedimages");
 
 export async function serveProtectedImage(
@@ -73,54 +77,51 @@ export async function serveProtectedImage(
         success: false, message: "Invalid token." 
       });
     }
-
-    // 📌 Verificar que la imagen existe
-    const safeFilename =
-      path.basename(filename);
-
-    const filePath =
-      path.join(
-        imagePath,
-        safeFilename
+    
+    const imageValidation =
+      validateProtectedImage(
+        filename,
+        imagePath
       );
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ success: false, message: "Image not found." });
-    }
 
-    const ext = path.extname(filename).toLowerCase();
-    /* =========================
-      ALLOWED EXTENSIONS
-    ========================= */
+    if (!imageValidation.valid) {
 
-    const allowedExtensions = [
+      if (
+        imageValidation.ext
+      ) {
 
-      ".jpg",
-      ".jpeg",
-      ".png",
-    ];
-
-    if ( !allowedExtensions.includes(ext) ) {
-      logger.security(
-        "Invalid image extension",{
-          ip: req.ip,
-          requestId: req.requestId,
-          path: sanitizeQueryForLogs(
-            req.originalUrl
-          ),
-          extension: ext
-        }
-      );
+        logger.security(
+          "not valid image extension",
+          {
+            ip: req.ip,
+            requestId:
+              req.requestId,
+            path:
+              sanitizeQueryForLogs(
+                req.originalUrl
+              ),
+            extension:
+              imageValidation.ext
+          }
+        );
+      }
 
       return res
-        .status(403)
+        .status(
+          imageValidation.status
+        )
         .json({
-
           success: false,
-
           message:
-            "Invalid file type."
+            imageValidation.message
         });
     }
+
+    const {
+      filePath,
+      ext
+    } = imageValidation;
+
     const mimeTypes = {
       ".jpg": "image/jpeg",
       ".jpeg": "image/jpeg",
@@ -144,7 +145,7 @@ export async function serveProtectedImage(
     stream.pipe(res);
     
   } catch (error) {
-      increment("invalidImageToken");
+      increment("notvalidImageToken");
       logger.security(
         "Invalid or expired image token",
         {

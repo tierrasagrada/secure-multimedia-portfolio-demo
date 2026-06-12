@@ -8,7 +8,7 @@ const metrics = {
 
   missingImageToken: 0,
   
-  invalidImageToken: 0,
+  notvalidImageToken: 0,
 
   csrfBlocked: 0,
 
