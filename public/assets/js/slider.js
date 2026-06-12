@@ -59,6 +59,7 @@ async function ensureNinjaSliderLoaded() {
 
 export async function
 loadProtectedImages() {
+  console.time("loadProtectedImages");
 if (
 
   typeof destroyFireworks ===
@@ -191,6 +192,7 @@ if (
   /* =========================
      GET IMAGES
   ========================= */
+console.time("fetchProtectedImages");
 
   const response2 =
     await apiFetch(
@@ -219,11 +221,11 @@ if (
   }
 
   const imagesarray = await response2.json();
-
+console.timeEnd("fetchProtectedImages");
   /* =========================
      RENDER IMAGES
   ========================= */
-
+console.time("generateSliderDOM");
   for (const image of imagesarray) {
 
     if (!image.secureUrl)
@@ -297,12 +299,12 @@ if (
 
     sliderContainer.appendChild(li);
   }
-
+console.timeEnd("generateSliderDOM");
   /* =========================
      PRELOAD SLIDER IMAGES
   ========================= */
 
-  await Promise.all(
+   Promise.all(
 
     imagesarray
       .filter(image =>
@@ -322,13 +324,9 @@ if (
           img.src = image.secureUrl;
         });
       })
-  );
-
-  /* =========================
-     WAIT FINAL RENDER
-  ========================= */
-
-  await new Promise(resolve => setTimeout(resolve, 300));
+  ).catch(error => {
+  console.error("Image preload failed", error);
+});
 
   /* =========================
      INIT SLIDER
@@ -336,7 +334,9 @@ if (
 
   if (typeof nslider !== "undefined") {
     try {
+      console.time("nslider.init");
       nslider.init();
+      console.timeEnd("nslider.init");
     } catch (error) {
       console.error(
         "Slider init error:",
@@ -355,7 +355,13 @@ if (
         triggerWanderitoFX();
       }, 100);
     } catch (error) {
-      console.error("Fireworks init error:", error);
+      console.error(
+        "Fireworks init error:",
+        error
+      );
     }
   }
+  console.timeEnd(
+    "loadProtectedImages"
+  );
 }
