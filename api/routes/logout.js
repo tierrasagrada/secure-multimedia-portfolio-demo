@@ -1,32 +1,19 @@
 import express from "express";
 
+import auth from "../middleware/auth.js";
+
+import { logout } from "../controllers/logoutController.js";
+
 const router = express.Router();
 
 /* =========================
    LOGOUT
 ========================= */
 
-router.post("/", (req, res) => {
-
-  res.clearCookie(
-    "access_token",
-    {
-      httpOnly: true,
-      secure:
-        process.env.NODE_ENV ===
-        "production",
-
-      sameSite: "strict"
-    }
-  );
-
-  return res.status(200).json({
-
-    success: true,
-
-    message:
-      "Session closed."
-  });
-});
+router.post(
+  "/",
+  auth,
+  logout
+);
 
 export default router;
