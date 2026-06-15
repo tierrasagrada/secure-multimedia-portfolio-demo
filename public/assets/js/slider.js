@@ -260,19 +260,36 @@ console.time("generateSliderDOM");
        STATIC IMAGE
     ========================= */
 
-    if (image.filename === "img-01.jpg") {
-      const imgsw2 = document.createElement("img");
-      imgsw2.src = image.secureUrl;
+    if (image.filename === "img-01.png") {
+const preloadedImage =
+  new Image();
 
-      imgsw2.className = "img-responsive";
+await new Promise(resolve => {
 
-      imgsw2.loading = "lazy";
+  preloadedImage.onload =
+    resolve;
 
-      imgsw2.decoding = "async";
+  preloadedImage.onerror =
+    resolve;
 
-      wanderitodiv2.appendChild(imgsw2);
+  preloadedImage.src =
+    image.secureUrl;
+});
 
-      continue;
+preloadedImage.className =
+  "img-responsive";
+
+preloadedImage.loading =
+  "eager";
+
+preloadedImage.decoding =
+  "sync";
+
+wanderitodiv2.appendChild(
+  preloadedImage
+);
+
+continue;
     }
 
     /* =========================
@@ -309,7 +326,7 @@ console.timeEnd("generateSliderDOM");
     imagesarray
       .filter(image =>
 
-        image.filename !== "wanderers.png" && image.filename !== "img-01.jpg"
+        image.filename !== "wanderers.png" && image.filename !== "img-01.png"
       )
       .map(image => {
 
