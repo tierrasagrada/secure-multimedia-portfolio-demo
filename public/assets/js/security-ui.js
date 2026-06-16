@@ -7,19 +7,19 @@ const submitButton =
    SHOW ERROR
 ========================= */
 
-export function mostrarError(
-  message
-) {
+export function mostrarError(message) {
 
   const errorDiv =
     document.getElementById(
       "error"
     );
 
-  errorDiv.style.opacity = "1";
-
   errorDiv.textContent =
     message;
+
+  errorDiv.classList.add(
+    "active"
+  );
 }
 
 /* =========================
@@ -33,9 +33,12 @@ export function limpiarError() {
       "error"
     );
 
-  errorDiv.style.opacity = "0";
+  errorDiv.textContent =
+    "";
 
-  errorDiv.textContent = "";
+  errorDiv.classList.remove(
+    "active"
+  );
 }
 
 /* =========================

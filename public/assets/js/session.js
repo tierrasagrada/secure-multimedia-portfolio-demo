@@ -77,6 +77,7 @@ export function resetSessionTimer() {
 ========================= */
 
 export function startSessionWatcher() { 
+  console.log("startSessionWatcher ejecutado");
   if (sessionWatcherActive) { 
     return;
   }
@@ -99,7 +100,7 @@ export function startSessionWatcher() {
 ========================= */
 
 function showSessionWarning() {
-
+console.log("showSessionWarning ejecutado");
   const modal = document.getElementById("session-modal");
 
   const countdown = document.getElementById("session-countdown");
@@ -291,7 +292,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   if (errorDiv) {
     errorDiv.textContent = "⚠ Session expired.";
-    errorDiv.style.opacity = "1";
+    errorDiv.classList.add("active");
   }
 }
 

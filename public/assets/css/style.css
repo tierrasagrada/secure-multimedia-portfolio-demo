@@ -373,13 +373,13 @@ body{
 
     display:none;
 
-    width:100%;
+    width:90%;
 
     max-width:520px;
 
     margin:80px auto;
 
-    padding:35px 35px 70px;
+    padding:35px;
 
     background:#1f2937;
 
@@ -390,8 +390,6 @@ body{
     box-sizing:border-box;
 
     text-align:center;
-
-    transition:.3s;
 }
 
 .contenedor.active{
@@ -485,53 +483,61 @@ body{
    ERROR MESSAGE DESKTOP
 ========================= */
 
-#security-container .error{
+.error {
 
-    position:fixed;
+    display: none;
 
-    left:50%;
+    width: 100%;
 
-    transform:translateX(-50%);
+    margin-top: 20px;
 
-    bottom:35px;
+    padding: 15px 20px;
 
-    width:auto;
+    border-radius: 14px;
 
-    min-width:320px;
+    background: rgba(35,35,35,.88);
 
-    max-width:520px;
+    border: 2px solid rgba(255, 90, 90, .75);
 
-    background:rgba(35,35,35,.88);
+    color: #ffffff;
 
-    border:1px solid rgba(255,120,120,.25);
+    font-size: 1rem;
 
-    backdrop-filter:blur(8px);
+    font-weight: 500;
 
-    color:#fff !important;
+    text-align: center;
 
-    padding:14px 22px;
+    box-sizing: border-box;
 
-    border-radius:14px;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.25),
+        0 0 0 3px rgba(255,90,90,.15);
 
-    font-size:1.1rem !important;
+    transition: all .3s ease;
+}
 
-    font-weight:500;
+.error.active {
 
-    letter-spacing:.2px;
-    
-    text-align:center;
+    display: block;
 
-    box-sizing:border-box;
+    animation: fadeInError .25s ease;
+}
 
-    z-index:9999;
+@keyframes fadeInError {
 
-    opacity:0;
+    from {
 
-    transition:.3s ease;
+        opacity: 0;
 
-    pointer-events:none;
+        transform: translateY(-5px);
+    }
 
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+    }
 }
 
 /* =========================
@@ -1077,54 +1083,89 @@ body.auth-loading {
    SESSION MODAL
 ========================= */
 
-.session-modal{
+.session-modal {
 
-    display:none;
+    display: none;
 
-    position:fixed;
+    position: fixed;
 
-    inset:0;
+    inset: 0;
 
-    background:rgba(0,0,0,.65);
+    justify-content: center;
 
-    z-index:10000;
+    align-items: center;
 
-    justify-content:center;
+    background: rgba(0, 0, 0, 0.75);
 
-    align-items:center;
+    backdrop-filter: blur(4px);
+
+    z-index: 9999;
 }
 
-.session-modal.active{
+.session-modal.active {
 
-    display:flex;
+    display: flex;
 }
 
-.session-modal-content{
-
-    background:#1f2937;
-
-    padding:30px;
-
-    border-radius:18px;
-
-    text-align:center;
-
-    width:90%;
-
-    max-width:420px;
-
-    color:#fff;
+.session-modal-content {
+    background: #1f2b3d;
+    color: #ffffff;
+    border-radius: 24px;
+    padding: 45px;
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,.45);
 }
 
-.session-modal-content button{
+.session-modal-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.session-modal-content p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,.9);
+}
+
+#session-countdown {
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffcc66;
+}
+#continue-session {
+    background: #3467eb;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+#continue-session:hover {
+    background: #4a7af7;
+    transform: translateY(-2px);
+}
+
+#continue-session:active {
+    transform: translateY(0);
+}
+#continue-session:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.access-help{
 
     margin-top:20px;
 
-    padding:12px 20px;
+    color:rgba(255,255,255,.65);
 
-    border:none;
-
-    border-radius:10px;
-
-    cursor:pointer;
+    font-size:.9rem;
 }
