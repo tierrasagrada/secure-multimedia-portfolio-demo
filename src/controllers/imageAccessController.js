@@ -28,7 +28,7 @@ import {
   validateProtectedImage
 } from "../utils/validateProtectedImage.js";
 
-const imagePath = path.join(process.cwd(), "api/protectedimages");
+const imagePath = path.join(process.cwd(), "src/protectedimages");
 
 export async function serveProtectedImage(
   req,

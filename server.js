@@ -2,29 +2,29 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
-import globalLimiter from "./api/middleware/globalRateLimit.js";
-import csrfProtection from "./api/middleware/csrfProtection.js";
-import errorHandler from "./api/middleware/errorHandler.js";
-import securityHeaders from "./api/middleware/securityHeaders.js";
-import httpLogger from "./api/middleware/httpLogger.js";
+import globalLimiter from "./src/middleware/globalRateLimit.js";
+import csrfProtection from "./src/middleware/csrfProtection.js";
+import errorHandler from "./src/middleware/errorHandler.js";
+import securityHeaders from "./src/middleware/securityHeaders.js";
+import httpLogger from "./src/middleware/httpLogger.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import requestId from "./api/middleware/requestId.js";
-import securityMetrics from "./api/routes/securityMetrics.js";
-import health from "./api/routes/health.js";
-import auditTrail from "./api/routes/auditTrail.js";
-import logoutRoute from "./api/routes/logout.js";
+import requestId from "./src/middleware/requestId.js";
+import securityMetrics from "./src/routes/securityMetrics.js";
+import health from "./src/routes/health.js";
+import auditTrail from "./src/routes/auditTrail.js";
+import logoutRoute from "./src/routes/logout.js";
 
 /* =========================
    IMPORT API ROUTES
 ========================= */
 
-import validarRespuesta from "./api/routes/validarRespuesta.js";
-import csrfToken from "./api/routes/csrf-token.js";
-import obtenerImagenes from "./api/routes/obtenerImagenes.js";
-import urlSeguraImagenes from "./api/routes/urlSeguraImagenes.js";
+import validarRespuesta from "./src/routes/validarRespuesta.js";
+import csrfToken from "./src/routes/csrf-token.js";
+import obtenerImagenes from "./src/routes/obtenerImagenes.js";
+import urlSeguraImagenes from "./src/routes/urlSeguraImagenes.js";
 import contenido from
-"./api/routes/contenido.js"; //esta bien aqui la ruta de contenido?
+"./src/routes/contenido.js"; //esta bien aqui la ruta de contenido?
 /* =========================
    EXPRESS APP
 ========================= */
@@ -32,8 +32,6 @@ import contenido from
 const app = express();
 
 app.disable("x-powered-by");
-
-const PORT = 3000;
 
 /* =========================
    __dirname FIX
@@ -134,10 +132,4 @@ app.use(
 //ERROR HANDLER
 app.use(errorHandler);
 
-/* =========================
-   START SERVER
-========================= */
-
-app.listen(PORT, () => {
-
-});
+export default app;

@@ -1,6 +1,3 @@
-//Paso 1: crear api/utils/validateProtectedImage.js
-
-
 import fs from "fs";
 import path from "path";
 

@@ -3,7 +3,7 @@ import path from "path";
 
 const contentPath = path.join(
   process.cwd(),
-  "api/views/protectedContent.html"
+  "src/views/protectedContent.html"
 );
 
 export async function getProtectedContent(

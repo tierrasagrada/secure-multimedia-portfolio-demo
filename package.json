@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Mi aplicación en Vercel con backend",
   "type": "module",
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node local.js",
+    "start": "node local.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

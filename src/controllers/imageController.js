@@ -3,7 +3,7 @@ import path from "path";
 import { generateImageToken } from "../services/tokenService.js";
 import logger from "../utils/logger.js";
 
-const imagePath = path.join(process.cwd(), "api/protectedimages");
+const imagePath = path.join(process.cwd(), "src/protectedimages");
 
 export async function getProtectedImages(req, res){
   try {

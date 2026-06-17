@@ -85,3 +85,5 @@ coverage/
 # ARCHIVOS SENSIBLES
 # =========================
 secrets.json
+.vercel
+.env*.local
