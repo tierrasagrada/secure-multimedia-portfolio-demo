@@ -3,30 +3,6 @@ import crypto from "crypto";
 import { SESSION_VERSION }
 from "../config/sessionConfig.js";
 
-/* =========================
-   USED IMAGE TOKENS
-========================= */
-
-const usedImageTokens =
-  new Map();
-
-/* =========================
-   CLEANUP EXPIRED JTIs
-========================= */
-
-setInterval(() => {
-
-  const now = Date.now();
-
-  for (const [jti, exp] of usedImageTokens) {
-
-    if (now > exp) {
-
-      usedImageTokens.delete(jti);
-    }
-  }
-
-}, 60 * 1000);
 
 /* =========================
    GENERATE IMAGE TOKEN
@@ -72,37 +48,6 @@ export const verifyImageToken = (
 
       process.env.SECRET_KEY
     );
-
-  const now =
-    Date.now();
-
-  /* =========================
-     REPLAY DETECTION
-  ========================= */
-
-  if (
-
-    usedImageTokens.has(
-      decoded.jti
-    )
-  ) {
-
-    throw new Error(
-      "Replay attack detected."
-    );
-  }
-
-  /* =========================
-     STORE USED JTI
-  ========================= */
-
-  usedImageTokens.set(
-
-    decoded.jti,
-
-    now + (5 * 60 * 1000)
-  );
-
   return decoded;
 };
 
