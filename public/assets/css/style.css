@@ -11,7 +11,9 @@ body{
     min-height:100%;
 
     background-color:#1d4d38 !important;
-
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background-image:
 
     radial-gradient(
@@ -390,6 +392,9 @@ body{
     box-sizing:border-box;
 
     text-align:center;
+
+    position: relative;
+    overflow: visible;    
 }
 
 .contenedor.active{
@@ -419,7 +424,7 @@ body{
     margin-bottom:18px;
 }
 
-.contenedor input[type=text]{
+.contenedor input[type=password]{
 
     width:100%;
 
@@ -485,26 +490,16 @@ body{
 
 .error {
 
-    display: none;
-
     width: 100%;
-
-    margin-top: 20px;
-
     padding: 15px 20px;
 
     border-radius: 14px;
-
     background: rgba(35,35,35,.88);
-
     border: 2px solid rgba(255, 90, 90, .75);
 
-    color: #ffffff;
-
+    color: #fff;
     font-size: 1rem;
-
     font-weight: 500;
-
     text-align: center;
 
     box-sizing: border-box;
@@ -513,14 +508,23 @@ body{
         0 10px 30px rgba(0,0,0,.25),
         0 0 0 3px rgba(255,90,90,.15);
 
-    transition: all .3s ease;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -90px;
+
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+
+    transition: all .25s ease;
 }
 
 .error.active {
 
-    display: block;
-
-    animation: fadeInError .25s ease;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 @keyframes fadeInError {
@@ -593,7 +597,8 @@ body{
 
         margin-top:18px;
 
-        font-size:1rem !important;
+        font-size:1.15rem !important;
+        line-height: 1.4;
     }
 }
 
@@ -627,7 +632,7 @@ body{
 
     text-align:center;
 
-    margin-top:80px;
+    margin-top: auto;
 
     padding-bottom:30px;
 
@@ -1168,4 +1173,10 @@ body.auth-loading {
     color:rgba(255,255,255,.65);
 
     font-size:.9rem;
+}
+#sliker{
+
+    border-radius:18px !important;
+
+    overflow:hidden;
 }
