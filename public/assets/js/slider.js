@@ -220,7 +220,7 @@ console.log("C");
       "Error loading images"
     );
   }
-
+console.log( "Cantidad imágenes:", imagesarray.length );
   const imagesarray = await response2.json();
 console.timeEnd("fetchProtectedImages");
 console.log("D");
