@@ -222,6 +222,20 @@ console.log("C");
   }
 
   const imagesarray = await response2.json();
+  imagesarray.sort((a, b) => {
+
+if (
+a.filename ===
+"wanderers.png"
+) return -1;
+
+if (
+b.filename ===
+"wanderers.png"
+) return 1;
+
+return 0;
+});
   console.log( "Cantidad imágenes:", imagesarray.length );
 console.timeEnd("fetchProtectedImages");
 console.log("D");
@@ -242,17 +256,32 @@ console.time("generateSliderDOM");
 
     if (image.filename === "wanderers.png") {
 
-      const imgsw = document.createElement("img");
+      const imgsw =
+        document.createElement(
+          "img"
+        );
 
-      imgsw.src = image.secureUrl;
+      imgsw.onload = () => {
+
+        if (
+          typeof triggerWanderitoFX !==
+          "undefined"
+        ) {
+
+          triggerWanderitoFX();
+        }
+      };
+
+      imgsw.src =
+        image.secureUrl;
 
       imgsw.width = 250;
 
       imgsw.height = 200;
 
-      imgsw.loading = "lazy";
+      imgsw.loading = "eager";
 
-      imgsw.decoding = "async";
+      imgsw.decoding = "sync";
 
       wanderitodiv.appendChild(
         imgsw
@@ -266,35 +295,29 @@ console.time("generateSliderDOM");
     ========================= */
 
     if (image.filename === "img-01.png") {
-const preloadedImage =
-  new Image();
+      const preloadedImage =
+        new Image();
 
-await new Promise(resolve => {
+      preloadedImage.onload = () => {
 
-  preloadedImage.onload =
-    resolve;
+        preloadedImage.className =
+          "img-responsive";
 
-  preloadedImage.onerror =
-    resolve;
+        preloadedImage.loading =
+          "eager";
 
-  preloadedImage.src =
-    image.secureUrl;
-});
+        preloadedImage.decoding =
+          "sync";
 
-preloadedImage.className =
-  "img-responsive";
+        wanderitodiv2.appendChild(
+          preloadedImage
+        );
+      };
 
-preloadedImage.loading =
-  "eager";
+      preloadedImage.src =
+        image.secureUrl;
 
-preloadedImage.decoding =
-  "sync";
-
-wanderitodiv2.appendChild(
-  preloadedImage
-);
-
-continue;
+      continue;
     }
 
     /* =========================
@@ -322,33 +345,6 @@ continue;
     sliderContainer.appendChild(li);
   }
 console.timeEnd("generateSliderDOM");
-  /* =========================
-     PRELOAD SLIDER IMAGES
-  ========================= */
-
-   Promise.all(
-
-    imagesarray
-      .filter(image =>
-
-        image.filename !== "wanderers.png" && image.filename !== "img-01.png"
-      )
-      .map(image => {
-
-        return new Promise(resolve => {
-
-          const img = new Image();
-
-          img.onload = resolve;
-
-          img.onerror = resolve;
-
-          img.src = image.secureUrl;
-        });
-      })
-  ).catch(error => {
-  console.error("Image preload failed", error);
-});
 
   /* =========================
      INIT SLIDER
@@ -369,22 +365,6 @@ console.log("window.NinjaSlider =", window.NinjaSlider);
     }
   }
 
-  /* =========================
-     REINIT FIREWORKS
-  ========================= */
-
-  if (typeof triggerWanderitoFX !== "undefined") {
-    try {
-      setTimeout(() => {
-        triggerWanderitoFX();
-      }, 100);
-    } catch (error) {
-      console.error(
-        "Fireworks init error:",
-        error
-      );
-    }
-  }
   console.timeEnd(
     "loadProtectedImages"
   );
