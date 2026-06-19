@@ -371,3 +371,15 @@ document.addEventListener(
     );
   }
 );
+
+/* =========================
+TAB VISIBILITY CHECK
+========================= */
+
+document.addEventListener( "visibilitychange",() => {
+  if ( document.visibilityState === "visible" && sessionWatcherActive ) {
+    if ( Date.now() >= sessionEndsAt ) {
+      destroySession();
+      }
+    }
+});
