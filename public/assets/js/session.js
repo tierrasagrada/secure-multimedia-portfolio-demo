@@ -372,13 +372,20 @@ document.addEventListener(
   }
 );
 
+
+        function imprimirError(mensaje) {
+            const cajaError = document.getElementById('error-box');
+            cajaError.textContent = "Error: " + mensaje;
+            cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
+        }
+
 // Función que maneja el cambio de estado
 function handleVisibilityChange() {
   if (document.visibilityState === 'hidden') {
-    alert('La pestaña está oculta (minimizada o en segundo plano)');
+    imprimirError('La pestaña está oculta (minimizada o en segundo plano)');
     // Pausar videos, detener peticiones, etc.
   } else {
-    alert('La pestaña está visible');
+    imprimirError('La pestaña está visible');
     // Reanudar acciones
   }
 }
