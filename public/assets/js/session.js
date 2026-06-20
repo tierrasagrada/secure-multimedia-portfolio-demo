@@ -372,20 +372,6 @@ document.addEventListener(
   }
 );
 
-document.addEventListener(
-  "visibilitychange",
-  () => {
-
-    if (
-      document.visibilityState ===
-      "visible"
-    ) {
-
-      window.location.reload();
-    }
-  }
-);
-
 function imprimirError(mensaje) {
 
   const cajaError =
@@ -404,28 +390,11 @@ function imprimirError(mensaje) {
     "block";
 }
 
-document.addEventListener(
-  "visibilitychange",
-  function () {
-
-    imprimirError(
-      "visibilitychange detectado"
-    );
-
-    if (
-      document.visibilityState ===
-      "visible"
-    ) {
-
-      imprimirError(
-        "Usuario volvió a la pestaña"
-      );
-
-    } else {
-
-      imprimirError(
-        "Pestaña en segundo plano"
-      );
+document.addEventListener("visibilitychange",async () => {
+    if (document.visibilityState !== "visible") {
+      return;
     }
-  }
-);
+    if (Date.now() >= sessionEndsAt){
+      await destroySession();
+    }
+});
