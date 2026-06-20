@@ -41,7 +41,7 @@ export async function validateSecurityAnswer(req, res) {
               === "production",
             sameSite: "Strict",
             maxAge:
-              1 * 60 * 1000,
+              5 * 60 * 1000,
           }
         );
         

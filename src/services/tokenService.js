@@ -73,7 +73,7 @@ export const generateAccessToken = (
 
     {
 
-      expiresIn: "1m",
+      expiresIn: "5m",
     }
   );
 };
