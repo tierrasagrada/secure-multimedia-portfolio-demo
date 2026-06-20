@@ -4,7 +4,7 @@ import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
-import { imprimirError } from "./funcionesfronted.js";
+import { imprimirError } from "./slider.js";
 
 
 /* =========================
