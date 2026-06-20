@@ -54,12 +54,33 @@ console.log("B");
 }
 
 /* =========================
+   EXPIRED IMAGE HANDLER
+========================= */
+
+let sessionDestroyed = false;
+
+async function handleExpiredImage() {
+
+  if (sessionDestroyed) {
+    return;
+  }
+
+  sessionDestroyed = true;
+
+  const { destroySession } =
+    await import("./session.js");
+
+  await destroySession();
+}
+
+/* =========================
    LOAD PROTECTED IMAGES
 ========================= */
 
 export async function
 loadProtectedImages() {
   console.time("loadProtectedImages");
+  sessionDestroyed = false;
 if (
 
   typeof destroyFireworks ===
@@ -272,6 +293,9 @@ console.time("generateSliderDOM");
         }
       };
 
+imgsw.onerror =
+  handleExpiredImage;
+
       imgsw.src =
         image.secureUrl;
 
@@ -297,6 +321,9 @@ console.time("generateSliderDOM");
     if (image.filename === "img-01.png") {
       const preloadedImage =
         new Image();
+
+      preloadedImage.onerror =
+        handleExpiredImage;    
 
       preloadedImage.onload = () => {
 
@@ -356,6 +383,18 @@ console.log("window.NinjaSlider =", window.NinjaSlider);
     try {
       console.time("nslider.init");
       nslider.init();
+
+      const sliderImages =
+        document.querySelectorAll(
+          "#ninja-slider img"
+        );
+
+      sliderImages.forEach(img => {
+
+        img.onerror =
+          handleExpiredImage;
+      });
+
       console.timeEnd("nslider.init");
     } catch (error) {
       console.error(
