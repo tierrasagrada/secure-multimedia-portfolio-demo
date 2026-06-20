@@ -20,6 +20,8 @@ let sessionWatcherActive = false;
 
 let sessionEndsAt = 0;
 
+let sessionClosing = false;
+
 /* =========================
    SESSION DURATION
 ========================= */
@@ -294,6 +296,8 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     errorDiv.textContent = "⚠ Session expired.";
     errorDiv.classList.add("active");
   }
+
+sessionClosing = false;  
 }
 
 /* =========================
@@ -400,13 +404,76 @@ document.addEventListener(
       )
     ) {
 
-      console.warn(
-        "Protected image expired"
+      console.log(
+        "IMG error detectado:",
+        src
       );
+
+      if (sessionClosing) {
+        return;
+      }
+
+      sessionClosing = true;
 
       await destroySession();
     }
 
   },
   true
+);
+
+/* =========================
+   PAGE RESTORE CHECK
+========================= */
+
+window.addEventListener(
+  "pageshow",
+  async () => {
+
+    console.log(
+      "pageshow ejecutado"
+    );
+
+    try {
+
+      const response =
+        await apiFetch(
+          "/api/contenido",
+          {
+            method: "GET"
+          }
+        );
+
+      console.log(
+        "pageshow status:",
+        response.status
+      );
+
+      if (!response.ok) {
+
+        if (sessionClosing) {
+          return;
+        }
+
+        sessionClosing = true;
+
+        await destroySession();
+      }
+
+    } catch (error) {
+
+      console.log(
+        "pageshow error:",
+        error
+      );
+
+      if (sessionClosing) {
+        return;
+      }
+
+      sessionClosing = true;
+
+      await destroySession();
+    }
+  }
 );
