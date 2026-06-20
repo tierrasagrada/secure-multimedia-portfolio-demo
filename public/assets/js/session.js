@@ -373,14 +373,14 @@ document.addEventListener(
 );
 
 
-        function imprimirError(mensaje) {
+     export async  function imprimirError(mensaje) {
             const cajaError = document.getElementById('error-box');
             cajaError.textContent = "Error: " + mensaje;
             cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
         }
 
 // Función que maneja el cambio de estado
-function handleVisibilityChange() {
+export async function handleVisibilityChange() {
   if (document.visibilityState === 'hidden') {
     imprimirError('La pestaña está oculta (minimizada o en segundo plano)');
     // Pausar videos, detener peticiones, etc.
