@@ -372,16 +372,18 @@ document.addEventListener(
   }
 );
 
-document.addEventListener(
-  "visibilitychange",
-  () => {
-
-    if (
-      document.visibilityState ===
-      "visible"
-    ) {
-
-      window.location.reload();
-    }
+const handleVisibilityChange = () => {
+  if (document.hidden || document.visibilityState === 'hidden') {
+    alert("La página está oculta o en segundo plano.");
+    // Pausar reproducción, detener llamadas API, etc.
+  } else {
+   alert("La página está visible.");
+    // Reanudar acciones
   }
-);
+};
+
+// Escucha estándar de visibilidad
+document.addEventListener("visibilitychange", handleVisibilityChange);
+
+// Respaldo crítico para móviles cuando la página se oculta/descarga
+window.addEventListener("pagehide", handleVisibilityChange);
