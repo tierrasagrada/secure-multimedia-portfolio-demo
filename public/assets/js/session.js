@@ -372,18 +372,24 @@ document.addEventListener(
   }
 );
 
-const handleVisibilityChange = () => {
-  if (document.hidden || document.visibilityState === 'hidden') {
-    alert("La página está oculta o en segundo plano.");
-    // Pausar reproducción, detener llamadas API, etc.
+// Función que maneja el cambio de estado
+function handleVisibilityChange() {
+  if (document.visibilityState === 'hidden') {
+    alert('La pestaña está oculta (minimizada o en segundo plano)');
+    // Pausar videos, detener peticiones, etc.
   } else {
-   alert("La página está visible.");
+    alert('La pestaña está visible');
     // Reanudar acciones
   }
-};
+}
 
-// Escucha estándar de visibilidad
-document.addEventListener("visibilitychange", handleVisibilityChange);
+// 1. Evento principal estándar
+document.addEventListener('visibilitychange', handleVisibilityChange, false);
 
-// Respaldo crítico para móviles cuando la página se oculta/descarga
-window.addEventListener("pagehide", handleVisibilityChange);
+// 2. Respaldo para móviles: cuando la página se oculta o se muestra
+window.addEventListener('pageshow', handleVisibilityChange, false);
+window.addEventListener('pagehide', handleVisibilityChange, false);
+
+// 3. Respaldo para cuando la ventana pierde o gana foco
+window.addEventListener('focus', handleVisibilityChange, false);
+window.addEventListener('blur', handleVisibilityChange, false);
