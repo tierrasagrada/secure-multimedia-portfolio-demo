@@ -1,6 +1,6 @@
 import { apiFetch } from "./api.js";
 
-import { renderProtectedContent, imprimirError } from "./protectedContent.js";
+import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
