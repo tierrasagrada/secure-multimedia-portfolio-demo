@@ -373,30 +373,18 @@ document.addEventListener(
 );
 
 
-     export async  function imprimirError(mensaje) {
+     function imprimirError(mensaje) {
             const cajaError = document.getElementById('error-box');
             cajaError.textContent = "Error: " + mensaje;
             cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
         }
-
-// Función que maneja el cambio de estado
-export async function handleVisibilityChange() {
-  if (document.visibilityState === 'hidden') {
-    imprimirError('La pestaña está oculta (minimizada o en segundo plano)');
-    // Pausar videos, detener peticiones, etc.
+imprimirError("estoy en la funcion imprimirError 1");
+document.addEventListener("visibilitychange", function() {
+  imprimirError("estoy en la funcion visibilitychange 2");
+  if (document.visibilityState === "visible") {
+   imprimirError("¡El usuario ha vuelto a la pestaña!");
+    // Aquí puedes ejecutar tus funciones: pausar/reanudar videos, actualizar datos, etc.
   } else {
-    imprimirError('La pestaña está visible');
-    // Reanudar acciones
+    imprimirError("La pestaña ha pasado a segundo plano.");
   }
-}
-
-// 1. Evento principal estándar
-document.addEventListener('visibilitychange', handleVisibilityChange, false);
-
-// 2. Respaldo para móviles: cuando la página se oculta o se muestra
-window.addEventListener('pageshow', handleVisibilityChange, false);
-window.addEventListener('pagehide', handleVisibilityChange, false);
-
-// 3. Respaldo para cuando la ventana pierde o gana foco
-window.addEventListener('focus', handleVisibilityChange, false);
-window.addEventListener('blur', handleVisibilityChange, false);
+});
