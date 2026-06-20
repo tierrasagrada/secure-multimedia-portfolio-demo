@@ -477,3 +477,96 @@ window.addEventListener(
     }
   }
 );
+
+/* =========================
+   TAB VISIBILITY CHECK
+========================= */
+
+document.addEventListener(
+  "visibilitychange",
+  async () => {
+
+    if (
+      document.visibilityState !==
+      "visible"
+    ) {
+      return;
+    }
+
+    console.log(
+      "visibilitychange ejecutado"
+    );
+
+    /* =========================
+       CHECK PROTECTED IMAGES
+    ========================= */
+
+    const protectedImages =
+      document.querySelectorAll(
+        "#wanderito img, #wanderito2 img"
+      );
+
+    for (const img of protectedImages) {
+
+      if (
+        img.complete &&
+        img.naturalWidth === 0
+      ) {
+
+        console.log(
+          "Imagen protegida expirada detectada"
+        );
+
+        if (sessionClosing) {
+          return;
+        }
+
+        sessionClosing = true;
+
+        await destroySession();
+
+        return;
+      }
+    }
+
+    /* =========================
+       CHECK SESSION SERVER
+    ========================= */
+
+    try {
+
+      const response =
+        await apiFetch(
+          "/api/contenido",
+          {
+            method: "GET"
+          }
+        );
+
+      if (!response.ok) {
+
+        console.log(
+          "Sesión expirada detectada por visibilitychange"
+        );
+
+        if (sessionClosing) {
+          return;
+        }
+
+        sessionClosing = true;
+
+        await destroySession();
+      }
+
+    } catch {
+
+      if (sessionClosing) {
+        return;
+      }
+
+      sessionClosing = true;
+
+      await destroySession();
+    }
+  }
+);
