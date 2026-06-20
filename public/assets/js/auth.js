@@ -68,7 +68,7 @@ export async function restoreSession() {
   return response;
 }
 
-     function imprimirError(mensaje) {
+     export function imprimirError(mensaje) {
             const cajaError = document.getElementById('error-box');
             cajaError.textContent = "Error: " + mensaje;
             cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
