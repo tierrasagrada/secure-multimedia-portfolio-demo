@@ -373,27 +373,40 @@ document.addEventListener(
 );
 
 /* =========================
-TAB VISIBILITY CHECK
+   PROTECTED IMAGE FAIL
 ========================= */
 
-document.addEventListener("visibilitychange",async () => {
-    if (document.visibilityState !== "visible") {
+document.addEventListener(
+  "error",
+  async (event) => {
+
+    const element = event.target;
+
+    if (
+      !element ||
+      element.tagName !== "IMG"
+    ) {
       return;
     }
 
-    try {
-      const response = await apiFetch(
-          "/api/contenido",{
-            method: "GET"
-          }
-        );
+    const src =
+      element.currentSrc ||
+      element.src ||
+      "";
 
-      if (!response.ok) {
-        await destroySession();
-        return;
-      }
-    } catch {
+    if (
+      src.includes(
+        "/api/urlSeguraImagenes"
+      )
+    ) {
+
+      console.warn(
+        "Protected image expired"
+      );
+
       await destroySession();
     }
-  }
+
+  },
+  true
 );
