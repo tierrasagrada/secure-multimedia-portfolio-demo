@@ -54,33 +54,12 @@ console.log("B");
 }
 
 /* =========================
-   EXPIRED IMAGE HANDLER
-========================= */
-
-let sessionDestroyed = false;
-
-async function handleExpiredImage() {
-
-  if (sessionDestroyed) {
-    return;
-  }
-
-  sessionDestroyed = true;
-
-  const { destroySession } =
-    await import("./session.js");
-
-  await destroySession();
-}
-
-/* =========================
    LOAD PROTECTED IMAGES
 ========================= */
 
 export async function
 loadProtectedImages() {
   console.time("loadProtectedImages");
-  sessionDestroyed = false;
 if (
 
   typeof destroyFireworks ===
@@ -293,24 +272,12 @@ console.time("generateSliderDOM");
         }
       };
 
-imgsw.onerror = async () => {
+      imgsw.src =
+        image.secureUrl;
 
-  console.warn(
-    "Protected image expired"
-  );
+      imgsw.width = 250;
 
-  const sessionModule =
-    await import("./session.js");
-
-  await sessionModule.destroySession();
-};
-
-imgsw.src =
-  image.secureUrl;
-
-imgsw.width = 250;
-
-imgsw.height = 200;
+      imgsw.height = 200;
 
       imgsw.loading = "eager";
 
@@ -331,9 +298,6 @@ imgsw.height = 200;
       const preloadedImage =
         new Image();
 
-      preloadedImage.onerror =
-        handleExpiredImage;    
-
       preloadedImage.onload = () => {
 
         preloadedImage.className =
@@ -350,19 +314,6 @@ imgsw.height = 200;
         );
       };
 
-preloadedImage.onerror =
-  async () => {
-
-    console.warn(
-      "Protected image expired"
-    );
-
-    const sessionModule =
-      await import("./session.js");
-
-    await sessionModule.destroySession();
-  };
-        
       preloadedImage.src =
         image.secureUrl;
 
@@ -405,18 +356,6 @@ console.log("window.NinjaSlider =", window.NinjaSlider);
     try {
       console.time("nslider.init");
       nslider.init();
-
-      const sliderImages =
-        document.querySelectorAll(
-          "#ninja-slider img"
-        );
-
-      sliderImages.forEach(img => {
-
-        img.onerror =
-          handleExpiredImage;
-      });
-
       console.timeEnd("nslider.init");
     } catch (error) {
       console.error(

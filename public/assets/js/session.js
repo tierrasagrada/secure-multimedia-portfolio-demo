@@ -20,13 +20,11 @@ let sessionWatcherActive = false;
 
 let sessionEndsAt = 0;
 
-let sessionClosing = false;
-
 /* =========================
    SESSION DURATION
 ========================= */
 
-const SESSION_LIMIT = 1 * 60 * 1000;
+const SESSION_LIMIT = 5 * 60 * 1000;
 
 /* ==========================================
    EVENTS TO RESET WATCHER SESSION INACTIVE
@@ -296,8 +294,6 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     errorDiv.textContent = "⚠ Session expired.";
     errorDiv.classList.add("active");
   }
-
-sessionClosing = false;  
 }
 
 /* =========================
@@ -376,198 +372,16 @@ document.addEventListener(
   }
 );
 
-/* =========================
-   PROTECTED IMAGE FAIL
-========================= */
-
-document.addEventListener(
-  "error",
-  async (event) => {
-
-    const element = event.target;
-
-    if (
-      !element ||
-      element.tagName !== "IMG"
-    ) {
-      return;
-    }
-
-    const src =
-      element.currentSrc ||
-      element.src ||
-      "";
-
-    if (
-      src.includes(
-        "/api/urlSeguraImagenes"
-      )
-    ) {
-
-      console.log(
-        "IMG error detectado:",
-        src
-      );
-
-      if (sessionClosing) {
-        return;
-      }
-
-      sessionClosing = true;
-
-      await destroySession();
-    }
-
-  },
-  true
-);
-
-/* =========================
-   PAGE RESTORE CHECK
-========================= */
-
-window.addEventListener(
-  "pageshow",
-  async () => {
-
-    console.log(
-      "pageshow ejecutado"
-    );
-
-    try {
-
-      const response =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      console.log(
-        "pageshow status:",
-        response.status
-      );
-
-      if (!response.ok) {
-
-        if (sessionClosing) {
-          return;
-        }
-
-        sessionClosing = true;
-
-        await destroySession();
-      }
-
-    } catch (error) {
-
-      console.log(
-        "pageshow error:",
-        error
-      );
-
-      if (sessionClosing) {
-        return;
-      }
-
-      sessionClosing = true;
-
-      await destroySession();
-    }
-  }
-);
-
-/* =========================
-   TAB VISIBILITY CHECK
-========================= */
-
 document.addEventListener(
   "visibilitychange",
-  async () => {
+  () => {
 
     if (
-      document.visibilityState !==
+      document.visibilityState ===
       "visible"
     ) {
-      return;
-    }
 
-    console.log(
-      "visibilitychange ejecutado"
-    );
-
-    /* =========================
-       CHECK PROTECTED IMAGES
-    ========================= */
-
-    const protectedImages =
-      document.querySelectorAll(
-        "#wanderito img, #wanderito2 img"
-      );
-
-    for (const img of protectedImages) {
-
-      if (
-        img.complete &&
-        img.naturalWidth === 0
-      ) {
-
-        console.log(
-          "Imagen protegida expirada detectada"
-        );
-
-        if (sessionClosing) {
-          return;
-        }
-
-        sessionClosing = true;
-
-        await destroySession();
-
-        return;
-      }
-    }
-
-    /* =========================
-       CHECK SESSION SERVER
-    ========================= */
-
-    try {
-
-      const response =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      if (!response.ok) {
-
-        console.log(
-          "Sesión expirada detectada por visibilitychange"
-        );
-
-        if (sessionClosing) {
-          return;
-        }
-
-        sessionClosing = true;
-
-        await destroySession();
-      }
-
-    } catch {
-
-      if (sessionClosing) {
-        return;
-      }
-
-      sessionClosing = true;
-
-      await destroySession();
+      window.location.reload();
     }
   }
 );
-
