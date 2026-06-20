@@ -380,7 +380,52 @@ document.addEventListener(
       document.visibilityState ===
       "visible"
     ) {
+
       window.location.reload();
+    }
+  }
+);
+
+function imprimirError(mensaje) {
+
+  const cajaError =
+    document.getElementById(
+      "error-box"
+    );
+
+  if (!cajaError) {
+    return;
+  }
+
+  cajaError.textContent =
+    mensaje;
+
+  cajaError.style.display =
+    "block";
+}
+
+document.addEventListener(
+  "visibilitychange",
+  function () {
+
+    imprimirError(
+      "visibilitychange detectado"
+    );
+
+    if (
+      document.visibilityState ===
+      "visible"
+    ) {
+
+      imprimirError(
+        "Usuario volvió a la pestaña"
+      );
+
+    } else {
+
+      imprimirError(
+        "Pestaña en segundo plano"
+      );
     }
   }
 );

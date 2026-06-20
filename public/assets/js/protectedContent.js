@@ -141,7 +141,7 @@ if (!protectedContent.dataset.loaded) {
   protectedContent.dataset.loaded =
     "true";
 }
- imprimirError(mensaje);
+
     protectedContent.style.display =
       "block";
       
@@ -160,20 +160,3 @@ if (!protectedContent.dataset.loaded) {
     return false;
   }
 }
-
-
-      function imprimirError(mensaje) {
-            const cajaError = document.getElementById('error-box');
-            cajaError.textContent = "Error: " + mensaje;
-            cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
-        }
-        imprimirError("estoy en la funcion imprimirError 1");
-document.addEventListener("visibilitychange", function() {
-  imprimirError("estoy en la funcion visibilitychange 2");
-  if (document.visibilityState === "visible") {
-   imprimirError("¡El usuario ha vuelto a la pestaña!");
-    // Aquí puedes ejecutar tus funciones: pausar/reanudar videos, actualizar datos, etc.
-  } else {
-    imprimirError("La pestaña ha pasado a segundo plano.");
-  }
-});
