@@ -1,9 +1,8 @@
 import { apiFetch } from "./api.js";
 
-import { renderProtectedContent, imprimirError } from "./protectedContent.js";
+import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
-
 
 /* =========================
    SESSION TIMEOUT
@@ -373,14 +372,15 @@ document.addEventListener(
   }
 );
 
+document.addEventListener(
+  "visibilitychange",
+  () => {
 
-imprimirError("estoy en la funcion imprimirError 1");
-document.addEventListener("visibilitychange", function() {
-  imprimirError("estoy en la funcion visibilitychange 2");
-  if (document.visibilityState === "visible") {
-   imprimirError("¡El usuario ha vuelto a la pestaña!");
-    // Aquí puedes ejecutar tus funciones: pausar/reanudar videos, actualizar datos, etc.
-  } else {
-    imprimirError("La pestaña ha pasado a segundo plano.");
+    if (
+      document.visibilityState ===
+      "visible"
+    ) {
+      window.location.reload();
+    }
   }
-});
+);
