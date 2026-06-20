@@ -174,3 +174,9 @@ document.addEventListener(
     await restoreProtectedSession();
   }
 );
+
+     export function imprimirError(mensaje) {
+            const cajaError = document.getElementById('error-box');
+            cajaError.textContent = "Error: " + mensaje;
+            cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
+        }

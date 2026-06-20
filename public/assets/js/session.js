@@ -4,6 +4,9 @@ import { renderProtectedContent, imprimirError } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
+import { imprimirError } from "./funcionesfronted.js";
+
+
 /* =========================
    SESSION TIMEOUT
 ========================= */
