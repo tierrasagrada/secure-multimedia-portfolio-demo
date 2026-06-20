@@ -376,10 +376,24 @@ document.addEventListener(
 TAB VISIBILITY CHECK
 ========================= */
 
-document.addEventListener( "visibilitychange",() => {
-  if ( document.visibilityState === "visible" && sessionWatcherActive ) {
-    if ( Date.now() >= sessionEndsAt ) {
-      destroySession();
-      }
+document.addEventListener("visibilitychange",async () => {
+    if (document.visibilityState !== "visible") {
+      return;
     }
-});
+
+    try {
+      const response = await apiFetch(
+          "/api/contenido",{
+            method: "GET"
+          }
+        );
+
+      if (!response.ok) {
+        await destroySession();
+        return;
+      }
+    } catch {
+      await destroySession();
+    }
+  }
+);
