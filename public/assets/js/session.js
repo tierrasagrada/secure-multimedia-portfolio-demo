@@ -571,18 +571,3 @@ document.addEventListener(
   }
 );
 
-setInterval(() => {
-
-  console.log(
-    "heartbeat",
-    Date.now()
-  );
-
-}, 5000);
-
-setInterval(() => {
-
-  document.title =
-    Date.now().toString();
-
-}, 5000);

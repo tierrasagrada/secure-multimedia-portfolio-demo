@@ -293,15 +293,24 @@ console.time("generateSliderDOM");
         }
       };
 
-imgsw.onerror =
-  handleExpiredImage;
+imgsw.onerror = async () => {
 
-      imgsw.src =
-        image.secureUrl;
+  console.warn(
+    "Protected image expired"
+  );
 
-      imgsw.width = 250;
+  const sessionModule =
+    await import("./session.js");
 
-      imgsw.height = 200;
+  await sessionModule.destroySession();
+};
+
+imgsw.src =
+  image.secureUrl;
+
+imgsw.width = 250;
+
+imgsw.height = 200;
 
       imgsw.loading = "eager";
 
@@ -341,6 +350,19 @@ imgsw.onerror =
         );
       };
 
+preloadedImage.onerror =
+  async () => {
+
+    console.warn(
+      "Protected image expired"
+    );
+
+    const sessionModule =
+      await import("./session.js");
+
+    await sessionModule.destroySession();
+  };
+        
       preloadedImage.src =
         image.secureUrl;
 
