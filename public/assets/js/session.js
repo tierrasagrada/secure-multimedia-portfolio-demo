@@ -1,6 +1,6 @@
 import { apiFetch } from "./api.js";
 
-import { renderProtectedContent } from "./protectedContent.js";
+import { renderProtectedContent, imprimirError } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
@@ -373,11 +373,6 @@ document.addEventListener(
 );
 
 
-     function imprimirError(mensaje) {
-            const cajaError = document.getElementById('error-box');
-            cajaError.textContent = "Error: " + mensaje;
-            cajaError.style.display = 'block'; // Muestra el mensaje en la pantalla
-        }
 imprimirError("estoy en la funcion imprimirError 1");
 document.addEventListener("visibilitychange", function() {
   imprimirError("estoy en la funcion visibilitychange 2");
