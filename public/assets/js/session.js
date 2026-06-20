@@ -77,7 +77,6 @@ export function resetSessionTimer() {
 ========================= */
 
 export function startSessionWatcher() { 
-  console.log("startSessionWatcher ejecutado");
   if (sessionWatcherActive) { 
     return;
   }

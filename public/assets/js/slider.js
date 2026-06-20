@@ -7,9 +7,9 @@ from "./csrf.js";
 /* =========================
    LOAD NINJA SLIDER SCRIPT
 ========================= */
-console.log("A");
+
 async function ensureNinjaSliderLoaded() {
-console.log("B");
+
   /* =========================
      REMOVE OLD SCRIPT
   ========================= */
@@ -212,7 +212,6 @@ console.time("fetchProtectedImages");
         body: JSON.stringify({}),
       }
     );
-console.log("C");
 
   if (!response2.ok) {
 
@@ -236,11 +235,7 @@ b.filename ===
 
 return 0;
 });
-  console.log( "Cantidad imágenes:", imagesarray.length );
 console.timeEnd("fetchProtectedImages");
-console.log("D");
-
-console.log("typeof nslider =", typeof nslider);
   /* =========================
      RENDER IMAGES
   ========================= */
@@ -349,9 +344,7 @@ console.timeEnd("generateSliderDOM");
   /* =========================
      INIT SLIDER
   ========================= */
-console.log("typeof nslider =", typeof nslider);
-console.log("window.nslider =", window.nslider);
-console.log("window.NinjaSlider =", window.NinjaSlider);
+
   if (typeof nslider !== "undefined") {
     try {
       console.time("nslider.init");
