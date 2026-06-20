@@ -24,7 +24,7 @@ let sessionEndsAt = 0;
    SESSION DURATION
 ========================= */
 
-const SESSION_LIMIT = 5 * 60 * 1000;
+const SESSION_LIMIT = 1 * 60 * 1000;
 
 /* ==========================================
    EVENTS TO RESET WATCHER SESSION INACTIVE
