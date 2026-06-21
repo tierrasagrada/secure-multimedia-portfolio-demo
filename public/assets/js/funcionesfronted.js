@@ -173,12 +173,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   sessionStorage.removeItem("sessionExpired");
 
-  await restoreProtectedSession();
-
   if (showSessionExpired) {
-
-    requestAnimationFrame(() => {
-      mostrarError("⚠ Session expired.");
-    });
+    mostrarError("⚠ Session expired.");
   }
+
+  await restoreProtectedSession();
 });

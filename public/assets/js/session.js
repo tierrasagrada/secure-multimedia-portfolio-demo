@@ -159,7 +159,7 @@ function stopSessionWatcher() {
 ========================= */
 
 export async function destroySession() {
-alert("DESTROY SESSION EJECUTADO");
+
 stopSessionWatcher();
 
 clearTimeout(sessionTimeout);
