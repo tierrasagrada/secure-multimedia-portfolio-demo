@@ -371,29 +371,52 @@ document.addEventListener(
   }
 );
 
-function imprimirError(mensaje) {
+window.addEventListener(
+  "pageshow",
+  async () => {
 
-  const cajaError =
-    document.getElementById(
-      "error-box"
-    );
+    const protectedContent =
+      document.getElementById(
+        "protected-content"
+      );
 
-  if (!cajaError) {
-    return;
-  }
-
-  cajaError.textContent =
-    mensaje;
-
-  cajaError.style.display =
-    "block";
-}
-
-document.addEventListener("visibilitychange",async () => {
-    if (document.visibilityState !== "visible") {
+    if (
+      !protectedContent ||
+      !protectedContent.dataset.loaded
+    ) {
       return;
     }
-    if (Date.now() >= sessionEndsAt){
+
+    try {
+
+      const response =
+        await apiFetch(
+          "/api/contenido",
+          {
+            method: "GET"
+          }
+        );
+
+      if (!response.ok) {
+
+        if (sessionClosing) {
+          return;
+        }
+
+        sessionClosing = true;
+
+        await destroySession();
+      }
+
+    } catch {
+
+      if (sessionClosing) {
+        return;
+      }
+
+      sessionClosing = true;
+
       await destroySession();
     }
-});
+  }
+);
