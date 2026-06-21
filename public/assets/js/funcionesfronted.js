@@ -164,20 +164,13 @@ document.addEventListener(
     });
   }
 );
+//intenta recuperar una sesión válida existente. Si la cookie ya expiró: no muestra contenido protegido
+document.addEventListener(
 
-//bloque que controla la restauración de la sesión y se ejecuta siempre al cargar la aplicación
-document.addEventListener("DOMContentLoaded", async () => {
+  "DOMContentLoaded",
 
-  const showSessionExpired =
-    sessionStorage.getItem("sessionExpired") === "true";
+  async () => {
 
-  sessionStorage.removeItem("sessionExpired");
-
-  await restoreProtectedSession();
-
-  setTimeout(() => {
-    if (showSessionExpired) {
-      mostrarError("⚠ Session expired.");
-    }
-  }, 50);
-});
+    await restoreProtectedSession();
+  }
+);

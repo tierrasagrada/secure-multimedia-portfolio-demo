@@ -289,10 +289,17 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   const errorDiv = document.getElementById("error");
 
-  if (errorDiv) {
-    errorDiv.textContent = "⚠ Session expired.";
+if (errorDiv) {
+
+  setTimeout(() => {
+
+    errorDiv.textContent =
+      "⚠ Session expired.";
+
     errorDiv.classList.add("active");
-  }
+
+  }, 500);
+}
 }
 
 /* =========================
