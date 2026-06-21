@@ -289,10 +289,33 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   const errorDiv = document.getElementById("error");
 
-  if (errorDiv) {
-    errorDiv.textContent = "⚠ Session expired.";
-    errorDiv.classList.add("active");
-  }
+if (errorDiv) {
+
+  errorDiv.textContent =
+    "⚠ Session expired.";
+
+  errorDiv.style.display =
+    "block";
+
+  errorDiv.style.visibility =
+    "visible";
+
+  errorDiv.style.opacity =
+    "1";
+
+  errorDiv.style.border =
+    "3px solid red";
+
+  errorDiv.style.background =
+    "yellow";
+
+  errorDiv.style.color =
+    "black";
+
+  errorDiv.classList.add(
+    "active"
+  );
+}
 }
 
 /* =========================

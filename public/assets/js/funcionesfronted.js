@@ -165,11 +165,42 @@ document.addEventListener(
   }
 );
 
+//bloque que controla la restauración de la sesión y se ejecuta siempre al cargar la aplicación
 document.addEventListener(
 
   "DOMContentLoaded",
 
   async () => {
+
+    /* =========================
+       SHOW EXPIRED MESSAGE
+    ========================= */
+
+    if (
+      sessionStorage.getItem(
+        "sessionExpired"
+      ) === "true"
+    ) {
+
+      sessionStorage.removeItem(
+        "sessionExpired"
+      );
+
+      const errorDiv =
+        document.getElementById(
+          "error"
+        );
+
+      if (errorDiv) {
+
+        errorDiv.textContent =
+          "⚠ Session expired.";
+
+        errorDiv.classList.add(
+          "active"
+        );
+      }
+    }
 
     await restoreProtectedSession();
   }
