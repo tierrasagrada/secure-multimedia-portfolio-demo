@@ -31,14 +31,21 @@ renderProtectedContent() {
       );
 
   if (!contentResponse.ok) {
-
+alert(
+  "hadValidSession = " +
+  localStorage.getItem(
+    "hadValidSession"
+  )
+);
     if (
       contentResponse.status === 401 &&
       localStorage.getItem(
         "hadValidSession"
       ) === "true"
     ) {
-
+        alert(
+    "ENTRO AL BLOQUE hadValidSession"
+  );
       localStorage.removeItem(
         "hadValidSession"
       );
