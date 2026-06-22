@@ -296,41 +296,67 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 ========================= */
 
 export async function restoreProtectedSession() {
+
   alert(
-  "localStorage keys = " +
-  Object.keys(localStorage).join(",")
-);
-alert(
+    "localStorage keys = " +
+    Object.keys(localStorage).join(",")
+  );
+
+  alert(
     "ANTES hadValidSession = " +
     localStorage.getItem(
       "hadValidSession"
     )
   );
+
   try {
 
     const result =
       await renderProtectedContent();
-alert(
-  "restoreProtectedSession result = " +
-  JSON.stringify(result)
-);
-alert(
-  "hadValidSession = " +
-  localStorage.getItem("hadValidSession")
-);
+
+    alert(
+      "restoreProtectedSession result = " +
+      JSON.stringify(result)
+    );
+
+    alert(
+      "hadValidSession = " +
+      localStorage.getItem(
+        "hadValidSession"
+      )
+    );
+
     if (result.ok) {
 
       startSessionWatcher();
+
       return;
     }
 
-    // 🔥 SOLO AQUÍ manejamos errores
+    alert(
+      "ENTRO BLOQUE ERROR = " +
+      JSON.stringify(result)
+    );
 
     if (result.status === 401) {
 
-      if (localStorage.getItem("hadValidSession") === "true") {
+      alert(
+        "STATUS 401 DETECTADO"
+      );
 
-        localStorage.removeItem("hadValidSession");
+      if (
+        localStorage.getItem(
+          "hadValidSession"
+        ) === "true"
+      ) {
+
+        alert(
+          "ENTRO BLOQUE SESSION EXPIRED"
+        );
+
+        localStorage.removeItem(
+          "hadValidSession"
+        );
 
         showSessionExpiredMessage();
       }
@@ -338,19 +364,33 @@ alert(
       return;
     }
 
-    // otros errores (opcional UI genérica)
-    if (result.status === "network_error") {
-      mostrarError("⚠ Connection error");
+    if (
+      result.status ===
+      "network_error"
+    ) {
+
+      alert(
+        "NETWORK ERROR DETECTADO"
+      );
+
+      mostrarError(
+        "⚠ Connection error"
+      );
     }
 
   } catch (error) {
 
+    alert(
+      "CATCH restoreProtectedSession"
+    );
+
     console.error(error);
-  }
 
-  finally {
+  } finally {
 
-    document.body.classList.remove("auth-loading");
+    document.body.classList.remove(
+      "auth-loading"
+    );
   }
 }
 
