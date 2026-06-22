@@ -301,7 +301,14 @@ export async function restoreProtectedSession() {
 
     const result =
       await renderProtectedContent();
-
+alert(
+  "restoreProtectedSession result = " +
+  JSON.stringify(result)
+);
+alert(
+  "hadValidSession = " +
+  localStorage.getItem("hadValidSession")
+);
     if (result.ok) {
 
       startSessionWatcher();
