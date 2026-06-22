@@ -302,23 +302,29 @@ export async function restoreProtectedSession() {
     const result =
       await renderProtectedContent();
 
-    if (result?.ok) {
+    if (result.ok) {
 
       startSessionWatcher();
+      return;
     }
 
-    // 👇 AQUÍ manejamos errores globalmente
-    if (!result?.ok) {
+    // 🔥 SOLO AQUÍ manejamos errores
 
-      if (
-        result.status === 401 &&
-        localStorage.getItem("hadValidSession") === "true"
-      ) {
+    if (result.status === 401) {
+
+      if (localStorage.getItem("hadValidSession") === "true") {
 
         localStorage.removeItem("hadValidSession");
 
         showSessionExpiredMessage();
       }
+
+      return;
+    }
+
+    // otros errores (opcional UI genérica)
+    if (result.status === "network_error") {
+      mostrarError("⚠ Connection error");
     }
 
   } catch (error) {

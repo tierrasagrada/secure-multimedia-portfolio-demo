@@ -162,6 +162,9 @@ if (!protectedContent.dataset.loaded) {
 
     console.error(error);
 
-    return false;
+    return {
+      ok: false,
+      status: "network_error"
+    };
   }
 }
