@@ -72,7 +72,7 @@ export function desbloquearBoton() {
 }
 
 export function showSessionExpiredMessage() {
-
+alert("showSessionExpiredMessage llamada");
   const errorDiv = document.getElementById("error");
 
   if (!errorDiv) return;
