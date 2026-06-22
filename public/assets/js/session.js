@@ -364,19 +364,14 @@ export async function restoreProtectedSession() {
       return;
     }
 
-    if (
-      result.status ===
-      "network_error"
-    ) {
-
-      alert(
-        "NETWORK ERROR DETECTADO"
-      );
-
-      mostrarError(
-        "⚠ Connection error"
-      );
-    }
+if (result.status === "network_error") {
+  if (localStorage.getItem("hadValidSession") === "true") {
+    localStorage.removeItem("hadValidSession");
+    await destroySession();
+    return;
+  }
+  mostrarError("⚠ Connection error");
+}
 
   } catch (error) {
 
