@@ -22,6 +22,8 @@ let sessionEndsAt = 0;
 
 let pageShowInitialized = false;
 
+let sessionClosing = false;
+
 /* =========================
    SESSION DURATION
 ========================= */
@@ -290,9 +292,8 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   ========================= */
 
   const errorDiv = document.getElementById("error");
-alert("destroySession ejecutado 1");
+
   if (errorDiv) {
-    alert("destroySession ejecutado 2");
     errorDiv.textContent = "⚠ Session expired.";
     errorDiv.classList.add("active");
   }

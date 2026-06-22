@@ -13,21 +13,6 @@ let delay = 1000;
    MAIN EVENT
 ========================= */
 
-window.addEventListener("pageshow", (event) => {
-
-  alert(
-    "pageshow persisted = " +
-    event.persisted
-  );
-
-});
-
-window.addEventListener("load", () => {
-
-  alert("window load");
-
-});
-
 submitButton.addEventListener("click", async () => {
 
   /* =========================
@@ -131,6 +116,11 @@ if (!data.success) {
 
   return;
 }
+
+  localStorage.setItem(
+    "hadValidSession",
+    "true"
+  );
 
 /* =========================
    LOAD PROTECTED SESSION

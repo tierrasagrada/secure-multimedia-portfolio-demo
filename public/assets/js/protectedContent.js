@@ -30,15 +30,41 @@ renderProtectedContent() {
         }
       );
 
-if (!contentResponse.ok) {
+  if (!contentResponse.ok) {
 
-  alert(
-    "renderProtectedContent status: " +
-    contentResponse.status
-  );
+    if (
+      contentResponse.status === 401 &&
+      localStorage.getItem(
+        "hadValidSession"
+      ) === "true"
+    ) {
 
-  return false;
-}
+      localStorage.removeItem(
+        "hadValidSession"
+      );
+
+      localStorage.removeItem(
+        "sessionExpired"
+      );
+
+      const errorDiv =
+        document.getElementById(
+          "error"
+        );
+
+      if (errorDiv) {
+
+        errorDiv.textContent =
+          "⚠ Session expired.";
+
+        errorDiv.classList.add(
+          "active"
+        );
+      }
+    }
+
+    return false;
+  }
     const data =
       await contentResponse.json();
 
