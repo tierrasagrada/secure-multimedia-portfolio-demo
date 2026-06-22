@@ -20,6 +20,8 @@ let sessionWatcherActive = false;
 
 let sessionEndsAt = 0;
 
+let pageShowInitialized = false;
+
 /* =========================
    SESSION DURATION
 ========================= */
@@ -287,19 +289,22 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      USER MESSAGE
   ========================= */
 
-  const errorDiv = document.getElementById("error");
+setTimeout(() => {
 
-if (errorDiv) {
+  const errorDiv =
+    document.getElementById("error");
 
-  setTimeout(() => {
+  if (errorDiv) {
 
     errorDiv.textContent =
       "⚠ Session expired.";
 
-    errorDiv.classList.add("active");
+    errorDiv.classList.add(
+      "active"
+    );
+  }
 
-  }, 500);
-}
+}, 1000);
 }
 
 /* =========================
@@ -378,10 +383,35 @@ document.addEventListener(
   }
 );
 
+/*function imprimirError(mensaje) {
+
+  const cajaError =
+    document.getElementById(
+      "error-box"
+    );
+
+  if (!cajaError) {
+    return;
+  }
+
+  cajaError.textContent =
+    mensaje;
+
+  cajaError.style.display =
+    "block";
+}*/
+
 window.addEventListener(
   "pageshow",
   async () => {
 
+    if (!pageShowInitialized) {
+
+      pageShowInitialized = true;
+
+      return;
+    }
+        
     const protectedContent =
       document.getElementById(
         "protected-content"
