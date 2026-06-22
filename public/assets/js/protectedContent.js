@@ -30,48 +30,14 @@ renderProtectedContent() {
         }
       );
 
-  if (!contentResponse.ok) {
-alert(
-  "hadValidSession = " +
-  localStorage.getItem(
-    "hadValidSession"
-  )
-);
-    if (
-      contentResponse.status === 401 &&
-      localStorage.getItem(
-        "hadValidSession"
-      ) === "true"
-    ) {
-        alert(
-    "ENTRO AL BLOQUE hadValidSession"
-  );
-      localStorage.removeItem(
-        "hadValidSession"
-      );
+    if (!contentResponse.ok) {
 
-      localStorage.removeItem(
-        "sessionExpired"
-      );
-
-      const errorDiv =
-        document.getElementById(
-          "error"
-        );
-
-      if (errorDiv) {
-
-        errorDiv.textContent =
-          "⚠ Session expired.";
-
-        errorDiv.classList.add(
-          "active"
-        );
-      }
+      return {
+        ok: false,
+        status: contentResponse.status
+      };
     }
 
-    return false;
-  }
     const data =
       await contentResponse.json();
 
@@ -188,7 +154,9 @@ if (!protectedContent.dataset.loaded) {
 
     await loadProtectedImages();
 
-    return true;
+    return {
+      ok: true
+    };
 
   } catch (error) {
 

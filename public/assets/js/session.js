@@ -4,6 +4,8 @@ import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
+import { showSessionExpiredMessage } from "./security-ui.js";
+
 /* =========================
    SESSION TIMEOUT
 ========================= */
@@ -197,7 +199,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   }
 
   sessionWarningActive = false;  
-
+  showSessionExpiredMessage();
   /* =========================
      HIDE PROTECTED CONTENT
   ========================= */
@@ -212,7 +214,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     ========================= */
 
     delete protectedContent.dataset.loaded;
-
+    
     /* =========================
       DESTROY IFRAMES
     ========================= */
@@ -287,48 +289,46 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     answerInput.value = "";
   }
 
-  /* =========================
-     USER MESSAGE
-  ========================= */
-
-  const errorDiv = document.getElementById("error");
-
-  if (errorDiv) {
-    errorDiv.textContent = "⚠ Session expired.";
-    errorDiv.classList.add("active");
-  }
 }
 
 /* =========================
    RESTORE SESSION
 ========================= */
 
-export async function
-restoreProtectedSession() {
+export async function restoreProtectedSession() {
 
   try {
 
-    const restored =
+    const result =
       await renderProtectedContent();
 
-    if (restored) {
+    if (result?.ok) {
 
       startSessionWatcher();
+    }
+
+    // 👇 AQUÍ manejamos errores globalmente
+    if (!result?.ok) {
+
+      if (
+        result.status === 401 &&
+        localStorage.getItem("hadValidSession") === "true"
+      ) {
+
+        localStorage.removeItem("hadValidSession");
+
+        showSessionExpiredMessage();
+      }
     }
 
   } catch (error) {
 
     console.error(error);
+  }
 
-  } finally {
+  finally {
 
-    /* =========================
-       SHOW APPLICATION
-    ========================= */
-
-    document.body.classList.remove(
-      "auth-loading"
-    );
+    document.body.classList.remove("auth-loading");
   }
 }
 
