@@ -296,6 +296,10 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 ========================= */
 
 export async function restoreProtectedSession() {
+  alert(
+  "localStorage keys = " +
+  Object.keys(localStorage).join(",")
+);
 alert(
     "ANTES hadValidSession = " +
     localStorage.getItem(
