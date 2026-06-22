@@ -30,11 +30,15 @@ renderProtectedContent() {
         }
       );
 
-    if (!contentResponse.ok) {
+if (!contentResponse.ok) {
 
-      return false;
-    }
+  alert(
+    "renderProtectedContent status: " +
+    contentResponse.status
+  );
 
+  return false;
+}
     const data =
       await contentResponse.json();
 
