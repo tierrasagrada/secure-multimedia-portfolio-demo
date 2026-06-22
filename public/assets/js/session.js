@@ -289,22 +289,13 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      USER MESSAGE
   ========================= */
 
-setTimeout(() => {
-
-  const errorDiv =
-    document.getElementById("error");
-
+  const errorDiv = document.getElementById("error");
+alert("destroySession ejecutado 1");
   if (errorDiv) {
-
-    errorDiv.textContent =
-      "⚠ Session expired.";
-
-    errorDiv.classList.add(
-      "active"
-    );
+    alert("destroySession ejecutado 2");
+    errorDiv.textContent = "⚠ Session expired.";
+    errorDiv.classList.add("active");
   }
-
-}, 1000);
 }
 
 /* =========================
