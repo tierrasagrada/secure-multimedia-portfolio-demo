@@ -13,6 +13,21 @@ let delay = 1000;
    MAIN EVENT
 ========================= */
 
+window.addEventListener("pageshow", (event) => {
+
+  alert(
+    "pageshow persisted = " +
+    event.persisted
+  );
+
+});
+
+window.addEventListener("load", () => {
+
+  alert("window load");
+
+});
+
 submitButton.addEventListener("click", async () => {
 
   /* =========================
