@@ -121,6 +121,12 @@ if (!data.success) {
     "hadValidSession",
     "true"
   );
+  alert(
+  "guardado hadValidSession = " +
+  localStorage.getItem(
+    "hadValidSession"
+  )
+);
 
 /* =========================
    LOAD PROTECTED SESSION
