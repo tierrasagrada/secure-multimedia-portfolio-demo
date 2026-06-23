@@ -291,24 +291,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
    RESTORE SESSION
 ========================= */
 
-let lastRestoreAttempt = 0;
-let restoreInProgress = false;
-
 export async function restoreProtectedSession() {
-
-  const now = Date.now();
-
-  // 🔥 throttle ANTES de cualquier fetch (CRÍTICO)
-  if (now - lastRestoreAttempt < 1500) {
-    return;
-  }
-
-  if (restoreInProgress) {
-    return;
-  }
-
-  lastRestoreAttempt = now;
-  restoreInProgress = true;
 
   try {
 
@@ -324,35 +307,50 @@ export async function restoreProtectedSession() {
     }
 
     /* =========================
-       SESSION EXPIRED REAL (backend)
+       SESSION EXPIRED REAL
     ========================= */
 
     if (result.status === 401) {
 
-      if (localStorage.getItem("hadValidSession") === "true") {
-        localStorage.removeItem("hadValidSession");
-        await destroySession();
-      }
+      localStorage.removeItem(
+        "hadValidSession"
+      );      
 
+      await destroySession();
       return;
     }
 
     /* =========================
-       NETWORK ERROR
-       → NO destruir sesión
-       → solo ignorar o retry silencioso
+       NETWORK / UNKNOWN ERROR
+       → RETRY CONTROLADO
     ========================= */
 
     if (result.status === "network_error") {
-      // 🔴 IMPORTANTE: NO destruir sesión aquí
-      // evita falsos logout en Android
+
+      if (localStorage.getItem("hadValidSession") === "true") {
+            localStorage.removeItem(
+              "hadValidSession"
+            );
+
+          await destroySession();
+
+          return;
+      }
+
+      mostrarError(
+        "⚠ Connection error"
+      );
+
       return;
     }
 
   } catch (error) {
+
     console.error(error);
+
+
   } finally {
-    restoreInProgress = false;
+
     document.body.classList.remove("auth-loading");
   }
 }
