@@ -291,13 +291,20 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
    RESTORE SESSION
 ========================= */
 
-
+let lastRestoreAttempt = 0;
 export async function restoreProtectedSession() {
-
+const now = Date.now();
   try {
 
     const result = await renderProtectedContent();
 
+      const now = Date.now();
+
+  // 🔥 throttle fuerte para Android
+  if (now - lastRestoreAttempt < 1500) return;
+
+  lastRestoreAttempt = now;
+  
     /* =========================
        OK → sesión válida
     ========================= */
