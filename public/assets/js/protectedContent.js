@@ -127,14 +127,18 @@ renderProtectedContent() {
       }      
     }
 
-    /* =========================
-       RENDER HTML
-    ========================= */
+ /* =========================
+   RENDER HTML (SAFE RENDER)
+========================= */
 
-    const protectedContent =
-      document.getElementById(
-        "protected-content"
-      );
+const protectedContent =
+  document.getElementById(
+    "protected-content"
+  );
+
+/* =========================
+   SOLO INYECTAR HTML 1 VEZ
+========================= */
 
 if (!protectedContent.dataset.loaded) {
 
@@ -145,18 +149,52 @@ if (!protectedContent.dataset.loaded) {
     "true";
 }
 
-    protectedContent.style.display =
-      "block";
-      
-    /* =========================
-       LOAD IMAGES
-    ========================= */
+/* =========================
+   SIEMPRE ASEGURAR VISIBILIDAD
+========================= */
 
-    await loadProtectedImages();
+protectedContent.style.display =
+  "block";
 
-    return {
-      ok: true
-    };
+/* =========================
+   PREVENIR DUPLICACIÓN DE UI DINÁMICA
+========================= */
+
+/* CLAVE: limpiar antes de volver a inicializar efectos */
+
+const wanderito =
+  document.getElementById("wanderito");
+
+const wanderito2 =
+  document.getElementById("wanderito2");
+
+if (wanderito) {
+  wanderito.innerHTML = "";
+}
+
+if (wanderito2) {
+  wanderito2.innerHTML = "";
+}
+
+/* =========================
+   PREVENIR DOBLE INIT DE IMÁGENES
+========================= */
+
+if (!protectedContent.dataset.imagesLoaded) {
+
+  await loadProtectedImages();
+
+  protectedContent.dataset.imagesLoaded =
+    "true";
+}
+
+/* =========================
+   RESULTADO
+========================= */
+
+return {
+  ok: true
+};
 
   } catch (error) {
 
