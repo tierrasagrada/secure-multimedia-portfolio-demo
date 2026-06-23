@@ -176,18 +176,22 @@ if (wanderito2) {
   wanderito2.innerHTML = "";
 }
 
-/* =========================
-   PREVENIR DOBLE INIT DE IMÁGENES
-========================= */
+/*
+  IMPORTANTE:
+  En Android + pageshow, el DOM puede quedar inconsistente.
+  Por eso NO usamos cache estricto.
+*/
 
-if (!protectedContent.dataset.imagesLoaded) {
+const shouldReloadImages =
+  !protectedContent.dataset.imagesLoaded ||
+  document.visibilityState === "visible";
+
+if (shouldReloadImages) {
 
   await loadProtectedImages();
 
-  protectedContent.dataset.imagesLoaded =
-    "true";
+  protectedContent.dataset.imagesLoaded = "true";
 }
-
 /* =========================
    RESULTADO
 ========================= */
