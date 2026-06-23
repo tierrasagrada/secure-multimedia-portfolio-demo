@@ -273,9 +273,9 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      SHOW LOGIN
   ========================= */
 
-  document.getElementById("security-container")?.style.display = "block";
+  document.getElementById('security-container') && (document.getElementById('security-container').style.display = 'block');
 
-  document.getElementById("security-footer")?.style.display = "block";
+  document.getElementById('security-footer') && (document.getElementById('security-footer').style.display = 'block');
 
   /* =========================
      CLEAR INPUT
