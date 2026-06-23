@@ -311,15 +311,23 @@ export async function restoreProtectedSession() {
        SESSION EXPIRED REAL
     ========================= */
 
-    if (result.status === 401) {
+if (result.status === 401) {
 
-      localStorage.removeItem(
-        "hadValidSession"
-      );      
+  if (
+    localStorage.getItem(
+      "hadValidSession"
+    ) === "true"
+  ) {
 
-      await destroySession();
-      return;
-    }
+    localStorage.removeItem(
+      "hadValidSession"
+    );
+
+    await destroySession();
+  }
+
+  return;
+}
 
     /* =========================
        NETWORK / UNKNOWN ERROR
