@@ -4,7 +4,7 @@ import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
-import { showSessionExpiredMessage } from "./security-ui.js";
+import { mostrarError } from "./security-ui.js";
 
 /* =========================
    SESSION TIMEOUT
@@ -86,6 +86,8 @@ export function startSessionWatcher() {
   if (sessionWatcherActive) { 
     return;
   }
+
+  sessionClosing = false;
 
   sessionWatcherActive = true;
 
@@ -199,7 +201,11 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   }
 
   sessionWarningActive = false;  
-  showSessionExpiredMessage();
+
+  mostrarError(
+    "⚠ Session expired."
+  );
+  
   /* =========================
      HIDE PROTECTED CONTENT
   ========================= */
@@ -267,26 +273,16 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      SHOW LOGIN
   ========================= */
 
-  const securityContainer = document.getElementById("security-container");
+  document.getElementById('security-container') && (document.getElementById('security-container').style.display = 'block');
 
-  const securityFooter = document.getElementById("security-footer");
-
-  if (securityContainer) {
-    securityContainer.style.display = "block";
-  }
-
-  if (securityFooter) {
-    securityFooter.style.display = "block";
-  }
+  document.getElementById('security-footer') && (document.getElementById('security-footer').style.display = 'block');
 
   /* =========================
      CLEAR INPUT
   ========================= */
-
-  const answerInput = document.getElementById("answer");
-
-  if (answerInput) {
-    answerInput.value = "";
+  const answerElement = document.getElementById("answer");
+  if (answerElement) {
+      answerElement.value = "";
   }
 
 }
@@ -295,61 +291,68 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
    RESTORE SESSION
 ========================= */
 
+let lastRestoreAttempt = 0;
+let restoreInProgress = false;
+
 export async function restoreProtectedSession() {
-  alert(
-  "localStorage keys = " +
-  Object.keys(localStorage).join(",")
-);
-alert(
-    "ANTES hadValidSession = " +
-    localStorage.getItem(
-      "hadValidSession"
-    )
-  );
+
+  const now = Date.now();
+
+  // 🔥 throttle ANTES de cualquier fetch (CRÍTICO)
+  if (now - lastRestoreAttempt < 1500) {
+    return;
+  }
+
+  if (restoreInProgress) {
+    return;
+  }
+
+  lastRestoreAttempt = now;
+  restoreInProgress = true;
+
   try {
 
-    const result =
-      await renderProtectedContent();
-alert(
-  "restoreProtectedSession result = " +
-  JSON.stringify(result)
-);
-alert(
-  "hadValidSession = " +
-  localStorage.getItem("hadValidSession")
-);
-    if (result.ok) {
+    const result = await renderProtectedContent();
 
+    /* =========================
+       OK → sesión válida
+    ========================= */
+
+    if (result.ok) {
       startSessionWatcher();
       return;
     }
 
-    // 🔥 SOLO AQUÍ manejamos errores
+    /* =========================
+       SESSION EXPIRED REAL (backend)
+    ========================= */
 
     if (result.status === 401) {
 
       if (localStorage.getItem("hadValidSession") === "true") {
-
         localStorage.removeItem("hadValidSession");
-
-        showSessionExpiredMessage();
+        await destroySession();
       }
 
       return;
     }
 
-    // otros errores (opcional UI genérica)
+    /* =========================
+       NETWORK ERROR
+       → NO destruir sesión
+       → solo ignorar o retry silencioso
+    ========================= */
+
     if (result.status === "network_error") {
-      mostrarError("⚠ Connection error");
+      // 🔴 IMPORTANTE: NO destruir sesión aquí
+      // evita falsos logout en Android
+      return;
     }
 
   } catch (error) {
-
     console.error(error);
-  }
-
-  finally {
-
+  } finally {
+    restoreInProgress = false;
     document.body.classList.remove("auth-loading");
   }
 }
@@ -425,49 +428,21 @@ window.addEventListener(
 
       return;
     }
-        
-    const protectedContent =
-      document.getElementById(
-        "protected-content"
-      );
+
+    await restoreProtectedSession();
+  }
+);
+
+document.addEventListener(
+  "visibilitychange",
+  async () => {
 
     if (
-      !protectedContent ||
-      !protectedContent.dataset.loaded
+      document.visibilityState ===
+      "visible"
     ) {
-      return;
-    }
 
-    try {
-
-      const response =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      if (!response.ok) {
-
-        if (sessionClosing) {
-          return;
-        }
-
-        sessionClosing = true;
-
-        await destroySession();
-      }
-
-    } catch {
-
-      if (sessionClosing) {
-        return;
-      }
-
-      sessionClosing = true;
-
-      await destroySession();
+      await restoreProtectedSession();
     }
   }
 );
