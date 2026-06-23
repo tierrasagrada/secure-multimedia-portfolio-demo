@@ -183,9 +183,8 @@ if (wanderito2) {
 */
 
 const shouldReloadImages =
-  !protectedContent.dataset.imagesLoaded ||
-  document.visibilityState === "visible";
-
+  !protectedContent.dataset.imagesLoaded;
+  
 if (shouldReloadImages) {
 
   await loadProtectedImages();

@@ -220,6 +220,8 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     ========================= */
 
     delete protectedContent.dataset.loaded;
+
+    delete protectedContent.dataset.imagesLoaded;
     
     /* =========================
       DESTROY IFRAMES
@@ -290,8 +292,15 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 /* =========================
    RESTORE SESSION
 ========================= */
+let restoreInProgress = false;
 
 export async function restoreProtectedSession() {
+
+  if (restoreInProgress) {
+    return;
+  }
+
+  restoreInProgress = true;
 
   try {
 
@@ -350,7 +359,7 @@ export async function restoreProtectedSession() {
 
 
   } finally {
-
+    restoreInProgress = false;
     document.body.classList.remove("auth-loading");
   }
 }
