@@ -4,7 +4,7 @@ import { renderProtectedContent } from "./protectedContent.js";
 
 import { getCSRFToken } from "./csrf.js";
 
-import { showSessionExpiredMessage } from "./security-ui.js";
+import { mostrarError } from "./security-ui.js";
 
 /* =========================
    SESSION TIMEOUT
@@ -86,6 +86,8 @@ export function startSessionWatcher() {
   if (sessionWatcherActive) { 
     return;
   }
+
+  sessionClosing = false;
 
   sessionWatcherActive = true;
 
@@ -199,7 +201,11 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   }
 
   sessionWarningActive = false;  
-  showSessionExpiredMessage();
+
+  mostrarError(
+    "⚠ Session expired."
+  );
+  
   /* =========================
      HIDE PROTECTED CONTENT
   ========================= */
@@ -267,27 +273,15 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
      SHOW LOGIN
   ========================= */
 
-  const securityContainer = document.getElementById("security-container");
+  document.getElementById("security-container")?.style.display = "block";
 
-  const securityFooter = document.getElementById("security-footer");
-
-  if (securityContainer) {
-    securityContainer.style.display = "block";
-  }
-
-  if (securityFooter) {
-    securityFooter.style.display = "block";
-  }
+  document.getElementById("security-footer")?.style.display = "block";
 
   /* =========================
      CLEAR INPUT
   ========================= */
 
-  const answerInput = document.getElementById("answer");
-
-  if (answerInput) {
-    answerInput.value = "";
-  }
+  document.getElementById("answer")?.value = "";
 
 }
 
@@ -295,97 +289,68 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
    RESTORE SESSION
 ========================= */
 
+
 export async function restoreProtectedSession() {
-
-  alert(
-    "localStorage keys = " +
-    Object.keys(localStorage).join(",")
-  );
-
-  alert(
-    "ANTES hadValidSession = " +
-    localStorage.getItem(
-      "hadValidSession"
-    )
-  );
 
   try {
 
-    const result =
-      await renderProtectedContent();
+    const result = await renderProtectedContent();
 
-    alert(
-      "restoreProtectedSession result = " +
-      JSON.stringify(result)
-    );
-
-    alert(
-      "hadValidSession = " +
-      localStorage.getItem(
-        "hadValidSession"
-      )
-    );
+    /* =========================
+       OK → sesión válida
+    ========================= */
 
     if (result.ok) {
-
       startSessionWatcher();
-
       return;
     }
 
-    alert(
-      "ENTRO BLOQUE ERROR = " +
-      JSON.stringify(result)
-    );
+    /* =========================
+       SESSION EXPIRED REAL
+    ========================= */
 
     if (result.status === 401) {
 
-      alert(
-        "STATUS 401 DETECTADO"
-      );
+      localStorage.removeItem(
+        "hadValidSession"
+      );      
 
-      if (
-        localStorage.getItem(
-          "hadValidSession"
-        ) === "true"
-      ) {
+      await destroySession();
+      return;
+    }
 
-        alert(
-          "ENTRO BLOQUE SESSION EXPIRED"
-        );
+    /* =========================
+       NETWORK / UNKNOWN ERROR
+       → RETRY CONTROLADO
+    ========================= */
 
-        localStorage.removeItem(
-          "hadValidSession"
-        );
+    if (result.status === "network_error") {
 
-        showSessionExpiredMessage();
+      if (localStorage.getItem("hadValidSession") === "true") {
+            localStorage.removeItem(
+              "hadValidSession"
+            );
+
+          await destroySession();
+
+          return;
       }
+
+      mostrarError(
+        "⚠ Connection error"
+      );
 
       return;
     }
 
-if (result.status === "network_error") {
-  if (localStorage.getItem("hadValidSession") === "true") {
-    localStorage.removeItem("hadValidSession");
-    await destroySession();
-    return;
-  }
-  mostrarError("⚠ Connection error");
-}
-
   } catch (error) {
-
-    alert(
-      "CATCH restoreProtectedSession"
-    );
 
     console.error(error);
 
+
   } finally {
 
-    document.body.classList.remove(
-      "auth-loading"
-    );
+    document.body.classList.remove("auth-loading");
   }
 }
 
@@ -460,49 +425,21 @@ window.addEventListener(
 
       return;
     }
-        
-    const protectedContent =
-      document.getElementById(
-        "protected-content"
-      );
+
+    await restoreProtectedSession();
+  }
+);
+
+document.addEventListener(
+  "visibilitychange",
+  async () => {
 
     if (
-      !protectedContent ||
-      !protectedContent.dataset.loaded
+      document.visibilityState ===
+      "visible"
     ) {
-      return;
-    }
 
-    try {
-
-      const response =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      if (!response.ok) {
-
-        if (sessionClosing) {
-          return;
-        }
-
-        sessionClosing = true;
-
-        await destroySession();
-      }
-
-    } catch {
-
-      if (sessionClosing) {
-        return;
-      }
-
-      sessionClosing = true;
-
-      await destroySession();
+      await restoreProtectedSession();
     }
   }
 );

@@ -70,13 +70,3 @@ export function desbloquearBoton() {
   submitButton.style.cursor =
     "pointer";
 }
-
-export function showSessionExpiredMessage() {
-alert("showSessionExpiredMessage llamada");
-  const errorDiv = document.getElementById("error");
-
-  if (!errorDiv) return;
-
-  errorDiv.textContent = "⚠ Session expired.";
-  errorDiv.classList.add("active");
-}
