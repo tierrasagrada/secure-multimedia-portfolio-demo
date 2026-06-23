@@ -280,8 +280,10 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   /* =========================
      CLEAR INPUT
   ========================= */
-
-  document.getElementById("answer")?.value = "";
+  const answerElement = document.getElementById("answer");
+  if (answerElement) {
+      answerElement.value = "";
+  }
 
 }
 
