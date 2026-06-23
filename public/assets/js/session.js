@@ -440,16 +440,3 @@ window.addEventListener(
   }
 );
 
-document.addEventListener(
-  "visibilitychange",
-  async () => {
-
-    if (
-      document.visibilityState ===
-      "visible"
-    ) {
-
-      await restoreProtectedSession();
-    }
-  }
-);
