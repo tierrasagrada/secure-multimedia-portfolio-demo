@@ -321,11 +321,19 @@ export async function restoreProtectedSession() {
 
     if (result.status === 401) {
 
-      localStorage.removeItem(
-        "hadValidSession"
-      );      
+      if (
+        localStorage.getItem(
+          "hadValidSession"
+        ) === "true"
+      ) {
 
-      await destroySession();
+        localStorage.removeItem(
+          "hadValidSession"
+        );
+
+        await destroySession();
+      }
+
       return;
     }
 
@@ -432,11 +440,13 @@ window.addEventListener(
     if (!pageShowInitialized) {
 
       pageShowInitialized = true;
-
       return;
+    }
+
+    if (sessionWatcherActive) {
+      resetSessionTimer();
     }
 
     await restoreProtectedSession();
   }
 );
-
