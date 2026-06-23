@@ -177,24 +177,15 @@ if (wanderito2) {
 }
 
 /* =========================
-   IMÁGENES (RENDER SIEMPRE CONSISTENTE)
+   PREVENIR DOBLE INIT DE IMÁGENES
 ========================= */
 
-/*
-  IMPORTANTE:
-  En Android + pageshow, el DOM puede quedar inconsistente.
-  Por eso NO usamos cache estricto.
-*/
-
-const shouldReloadImages =
-  !protectedContent.dataset.imagesLoaded ||
-  document.visibilityState === "visible";
-
-if (shouldReloadImages) {
+if (!protectedContent.dataset.imagesLoaded) {
 
   await loadProtectedImages();
 
-  protectedContent.dataset.imagesLoaded = "true";
+  protectedContent.dataset.imagesLoaded =
+    "true";
 }
 
 /* =========================
