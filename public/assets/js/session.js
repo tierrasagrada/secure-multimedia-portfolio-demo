@@ -310,10 +310,19 @@ export async function restoreProtectedSession() {
        OK → sesión válida
     ========================= */
 
-    if (result.ok) {
-      startSessionWatcher();
-      return;
-    }
+      if (result.ok) {
+
+        if (sessionWatcherActive) {
+
+          resetSessionTimer();
+
+        } else {
+
+          startSessionWatcher();
+        }
+
+        return;
+      }
 
     /* =========================
        SESSION EXPIRED REAL
