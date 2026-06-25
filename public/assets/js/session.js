@@ -442,32 +442,27 @@ document.addEventListener(
     "block";
 }*/
 
-window.addEventListener(
-  "pageshow",
-  async (event) => {
+document.addEventListener(
+  "visibilitychange",
+  async () => {
 
-    if (!event.persisted) {
+    if (document.visibilityState !== "visible") {
       return;
     }
 
-    try {
+    const protectedContent =
+      document.getElementById(
+        "protected-content"
+      );
 
-      const result =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      if (!result.ok) {
-
-        await destroySession();
-      }
-
-    } catch {
-
-      await destroySession();
+    if (
+      !protectedContent ||
+      !protectedContent.dataset.loaded
+    ) {
+      return;
     }
+
+    await restoreProtectedSession();
+
   }
 );
