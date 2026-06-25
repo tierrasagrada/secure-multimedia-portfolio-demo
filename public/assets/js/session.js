@@ -444,18 +444,30 @@ document.addEventListener(
 
 window.addEventListener(
   "pageshow",
-  async () => {
+  async (event) => {
 
-    if (!pageShowInitialized) {
-
-      pageShowInitialized = true;
+    if (!event.persisted) {
       return;
     }
 
-    if (sessionWatcherActive) {
-      resetSessionTimer();
-    }
+    try {
 
-    await restoreProtectedSession();
+      const result =
+        await apiFetch(
+          "/api/contenido",
+          {
+            method: "GET"
+          }
+        );
+
+      if (!result.ok) {
+
+        await destroySession();
+      }
+
+    } catch {
+
+      await destroySession();
+    }
   }
 );
