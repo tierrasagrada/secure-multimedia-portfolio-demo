@@ -22,7 +22,7 @@ let sessionWatcherActive = false;
 
 let sessionEndsAt = 0;
 
-let pageShowInitialized = false;
+
 
 let sessionClosing = false;
 
@@ -263,6 +263,29 @@ export async function destroySession(reload = false) {
 
     });
 
+/* =========================
+   REDIRECT TO LOGIN
+========================= */
+
+function redirectToLogin() {
+
+  stopSessionWatcher();
+
+  clearTimeout(sessionTimeout);
+
+  clearTimeout(warningTimeout);
+
+  clearInterval(countdownInterval);
+
+  localStorage.removeItem(
+    "hadValidSession"
+  );
+
+  sessionClosing = true;
+
+  window.location.replace("/");
+}    
+
     /* =========================
        RESET SLIDER
     ========================= */
@@ -346,87 +369,83 @@ let restoreInProgress = false;
 export async function restoreProtectedSession() {
 
   if (restoreInProgress) {
-    return;
+
+    return {
+      ok: false
+    };
   }
 
   restoreInProgress = true;
 
   try {
 
-    const result = await renderProtectedContent();
+    const result =
+      await renderProtectedContent();
 
     /* =========================
-       OK → sesión válida
+       SESSION OK
     ========================= */
 
-      if (result.ok) {
+    if (result.ok) {
 
-        if (sessionWatcherActive) {
+      if (sessionWatcherActive) {
 
-          resetSessionTimer();
+        resetSessionTimer();
 
-        } else {
+      } else {
 
-          startSessionWatcher();
-        }
-
-        return;
+        startSessionWatcher();
       }
 
+      return {
+        ok: true
+      };
+    }
+
     /* =========================
-       SESSION EXPIRED REAL
+       SESSION EXPIRED
     ========================= */
 
     if (result.status === 401) {
 
-      if (
-        localStorage.getItem(
-          "hadValidSession"
-        ) === "true"
-      ) {
-
-        localStorage.removeItem(
-          "hadValidSession"
-        );
-
-        await destroySession(true);
-      }
-
-      return;
+      return {
+        ok: false,
+        status: 401
+      };
     }
 
     /* =========================
-       NETWORK / UNKNOWN ERROR
-       → RETRY CONTROLADO
+       NETWORK ERROR
     ========================= */
 
     if (result.status === "network_error") {
 
-      if (localStorage.getItem("hadValidSession") === "true") {
-            localStorage.removeItem(
-              "hadValidSession"
-            );
-
-          await destroySession();
-
-          return;
-      }
-
-      mostrarError(
-        "⚠ Connection error"
-      );
-
-      return;
+      return {
+        ok: false,
+        status: "network_error"
+      };
     }
+
+    return {
+      ok: false
+    };
 
   } catch (error) {
 
     console.error(error);
 
+    return {
+      ok: false,
+      status: "exception"
+    };
 
   } finally {
+
     restoreInProgress = false;
-    document.body.classList.remove("auth-loading");
+
+    document.body.classList.remove(
+      "auth-loading"
+    );
   }
 }
 
@@ -495,23 +514,47 @@ document.addEventListener(
   "visibilitychange",
   async () => {
 
-    if (document.visibilityState !== "visible") {
-      return;
-    }
-
-    const protectedContent =
-      document.getElementById(
-        "protected-content"
-      );
-
     if (
-      !protectedContent ||
-      !protectedContent.dataset.loaded
+      document.visibilityState !==
+      "visible"
     ) {
       return;
     }
 
-    await restoreProtectedSession();
+    const result =
+      await restoreProtectedSession();
 
+    if (
+      result?.status === 401
+    ) {
+
+      redirectToLogin();
+    }
+  }
+);
+
+/* =========================
+   PAGE RESTORE CHECK
+========================= */
+
+window.addEventListener(
+  "pageshow",
+  async (event) => {
+
+    if (
+      !event.persisted
+    ) {
+      return;
+    }
+
+    const result =
+      await restoreProtectedSession();
+
+    if (
+      result?.status === 401
+    ) {
+
+      redirectToLogin();
+    }
   }
 );
