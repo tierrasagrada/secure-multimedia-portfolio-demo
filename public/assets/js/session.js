@@ -22,7 +22,7 @@ let sessionWatcherActive = false;
 
 let sessionEndsAt = 0;
 
-
+let pageShowInitialized = false;
 
 let sessionClosing = false;
 
@@ -166,18 +166,17 @@ function stopSessionWatcher() {
    DESTROY SESSION
 ========================= */
 
-export async function destroySession(reload = false) {
+export async function destroySession() {
 
-  stopSessionWatcher();
+stopSessionWatcher();
 
-  clearTimeout(sessionTimeout);
+clearTimeout(sessionTimeout);
 
-  clearTimeout(warningTimeout);
+clearTimeout(warningTimeout);
 
-  clearInterval(countdownInterval);
+clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   try {
-
     const csrfToken = await getCSRFToken();
 
     await apiFetch(
@@ -185,69 +184,47 @@ export async function destroySession(reload = false) {
       {
         method: "POST",
         headers: {
-          "X-CSRF-Token": csrfToken
+          "X-CSRF-Token":
+            csrfToken
         }
       }
     );
 
   } catch (error) {
-
-    console.error("Logout failed", error);
-
+    console.error("Logout failed",error);
   }
 
-  /* =========================
-     RELOAD CLEAN PAGE
-  ========================= */
-
-  if (reload) {
-
-    window.location.replace(
-      window.location.pathname
-    );
-
-    return;
-  }
-
-  const modal =
-    document.getElementById(
-      "session-modal"
-    );
+  const modal = document.getElementById("session-modal");
 
   if (modal) {
     modal.classList.remove("active");
   }
 
-  sessionWarningActive = false;
+  sessionWarningActive = false;  
 
   mostrarError(
     "⚠ Session expired."
   );
-
+  
   /* =========================
      HIDE PROTECTED CONTENT
   ========================= */
 
-  const protectedContent =
-    document.getElementById(
-      "protected-content"
-    );
+  const protectedContent = document.getElementById("protected-content");
 
   if (protectedContent) {
+    protectedContent.style.display = "none";
 
-    protectedContent.style.display =
-      "none";
-
-    /* =========================
-       RESET DATASET
+  /* =========================
+      RESET DATASET
     ========================= */
 
     delete protectedContent.dataset.loaded;
 
     delete protectedContent.dataset.imagesLoaded;
-
+    
     /* =========================
-       DESTROY IFRAMES
+      DESTROY IFRAMES
     ========================= */
 
     const iframes =
@@ -260,34 +237,10 @@ export async function destroySession(reload = false) {
       iframe.src = "";
 
       iframe.remove();
-
     });
 
-/* =========================
-   REDIRECT TO LOGIN
-========================= */
-
-function redirectToLogin() {
-
-  stopSessionWatcher();
-
-  clearTimeout(sessionTimeout);
-
-  clearTimeout(warningTimeout);
-
-  clearInterval(countdownInterval);
-
-  localStorage.removeItem(
-    "hadValidSession"
-  );
-
-  sessionClosing = true;
-
-  window.location.replace("/");
-}    
-
     /* =========================
-       RESET SLIDER
+      RESET SLIDER CONTENT
     ========================= */
 
     const sliker =
@@ -300,63 +253,38 @@ function redirectToLogin() {
     }
 
     /* =========================
-       RESET FIREWORKS
+      RESET FIREWORKS
     ========================= */
 
     const wanderito =
-      document.getElementById(
-        "wanderito"
-      );
+      document.getElementById("wanderito");
 
     if (wanderito) {
       wanderito.innerHTML = "";
     }
 
     const wanderito2 =
-      document.getElementById(
-        "wanderito2"
-      );
+      document.getElementById("wanderito2");
 
     if (wanderito2) {
       wanderito2.innerHTML = "";
-    }
+    }      
   }
 
   /* =========================
      SHOW LOGIN
   ========================= */
 
-  const securityContainer =
-    document.getElementById(
-      "security-container"
-    );
+  document.getElementById('security-container') && (document.getElementById('security-container').style.display = 'block');
 
-  if (securityContainer) {
-    securityContainer.style.display =
-      "block";
-  }
-
-  const securityFooter =
-    document.getElementById(
-      "security-footer"
-    );
-
-  if (securityFooter) {
-    securityFooter.style.display =
-      "block";
-  }
+  document.getElementById('security-footer') && (document.getElementById('security-footer').style.display = 'block');
 
   /* =========================
      CLEAR INPUT
   ========================= */
-
-  const answerElement =
-    document.getElementById(
-      "answer"
-    );
-
+  const answerElement = document.getElementById("answer");
   if (answerElement) {
-    answerElement.value = "";
+      answerElement.value = "";
   }
 
 }
@@ -369,83 +297,87 @@ let restoreInProgress = false;
 export async function restoreProtectedSession() {
 
   if (restoreInProgress) {
-
-    return {
-      ok: false
-    };
+    return;
   }
 
   restoreInProgress = true;
 
   try {
 
-    const result =
-      await renderProtectedContent();
+    const result = await renderProtectedContent();
 
     /* =========================
-       SESSION OK
+       OK → sesión válida
     ========================= */
 
-    if (result.ok) {
+      if (result.ok) {
 
-      if (sessionWatcherActive) {
+        if (sessionWatcherActive) {
 
-        resetSessionTimer();
+          resetSessionTimer();
 
-      } else {
+        } else {
 
-        startSessionWatcher();
+          startSessionWatcher();
+        }
+
+        return;
       }
 
-      return {
-        ok: true
-      };
-    }
-
     /* =========================
-       SESSION EXPIRED
+       SESSION EXPIRED REAL
     ========================= */
 
     if (result.status === 401) {
 
-      return {
-        ok: false,
-        status: 401
-      };
+      if (
+        localStorage.getItem(
+          "hadValidSession"
+        ) === "true"
+      ) {
+
+        localStorage.removeItem(
+          "hadValidSession"
+        );
+
+        await destroySession();
+      }
+
+      return;
     }
 
     /* =========================
-       NETWORK ERROR
+       NETWORK / UNKNOWN ERROR
+       → RETRY CONTROLADO
     ========================= */
 
     if (result.status === "network_error") {
 
-      return {
-        ok: false,
-        status: "network_error"
-      };
-    }
+      if (localStorage.getItem("hadValidSession") === "true") {
+            localStorage.removeItem(
+              "hadValidSession"
+            );
 
-    return {
-      ok: false
-    };
+          await destroySession();
+
+          return;
+      }
+
+      mostrarError(
+        "⚠ Connection error"
+      );
+
+      return;
+    }
 
   } catch (error) {
 
     console.error(error);
 
-    return {
-      ok: false,
-      status: "exception"
-    };
 
   } finally {
-
     restoreInProgress = false;
-
-    document.body.classList.remove(
-      "auth-loading"
-    );
+    document.body.classList.remove("auth-loading");
   }
 }
 
@@ -510,51 +442,32 @@ document.addEventListener(
     "block";
 }*/
 
-document.addEventListener(
-  "visibilitychange",
-  async () => {
-
-    if (
-      document.visibilityState !==
-      "visible"
-    ) {
-      return;
-    }
-
-    const result =
-      await restoreProtectedSession();
-
-    if (
-      result?.status === 401
-    ) {
-
-      redirectToLogin();
-    }
-  }
-);
-
-/* =========================
-   PAGE RESTORE CHECK
-========================= */
-
 window.addEventListener(
   "pageshow",
   async (event) => {
 
-    if (
-      !event.persisted
-    ) {
+    if (!event.persisted) {
       return;
     }
 
-    const result =
-      await restoreProtectedSession();
+    try {
 
-    if (
-      result?.status === 401
-    ) {
+      const result =
+        await apiFetch(
+          "/api/contenido",
+          {
+            method: "GET"
+          }
+        );
 
-      redirectToLogin();
+      if (!result.ok) {
+
+        await destroySession();
+      }
+
+    } catch {
+
+      await destroySession();
     }
   }
 );
