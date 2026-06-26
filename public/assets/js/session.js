@@ -166,17 +166,18 @@ function stopSessionWatcher() {
    DESTROY SESSION
 ========================= */
 
-export async function destroySession() {
+export async function destroySession(reload = false) {
 
-stopSessionWatcher();
+  stopSessionWatcher();
 
-clearTimeout(sessionTimeout);
+  clearTimeout(sessionTimeout);
 
-clearTimeout(warningTimeout);
+  clearTimeout(warningTimeout);
 
-clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
+  clearInterval(countdownInterval);
 
   try {
+
     const csrfToken = await getCSRFToken();
 
     await apiFetch(
@@ -184,47 +185,69 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       {
         method: "POST",
         headers: {
-          "X-CSRF-Token":
-            csrfToken
+          "X-CSRF-Token": csrfToken
         }
       }
     );
 
   } catch (error) {
-    console.error("Logout failed",error);
+
+    console.error("Logout failed", error);
+
   }
 
-  const modal = document.getElementById("session-modal");
+  /* =========================
+     RELOAD CLEAN PAGE
+  ========================= */
+
+  if (reload) {
+
+    window.location.replace(
+      window.location.pathname
+    );
+
+    return;
+  }
+
+  const modal =
+    document.getElementById(
+      "session-modal"
+    );
 
   if (modal) {
     modal.classList.remove("active");
   }
 
-  sessionWarningActive = false;  
+  sessionWarningActive = false;
 
   mostrarError(
     "⚠ Session expired."
   );
-  
+
   /* =========================
      HIDE PROTECTED CONTENT
   ========================= */
 
-  const protectedContent = document.getElementById("protected-content");
+  const protectedContent =
+    document.getElementById(
+      "protected-content"
+    );
 
   if (protectedContent) {
-    protectedContent.style.display = "none";
 
-  /* =========================
-      RESET DATASET
+    protectedContent.style.display =
+      "none";
+
+    /* =========================
+       RESET DATASET
     ========================= */
 
     delete protectedContent.dataset.loaded;
 
     delete protectedContent.dataset.imagesLoaded;
-    
+
     /* =========================
-      DESTROY IFRAMES
+       DESTROY IFRAMES
     ========================= */
 
     const iframes =
@@ -237,10 +260,11 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       iframe.src = "";
 
       iframe.remove();
+
     });
 
     /* =========================
-      RESET SLIDER CONTENT
+       RESET SLIDER
     ========================= */
 
     const sliker =
@@ -253,38 +277,63 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
     }
 
     /* =========================
-      RESET FIREWORKS
+       RESET FIREWORKS
     ========================= */
 
     const wanderito =
-      document.getElementById("wanderito");
+      document.getElementById(
+        "wanderito"
+      );
 
     if (wanderito) {
       wanderito.innerHTML = "";
     }
 
     const wanderito2 =
-      document.getElementById("wanderito2");
+      document.getElementById(
+        "wanderito2"
+      );
 
     if (wanderito2) {
       wanderito2.innerHTML = "";
-    }      
+    }
   }
 
   /* =========================
      SHOW LOGIN
   ========================= */
 
-  document.getElementById('security-container') && (document.getElementById('security-container').style.display = 'block');
+  const securityContainer =
+    document.getElementById(
+      "security-container"
+    );
 
-  document.getElementById('security-footer') && (document.getElementById('security-footer').style.display = 'block');
+  if (securityContainer) {
+    securityContainer.style.display =
+      "block";
+  }
+
+  const securityFooter =
+    document.getElementById(
+      "security-footer"
+    );
+
+  if (securityFooter) {
+    securityFooter.style.display =
+      "block";
+  }
 
   /* =========================
      CLEAR INPUT
   ========================= */
-  const answerElement = document.getElementById("answer");
+
+  const answerElement =
+    document.getElementById(
+      "answer"
+    );
+
   if (answerElement) {
-      answerElement.value = "";
+    answerElement.value = "";
   }
 
 }
@@ -340,7 +389,7 @@ export async function restoreProtectedSession() {
           "hadValidSession"
         );
 
-        await destroySession();
+        await destroySession(true);
       }
 
       return;
