@@ -1,7 +1,8 @@
 {
-  "name": "miproyecto",
-  "version": "1.0.0",
-  "description": "Mi aplicación en Vercel con backend",
+  "name": "secure-multimedia-portfolio-demo",
+  "version": "1.2.0",
+  "description": "Secure multimedia portfolio built with Node.js and Express demonstrating controlled content delivery and practical web security techniques.",
+  "private": true,
   "type": "module",
   "main": "api/index.js",
   "scripts": {
