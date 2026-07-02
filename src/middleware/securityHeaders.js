@@ -1,7 +1,6 @@
 import helmet from "helmet";
 
 const securityHeaders = helmet({
-
   /* =========================
      DISABLE CSP
   ========================= */
@@ -31,7 +30,6 @@ const securityHeaders = helmet({
   ========================= */
 
   frameguard: {
-
     action: "deny",
   },
 
@@ -40,11 +38,8 @@ const securityHeaders = helmet({
   ========================= */
 
   hsts: {
-
     maxAge: 31536000,
-
     includeSubDomains: true,
-
     preload: true,
   },
 
@@ -53,7 +48,6 @@ const securityHeaders = helmet({
   ========================= */
 
   referrerPolicy: {
-
     policy: "no-referrer",
   },
 });

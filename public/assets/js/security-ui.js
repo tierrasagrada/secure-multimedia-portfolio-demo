@@ -1,25 +1,14 @@
-const submitButton =
-  document.getElementById(
-    "submit"
-  );
+const submitButton = document.getElementById("submit");
 
 /* =========================
    SHOW ERROR
 ========================= */
 
 export function mostrarError(message) {
+  const errorDiv = document.getElementById("error");
 
-  const errorDiv =
-    document.getElementById(
-      "error"
-    );
-
-  errorDiv.textContent =
-    message;
-
-  errorDiv.classList.add(
-    "active"
-  );
+  errorDiv.textContent = message;
+  errorDiv.classList.add("active");
 }
 
 /* =========================
@@ -27,18 +16,10 @@ export function mostrarError(message) {
 ========================= */
 
 export function limpiarError() {
+  const errorDiv = document.getElementById("error");
 
-  const errorDiv =
-    document.getElementById(
-      "error"
-    );
-
-  errorDiv.textContent =
-    "";
-
-  errorDiv.classList.remove(
-    "active"
-  );
+  errorDiv.textContent = "";
+  errorDiv.classList.remove("active");
 }
 
 /* =========================
@@ -46,14 +27,9 @@ export function limpiarError() {
 ========================= */
 
 export function bloquearBoton() {
-
   submitButton.disabled = true;
-
-  submitButton.style.opacity =
-    "0.6";
-
-  submitButton.style.cursor =
-    "not-allowed";
+  submitButton.style.opacity = "0.6";
+  submitButton.style.cursor = "not-allowed";
 }
 
 /* =========================
@@ -61,12 +37,7 @@ export function bloquearBoton() {
 ========================= */
 
 export function desbloquearBoton() {
-
   submitButton.disabled = false;
-
-  submitButton.style.opacity =
-    "1";
-
-  submitButton.style.cursor =
-    "pointer";
+  submitButton.style.opacity = "1";
+  submitButton.style.cursor = "pointer";
 }

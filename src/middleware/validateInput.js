@@ -2,29 +2,17 @@
    VALIDATE ANSWER
 ========================= */
 
-export function validateAnswer(
-  req,
-  res,
-  next
-) {
-
+export function validateAnswer(req, res, next) {
   const { respuesta } = req.body;
 
   /* =========================
      BODY EXISTS
   ========================= */
 
-  if (
-    !req.body ||
-    typeof req.body !== "object"
-  ) {
-
+  if (!req.body || typeof req.body !== "object") {
     return res.status(400).json({
-
       success: false,
-
-      message:
-        "Invalid request.",
+      message: "Invalid request.",
     });
   }
 
@@ -32,16 +20,10 @@ export function validateAnswer(
      TYPE VALIDATION
   ========================= */
 
-  if (
-    typeof respuesta !== "string"
-  ) {
-
+  if (typeof respuesta !== "string") {
     return res.status(400).json({
-
       success: false,
-
-      message:
-        "Invalid input.",
+      message: "Invalid input.",
     });
   }
 
@@ -49,16 +31,10 @@ export function validateAnswer(
      EMPTY VALIDATION
   ========================= */
 
-  if (
-    !respuesta.trim()
-  ) {
-
+  if (!respuesta.trim()) {
     return res.status(400).json({
-
       success: false,
-
-      message:
-        "Empty input.",
+      message: "Empty input.",
     });
   }
 
@@ -66,18 +42,11 @@ export function validateAnswer(
      LENGTH VALIDATION
   ========================= */
 
-  if (
-    respuesta.length > 30
-  ) {
-
+  if (respuesta.length > 30) {
     return res.status(400).json({
-
       success: false,
-
-      message:
-        "Input too long.",
+      message: "Input too long.",
     });
   }
-
   next();
 }

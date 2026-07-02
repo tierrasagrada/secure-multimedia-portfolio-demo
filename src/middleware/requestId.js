@@ -1,13 +1,7 @@
 import crypto from "crypto";
 
-export default function requestId(
-  req,
-  res,
-  next
-) {
-
-  req.requestId =
-    crypto.randomUUID();
+export default function requestId(req, res, next) {
+  req.requestId = crypto.randomUUID();
 
   next();
 }

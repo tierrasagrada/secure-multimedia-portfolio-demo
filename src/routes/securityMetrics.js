@@ -5,10 +5,7 @@ import { getMetrics } from "../utils/securityMetrics.js";
 const router = express.Router();
 
 router.get("/", auth, (req, res) => {
-
-  return res.status(200).json(
-    getMetrics()
-  );
+  return res.status(200).json(getMetrics());
 });
 
 export default router;

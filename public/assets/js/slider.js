@@ -1,8 +1,6 @@
-import { apiFetch }
-from "./api.js";
+import { apiFetch } from "./api.js";
 
-import { getCSRFToken }
-from "./csrf.js";
+import { getCSRFToken } from "./csrf.js";
 
 /* =========================
    LOAD NINJA SLIDER SCRIPT
@@ -14,13 +12,9 @@ async function ensureNinjaSliderLoaded() {
      REMOVE OLD SCRIPT
   ========================= */
 
-  const oldScript =
-    document.getElementById(
-      "ninja-slider-script"
-    );
+  const oldScript = document.getElementById("ninja-slider-script");
 
   if (oldScript) {
-
     oldScript.remove();
   }
 
@@ -29,27 +23,15 @@ async function ensureNinjaSliderLoaded() {
   ========================= */
 
   await new Promise((resolve, reject) => {
+    const script = document.createElement("script");
 
-    const script =
-      document.createElement(
-        "script"
-      );
+    script.id = "ninja-slider-script";
+    script.src = "/assets/js/ninja-slider.js";
 
-    script.id =
-      "ninja-slider-script";
+    script.onload = resolve;
+    script.onerror = reject;
 
-    script.src =
-      "/assets/js/ninja-slider.js";
-
-    script.onload =
-      resolve;
-
-    script.onerror =
-      reject;
-
-    document.body.appendChild(
-      script
-    );
+    document.body.appendChild(script);
   });
 }
 
@@ -57,45 +39,18 @@ async function ensureNinjaSliderLoaded() {
    LOAD PROTECTED IMAGES
 ========================= */
 
-export async function
-loadProtectedImages() {
-  console.time("loadProtectedImages");
-if (
+export async function loadProtectedImages(){
 
-  typeof destroyFireworks ===
-  "function"
+  if(typeof destroyFireworks === "function"){
+    destroyFireworks();
+  }
 
-) {
+  const sliker = document.getElementById("sliker");
+  const wanderitodiv = document.getElementById("wanderito");
+  const wanderitodiv2 = document.getElementById("wanderito2");
 
-  destroyFireworks();
-}
-  const sliker =
-    document.getElementById(
-      "sliker"
-    );
-
-  const wanderitodiv =
-    document.getElementById(
-      "wanderito"
-    );
-
-  const wanderitodiv2 =
-    document.getElementById(
-      "wanderito2"
-    );
-
-  if (
-
-    !sliker ||
-
-    !wanderitodiv ||
-
-    !wanderitodiv2
-  ) {
-
-    throw new Error(
-      "Protected containers not found."
-    );
+  if (!sliker || !wanderitodiv || !wanderitodiv2){
+    throw new Error("Protected containers not found.");
   }
 
   /* =========================
@@ -103,7 +58,6 @@ if (
   ========================= */
 
   wanderitodiv.innerHTML = "";
-
   wanderitodiv2.innerHTML = "";
 
   /* =========================
@@ -116,65 +70,39 @@ if (
      REMOVE OLD CONTROLS
   ========================= */
 
-  document.getElementById(
-    "ninja-slider-pager"
-  )?.remove();
-
-  document.getElementById(
-    "ninja-slider-prev"
-  )?.remove();
-
-  document.getElementById(
-    "ninja-slider-next"
-  )?.remove();
-
-  document.getElementById(
-    "ninja-slider-pause-play"
-  )?.remove();
+  document.getElementById("ninja-slider-pager")?.remove();
+  document.getElementById("ninja-slider-prev")?.remove();
+  document.getElementById("ninja-slider-next")?.remove();
+  document.getElementById("ninja-slider-pause-play")?.remove();
 
   /* =========================
      REBUILD SLIDER HTML
   ========================= */
 
   sliker.innerHTML = `
-
     <div id="ninja-slider">
-
       <div class="slider-inner">
-
         <ul id="unDiv"></ul>
-
         <div class="fs-icon"
-          title="Expand/Close"></div>
-
+          title="Expand/Close">
+        </div>
       </div>
-
     </div>
   `;
 
-  await new Promise(resolve =>
-    requestAnimationFrame(resolve)
-  );
+  await new Promise(resolve => requestAnimationFrame(resolve));
 
-  const sliderContainer =
-    document.getElementById(
-      "unDiv"
-    );
+  const sliderContainer = document.getElementById("unDiv");
 
   if (!sliderContainer) {
-
-    throw new Error(
-      "Slider container not found."
-    );
+    throw new Error("Slider container not found.");
   }
 
   /* =========================
      RESET INLINE STYLES
   ========================= */
 
-  sliderContainer.removeAttribute(
-    "style"
-  );
+  sliderContainer.removeAttribute("style");
 
   /* =========================
      LOAD SCRIPT AGAIN
@@ -186,64 +114,48 @@ if (
      GET CSRF TOKEN
   ========================= */
 
-  const csrfToken =
-    await getCSRFToken();
+  const csrfToken = await getCSRFToken();
 
   /* =========================
      GET IMAGES
   ========================= */
-console.time("fetchProtectedImages");
 
-  const response2 =
-    await apiFetch(
+  const response2 = await apiFetch("/api/obtenerImagenes",{
+    method: "POST",
+    headers: {
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify({}),
+  });
 
-      "/api/obtenerImagenes",
-
-      {
-
-        method: "POST",
-
-        headers: {
-
-          "X-CSRF-Token":
-            csrfToken,
-        },
-
-        body: JSON.stringify({}),
-      }
-    );
-
-  if (!response2.ok) {
-
-    throw new Error(
-      "Error loading images"
-    );
+  if (!response2.ok){
+    throw new Error("Error loading images");
   }
 
   const imagesarray = await response2.json();
+  
   imagesarray.sort((a, b) => {
 
-if (
-a.filename ===
-"wanderers.png"
-) return -1;
+    if (a.filename === "wanderers.png"){
+      return -1;
+    } 
 
-if (
-b.filename ===
-"wanderers.png"
-) return 1;
+    if (b.filename === "wanderers.png"){
+       return 1;
+    }
 
-return 0;
-});
-console.timeEnd("fetchProtectedImages");
+    return 0;
+  });
+
   /* =========================
      RENDER IMAGES
   ========================= */
-console.time("generateSliderDOM");
+
   for (const image of imagesarray) {
 
-    if (!image.secureUrl)
+    if (!image.secureUrl){
       continue;
+    }
 
     /* =========================
        FIREWORK IMAGE
@@ -251,36 +163,20 @@ console.time("generateSliderDOM");
 
     if (image.filename === "wanderers.png") {
 
-      const imgsw =
-        document.createElement(
-          "img"
-        );
+      const imgsw = document.createElement("img");
 
       imgsw.onload = () => {
-
-        if (
-          typeof triggerWanderitoFX !==
-          "undefined"
-        ) {
-
+        if (typeof triggerWanderitoFX !== "undefined") {
           triggerWanderitoFX();
         }
       };
 
-      imgsw.src =
-        image.secureUrl;
-
+      imgsw.src = image.secureUrl;
       imgsw.width = 250;
-
       imgsw.height = 200;
-
       imgsw.loading = "eager";
-
       imgsw.decoding = "sync";
-
-      wanderitodiv.appendChild(
-        imgsw
-      );
+      wanderitodiv.appendChild(imgsw);
 
       continue;
     }
@@ -290,27 +186,19 @@ console.time("generateSliderDOM");
     ========================= */
 
     if (image.filename === "img-01.png") {
-      const preloadedImage =
-        new Image();
+
+      const preloadedImage = new Image();
 
       preloadedImage.onload = () => {
 
-        preloadedImage.className =
-          "img-responsive";
+        preloadedImage.className = "img-responsive";
+        preloadedImage.loading = "eager";
+        preloadedImage.decoding = "sync";
 
-        preloadedImage.loading =
-          "eager";
-
-        preloadedImage.decoding =
-          "sync";
-
-        wanderitodiv2.appendChild(
-          preloadedImage
-        );
+        wanderitodiv2.appendChild(preloadedImage);
       };
 
-      preloadedImage.src =
-        image.secureUrl;
+      preloadedImage.src = image.secureUrl;
 
       continue;
     }
@@ -319,27 +207,23 @@ console.time("generateSliderDOM");
        SLIDER IMAGE
     ========================= */
 
+    // 1. Creation
     const li = document.createElement("li");
-
     const a = document.createElement("a");
-
-    a.className = "ns-img";
-
-    a.href = image.secureUrl;
-
     const div = document.createElement("div");
 
+    // 2. Configuration
+    a.className = "ns-img";
+    a.href = image.secureUrl;
+    
     div.className = "caption";
-
     div.textContent = "@colerise";
 
+    // 3. Appending and Insertion
     li.appendChild(a);
-
     li.appendChild(div);
-
     sliderContainer.appendChild(li);
   }
-console.timeEnd("generateSliderDOM");
 
   /* =========================
      INIT SLIDER
@@ -347,18 +231,9 @@ console.timeEnd("generateSliderDOM");
 
   if (typeof nslider !== "undefined") {
     try {
-      console.time("nslider.init");
       nslider.init();
-      console.timeEnd("nslider.init");
     } catch (error) {
-      console.error(
-        "Slider init error:",
-        error
-      );
+      showError("No fue posible cargar el contenido.");
     }
   }
-
-  console.timeEnd(
-    "loadProtectedImages"
-  );
 }

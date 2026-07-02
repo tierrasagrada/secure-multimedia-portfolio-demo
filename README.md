@@ -1,140 +1,136 @@
 # Secure Multimedia Portfolio
 
-A web application built with **Node.js**, **Express**, and **vanilla JavaScript**, designed to protect multimedia content through controlled access mechanisms and security-oriented development practices.
+A web application built with Node.js, Express and Vanilla JavaScript that demonstrates secure multimedia content delivery through controlled access mechanisms and the practical application of web security controls.
 
 ## Project Overview
 
-This project addresses a common issue found in traditional portfolios: **sharing direct links to personal content without control over its distribution or reuse**.
+Traditional portfolios often expose multimedia content through direct links that can be shared, indexed, or reused without control.
 
-The application enables portfolio owners to grant temporary access to selected individuals through a lightweight validation process, protecting multimedia resources against unauthorized access, automated scraping, and direct URL exposure.
+This project addresses that problem by implementing an access validation process before protected content becomes available. Private resources are delivered through backend-controlled mechanisms, including secure sessions and short-lived signed URLs for multimedia assets.
+
+The main goal is to reduce the direct exposure of private resources while applying practical secure development concepts in a real-world scenario.
+
+---
 
 ## Screenshots
 
 ### Access Validation
 
-Users must complete a validation process before gaining access to protected content.
+Users must complete an access validation process before protected content becomes available.
 
 ![Access validation screen](./docs/screenshots/access-form.png)
 
-### Protected Portfolio Content
+### Protected Multimedia Portfolio
 
-Private multimedia resources are delivered through controlled access mechanisms and temporary protected URLs.
+Private content is delivered through controlled access mechanisms and protected resources using short-lived signed URLs.
 
-![Protected portfolio](./docs/screenshots/protected-content.png)
+![Protected portfolio content](./docs/screenshots/protected-content.png)
 
-### Session Management
+### Session Inactivity Management
 
-The application monitors user inactivity and warns users before automatically terminating inactive sessions.
+The application detects periods of user inactivity, warns the user before expiration, and automatically terminates inactive sessions.
 
-![Session warning](./docs/screenshots/session-warning.png)
+![Session expiration warning](./docs/screenshots/session-warning.png)
+
+---
+
+## How It Works
+
+1. The user accesses the portfolio.
+2. An access word is requested.
+3. The backend validates the response.
+4. A secure session is established.
+5. Protected content is requested through authenticated APIs.
+6. The backend generates signed URLs for private images.
+7. Multimedia resources are securely delivered.
+8. The session automatically expires after a period of inactivity.
+
+---
 
 ## Key Features
 
-* Protected access using an owner-provided access word.
-* Controlled delivery of multimedia resources.
-* User inactivity detection.
-* Automatic session expiration.
-* Optimized user experience without frontend frameworks.
-* Protection of sensitive resources through signed URLs with expiration.
+* Access validation using a predefined access word.
+* Secure session management using HTTP-Only cookies.
+* Controlled multimedia content delivery.
+* Automatic session expiration after inactivity.
+* Session expiration warning system.
+* Resource protection through signed URLs.
+* Structured event logging for auditing and diagnostics.
+* Frontend developed without frameworks.
 
-The following sections describe some of the technical decisions adopted during development.
+---
 
-## Security Measures Implemented
+## Security Highlights
 
-* Protection of multimedia resources using signed URLs with automatic expiration.
-* Secure session management through HTTP-only cookies.
-* User validation before exposing protected content.
-* CSRF protection for sensitive operations.
-* Request limiting to reduce risks associated with automation and brute-force attacks.
-* Progressive delay increments after multiple failed validation attempts.
-* Association of protected resources with the user's authenticated context.
-* Input validation and sanitization before processing client-provided data.
+* Secure session management using HTTP-Only cookies.
+* Signed URLs with automatic expiration.
+* CSRF protection.
+* Rate limiting to mitigate automation and brute-force attempts.
+* Progressive delays after multiple failed validation attempts.
+* Input validation and sanitization.
 * Security headers aligned with OWASP recommendations.
-* Prevention of direct access to private resources stored on the server.
-* Internal auditing and traceability mechanisms for relevant security events.
-* User inactivity detection and automatic session termination.
-* Centralized error handling to prevent unnecessary exposure of sensitive information.
+* Private resources stored outside direct public access.
+* Centralized error handling.
+* Structured event logging for auditing and diagnostics.
 
-## Project Architecture
+---
 
-The solution was designed using a separation-of-concerns approach to improve maintainability, scalability, and future extensibility.
+## Architecture
+
+The application follows a layered architecture designed to promote maintainability and clear separation of responsibilities.
 
 ### Frontend
 
-Responsible for user interaction and secure backend service consumption.
+Responsible for:
 
-Main responsibilities:
-
-* Initial validation workflow.
+* Access validation.
 * Dynamic rendering of protected content.
 * Session lifecycle management.
-* Inactivity detection and expiration handling.
-* Consumption of protected APIs.
-* Deferred and optimized multimedia loading.
+* User inactivity detection.
+* Secure API consumption.
+* Optimized multimedia loading.
 
 ### Backend
 
-Organized into independent layers with clearly defined responsibilities.
-
 #### Routes
 
-Define application entry points and coordinate requests toward the appropriate controllers.
+Define the application's entry points.
 
 #### Controllers
 
-Implement business logic related to authentication, protected content generation, secure image delivery, and session termination.
+Implement authentication, session management, and protected content delivery logic.
 
 #### Middleware
 
-Handle cross-cutting concerns, including:
+Handle:
 
 * Authentication and authorization.
 * CSRF protection.
 * Input validation.
-* Request limiting.
-* Traceability identifier generation.
-* Centralized HTTP event logging.
-* Security header enforcement.
+* Rate limiting.
+* Security headers.
+* Event logging.
 * Global error handling.
 
 #### Services
 
-Encapsulate reusable logic related to token generation and validation.
+Encapsulate reusable token generation and validation logic.
 
 #### Utilities
 
-Provide auxiliary functionality related to auditing, security metrics, data sanitization, and multimedia protection.
+Provide supporting functionality for auditing, security metrics, and multimedia protection.
+
+#### Views
+
+Templates responsible for rendering public content and protected content accessible only after successful access validation.
 
 #### Protected Resources
 
-Private files remain inaccessible through direct public URLs and can only be obtained through backend validation mechanisms.
+Private files remain outside direct public access and can only be retrieved through backend validation mechanisms.
 
-This organization facilitates the addition of future security enhancements and scalability strategies without significantly impacting other parts of the system.
+---
 
-## Protected Access Flow
-
-1. The user accesses the portfolio.
-2. An access word is requested.
-3. The backend validates the provided response.
-4. A secure session is established.
-5. Protected resources are requested through authenticated endpoints.
-6. Temporary signed URLs are generated for private multimedia assets.
-7. User inactivity automatically triggers session termination.
-
-## Competencies Demonstrated
-
-* REST API design and implementation using Node.js and Express.
-* Practical implementation of authentication and authorization mechanisms.
-* Protection of sensitive resources through controlled access strategies.
-* Application of OWASP security principles.
-* Protection against automation, abuse, and brute-force scenarios.
-* Session lifecycle and inactivity management.
-* Code organization through separation of responsibilities.
-* Frontend development using vanilla JavaScript without framework dependencies.
-* Design of maintainable solutions prepared for future scalability.
-* Continuous deployment of web applications in cloud environments.
-
-## Technologies Used
+## Technologies
 
 | Layer      | Technologies             |
 | ---------- | ------------------------ |
@@ -143,38 +139,55 @@ This organization facilitates the addition of future security enhancements and s
 | Security   | JWT, CSRF, Rate Limiting |
 | Deployment | Vercel                   |
 
-## Installation and Local Execution
+---
+
+## Installation
 
 ```bash
 git clone https://github.com/tierrasagrada/secure-multimedia-portfolio-demo
 
-cd your-repository
+cd secure-multimedia-portfolio-demo
 
 npm install
 
 npm run dev
 ```
 
-### Environment Variables
+## Environment Variables
 
 Create a `.env` file using `.env.example` as a reference.
 
-## Deployment
-
-The application is prepared for deployment on serverless platforms such as Vercel.
+---
 
 ## Future Enhancements
 
-The current architecture was designed considering future improvements such as:
+* Migrate to a custom multimedia gallery to improve maintainability, performance, and interface control.
+* Lazy loading for embedded content.
+* Distributed session management using Redis.
+* Persistent storage of security events and audit logs.
+* Monitoring dashboard with security metrics, charts, and statistics.
+* Automatic alerts for relevant security events.
+* Advanced abuse mitigation through distributed rate limiting.
 
-* Distributed session storage using Redis.
-* Caching layers to improve performance.
-* Integration with external identity providers.
-* Advanced monitoring and alerting mechanisms.
-* Horizontal scalability strategies.
+---
 
-## Disclaimer
+## Skills Demonstrated
 
-This project was developed as a personal initiative focused on applying secure development principles to a real-world scenario involving controlled access to multimedia resources.
+* REST API development using Node.js and Express.
+* Secure multimedia content delivery.
+* Authentication and authorization implementation.
+* Implementation of security controls aligned with OWASP recommendations.
+* Brute-force mitigation techniques.
+* Session lifecycle management.
+* Layered backend architecture.
+* Frontend development using Vanilla JavaScript.
+* Cloud deployment using Vercel.
+* Structured logging implementation for auditing and diagnostics.
 
-The multimedia assets included in this repository were created exclusively for demonstration purposes.
+---
+
+### Note
+
+This project was developed as a personal initiative to apply practical web security concepts in a real-world controlled multimedia content delivery scenario.
+
+All multimedia assets included in this repository are demonstration resources only and do not contain personal information or third-party protected content.

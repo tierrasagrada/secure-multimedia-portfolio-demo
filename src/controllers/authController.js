@@ -22,49 +22,33 @@ export async function validateSecurityAnswer(req, res) {
           GENERATE ACCESS TOKEN
         ========================= */
 
-        const accessToken =
-          generateAccessToken({
+        const accessToken = generateAccessToken({
             access: true,
-          });
+        });
 
         /* =========================
           SECURE COOKIE
         ========================= */
 
-        res.cookie(
-          "access_token",
-          accessToken,
-          {
+        res.cookie("access_token", accessToken, {
             httpOnly: true,
-            secure:
-              process.env.NODE_ENV
-              === "production",
+            secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
-            maxAge:
-              5 * 60 * 1000,
-          }
-        );
+            maxAge: 5 * 60 * 1000,
+        });
         
         /* =========================
           SUCCESS RESPONSE
         ========================= */
         increment("authSuccess");
 
-        logger.info(
-          "Successful authentication",
-          {
-            ip: req.ip,
+        logger.info("Successful authentication",{
             requestId: req.requestId
-          }
-        );
+        });
 
-        addAuditEvent(
-          "AUTH_SUCCESS",
-          {
-            ip: req.ip,
+        addAuditEvent("AUTH_SUCCESS", {
             requestId: req.requestId
-          }
-        );                
+        });                
         
         return res.status(200).json({
           success: true,
@@ -75,22 +59,16 @@ export async function validateSecurityAnswer(req, res) {
 
       increment("authFailure");
 
-      logger.warn(
-        "Failed authentication attempt",
-        {
+      logger.warn("Failed authentication attempt", {
           ip: req.ip,
           requestId: req.requestId,
           path: req.originalUrl
-        }
-      );
+      });
 
-      addAuditEvent(
-        "AUTH_FAILURE",
-        {
+      addAuditEvent("AUTH_FAILURE", {
           ip: req.ip,
           requestId: req.requestId
-        }
-      );      
+      });      
         // WRONG ANSWER
       return res.status(401).json({
         success: false,
@@ -98,20 +76,16 @@ export async function validateSecurityAnswer(req, res) {
       });
       
     } catch (error) {
-        logger.error(
-            "Validation route failed",
-            error,
-            {
-            ip: req.ip,
-            requestId: req.requestId,
-            path: req.originalUrl
-            }
-        );      
+      logger.error("Validation route failed", error, {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: req.originalUrl
+      });      
 
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error.",
-        });
+      return res.status(500).json({
+          success: false,
+          message: "Internal server error.",
+      });
     }
   }
   

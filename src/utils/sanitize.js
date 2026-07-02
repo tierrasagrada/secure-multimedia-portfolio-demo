@@ -6,11 +6,7 @@ import xss from "xss";
 ========================= */
 
 export function sanitizeText(input) {
-
-  if (
-    typeof input !== "string"
-  ) {
-
+  if (typeof input !== "string") {
     return "";
   }
 
@@ -18,8 +14,7 @@ export function sanitizeText(input) {
      TRIM
   ========================= */
 
-  let clean =
-    validator.trim(input);
+  let clean = validator.trim(input);
 
   /* =========================
      REMOVE XSS
@@ -31,15 +26,13 @@ export function sanitizeText(input) {
      ESCAPE HTML
   ========================= */
 
-  clean =
-    validator.escape(clean);
+  clean = validator.escape(clean);
 
   /* =========================
      NORMALIZE
   ========================= */
 
-  clean =
-    clean.toLowerCase();
+  clean = clean.toLowerCase();
 
   return clean;
 }

@@ -1,54 +1,33 @@
-import {
-  verifyAccessToken
-} from "../services/tokenService.js";
+import { verifyAccessToken } from "../services/tokenService.js";
 
-import logger from
-"../utils/logger.js";
+import logger from "../utils/logger.js";
 
-import {
-  SESSION_VERSION
-}
-from "../config/sessionConfig.js";
+import { SESSION_VERSION } from "../config/sessionConfig.js";
 
-import {
-  increment
-} from "../utils/securityMetrics.js";
+import { increment } from "../utils/securityMetrics.js";
 
-import {
-  addAuditEvent
-} from "../utils/auditTrail.js";
+import { addAuditEvent } from "../utils/auditTrail.js";
 
 /* =========================
    AUTH MIDDLEWARE
 ========================= */
 
-export default function auth(
-  req,
-  res,
-  next
-) {
-
+export default function auth(req, res, next) {
   try {
-
     /* =========================
        GET TOKEN
     ========================= */
 
-    const token =
-      req.cookies.access_token;
+    const token = req.cookies.access_token;
 
     /* =========================
        TOKEN REQUIRED
     ========================= */
 
     if (!token) {
-
       return res.status(401).json({
-
         success: false,
-
-        message:
-          "Authentication required.",
+        message: "Authentication required.",
       });
     }
 
@@ -56,8 +35,7 @@ export default function auth(
        VERIFY TOKEN
     ========================= */
 
-    const decoded =
-      verifyAccessToken(token);
+    const decoded = verifyAccessToken(token);
 
     /* =========================
        ATTACH USER DATA
@@ -69,58 +47,34 @@ export default function auth(
     SESSION VERSION CHECK
     ========================= */
 
-    if (
-
-      decoded.sessionVersion !==
-      SESSION_VERSION
-    ) {
-
+    if (decoded.sessionVersion !== SESSION_VERSION) {
       return res.status(401).json({
-
         success: false,
-
-        message:
-          "Session invalidated.",
+        message: "Session invalidated.",
       });
     }
-
     next();
-
   } catch (error) {
-
     /* =========================
        INVALID TOKEN LOG
     ========================= */
 
-    /*logger.security(
-
-      `Invalid JWT from IP: ${req.ip}`
-    );*/
     increment("invalidJwt");
 
-    logger.security(
-      "Invalid JWT",
-      {
-        ip: req.ip,
-        requestId: req.requestId,
-        path: req.originalUrl
-      }
-    );    
+    logger.security("Invalid JWT", {
+      ip: req.ip,
+      requestId: req.requestId,
+      path: req.originalUrl,
+    });
 
-    addAuditEvent(
-      "INVALID_JWT",
-      {
-        ip: req.ip,
-        requestId: req.requestId
-      }
-    );
+    addAuditEvent("INVALID_JWT", {
+      ip: req.ip,
+      requestId: req.requestId,
+    });
 
     return res.status(403).json({
-
       success: false,
-
-      message:
-        "Invalid or expired session.",
+      message: "Invalid or expired session.",
     });
   }
 }

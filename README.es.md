@@ -1,134 +1,134 @@
 # Portafolio Multimedia Seguro
 
-Aplicación web desarrollada con **Node.js**, **Express** y **JavaScript puro**, diseñada para proteger contenido multimedia mediante mecanismos de acceso controlado y prácticas de seguridad aplicadas al desarrollo web.
+Aplicación web desarrollada con Node.js, Express y JavaScript puro que demuestra técnicas de distribución segura de contenido multimedia mediante mecanismos de acceso controlado y la aplicación práctica de controles de seguridad web.
 
 ## Descripción del proyecto
 
-Este proyecto surge como respuesta a una problemática común en los portafolios tradicionales: **compartir enlaces directos a contenido personal sin control sobre su distribución o reutilización**.
+Los portafolios tradicionales suelen exponer contenido multimedia mediante enlaces directos que pueden ser compartidos, indexados o reutilizados sin control.
 
-La aplicación permite al propietario del portafolio entregar acceso temporal a personas específicas mediante un proceso de validación ligero, protegiendo imágenes y recursos frente a accesos no autorizados, scraping automatizado y exposición directa de URLs.
+Este proyecto aborda ese problema implementando un proceso de validación previo al acceso del contenido protegido. Los recursos privados son entregados mediante mecanismos controlados por el backend, incluyendo sesiones seguras y URLs firmadas de corta duración para recursos multimedia.
+
+El objetivo es reducir la exposición directa de recursos privados y aplicar conceptos prácticos de desarrollo seguro en un escenario real.
+
+---
 
 ## Capturas de pantalla
 
 ### Validación de acceso
-El acceso al contenido protegido requiere completar un proceso de validación antes de habilitar la sesión del usuario.
+
+El usuario debe completar una validación antes de acceder al contenido protegido.
 
 ![Pantalla de validación de acceso](./docs/screenshots/access-form.png)
 
 ### Portafolio multimedia protegido
+
 El contenido privado se entrega mediante mecanismos de acceso controlado y recursos protegidos con URLs temporales.
 
 ![Contenido protegido del portafolio](./docs/screenshots/protected-content.png)
 
 ### Gestión de sesiones por inactividad
-La aplicación detecta períodos de inactividad y advierte al usuario antes de finalizar automáticamente la sesión activa.
+
+La aplicación detecta períodos de inactividad, advierte al usuario y finaliza automáticamente las sesiones inactivas.
 
 ![Advertencia de expiración de sesión](./docs/screenshots/session-warning.png)
 
-## Características principales
+---
 
-* Acceso protegido mediante una palabra de acceso entregada por el propietario del portafolio.
-* Entrega controlada de contenido multimedia.
-* Detección de inactividad del usuario.
-* Cierre automático de sesión por inactividad.
-* Experiencia de usuario optimizada sin utilizar frameworks frontend.
-* Protección de recursos mediante URLs firmadas con expiración.
-
-A continuación se describen algunas de las decisiones técnicas adoptadas durante el desarrollo del proyecto.
-## Medidas de seguridad implementadas
-
-* Protección de recursos multimedia mediante URLs firmadas con expiración automática.
-* Control de acceso basado en sesiones seguras utilizando cookies HTTP-Only.
-* Validación previa del usuario antes de exponer contenido protegido.
-* Protección frente a ataques CSRF en operaciones sensibles.
-* Limitación de solicitudes para reducir riesgos asociados a automatización y fuerza bruta.
-* Incremento progresivo del tiempo de espera ante múltiples intentos fallidos de validación.
-* Asociación del acceso a recursos protegidos con el contexto de autenticación del usuario.
-* Validación y sanitización de datos provenientes del cliente antes de su procesamiento.
-* Aplicación de cabeceras de seguridad alineadas con recomendaciones OWASP.
-* Prevención del acceso directo a recursos privados almacenados en el servidor.
-* Registro de eventos relevantes mediante mecanismos internos de auditoría y trazabilidad.
-* Detección de inactividad del usuario y cierre automático de sesión.
-* Gestión centralizada de errores para evitar exposición innecesaria de información sensible.
-
-
-## Arquitectura del proyecto
-
-La solución fue diseñada utilizando una arquitectura basada en separación de responsabilidades, favoreciendo la mantenibilidad, escalabilidad y facilidad de evolución del sistema.
-
-### Frontend
-
-Responsable de la interacción con el usuario y del consumo seguro de servicios backend.
-
-Componentes principales:
-
-* Gestión del proceso de validación inicial.
-* Renderizado dinámico del contenido protegido.
-* Gestión del ciclo de vida de la sesión del usuario.
-* Detección de inactividad y control de expiración.
-* Consumo de APIs protegidas.
-* Carga diferida y optimizada de recursos multimedia.
-
-### Backend
-
-Organizado mediante capas independientes que delimitan claramente las responsabilidades del sistema.
-
-#### Routes
-
-Definen los puntos de entrada de la aplicación y coordinan el flujo hacia los controladores correspondientes.
-
-#### Controllers
-
-Implementan la lógica asociada a autenticación, generación de contenido protegido, entrega de imágenes seguras y cierre de sesiones.
-
-#### Middleware
-
-Gestionan preocupaciones transversales del sistema, incluyendo:
-
-* Autenticación y autorización.
-* Protección CSRF.
-* Validación de entradas.
-* Limitación de solicitudes.
-* Generación de identificadores de trazabilidad.
-* Registro centralizado de eventos HTTP.
-* Aplicación de cabeceras de seguridad.
-* Manejo global de errores.
-
-#### Services
-
-Encapsulan lógica reutilizable asociada a la generación y validación de tokens.
-
-#### Utilities
-
-Agrupan funcionalidades auxiliares relacionadas con auditoría, métricas de seguridad, sanitización de datos y protección de recursos multimedia.
-
-#### Protected Resources
-
-Los archivos privados permanecen fuera del acceso público directo y solo pueden ser obtenidos mediante mecanismos de validación implementados por el backend.
-
-Esta organización permite incorporar nuevas funcionalidades de seguridad o escalabilidad sin afectar significativamente al resto del sistema.
-
-## Flujo de acceso protegido
+## ¿Cómo funciona?
 
 1. El usuario accede al portafolio.
 2. Se solicita una palabra de acceso.
 3. El backend valida la respuesta.
 4. Se establece una sesión segura.
-5. Los recursos protegidos son solicitados mediante endpoints autenticados.
-6. Se generan URLs temporales para imágenes privadas.
-7. La inactividad del usuario provoca el cierre automático de la sesión.
+5. El contenido protegido es solicitado mediante APIs autenticadas.
+6. El backend genera URLs firmadas para imágenes privadas.
+7. Los recursos multimedia son entregados de forma controlada.
+8. La sesión finaliza automáticamente tras un período de inactividad.
 
-## Competencias demostradas
+---
 
-* Diseño e implementación de APIs REST utilizando Node.js y Express.
-* Protección de recursos sensibles mediante mecanismos de autenticación y autorización.
-* Aplicación práctica de principios de seguridad recomendados por OWASP.
-* Implementación de controles contra automatización, abuso y fuerza bruta.
-* Gestión del ciclo de vida de sesiones e inactividad del usuario.
-* Organización del código mediante separación de responsabilidades.
-* Desarrollo frontend utilizando JavaScript puro sin dependencia de frameworks.
-* Diseño de soluciones orientadas a mantenibilidad y futura escalabilidad.
-* Despliegue continuo de aplicaciones web en entornos cloud.
+## Características principales
+
+* Validación de acceso mediante palabra de acceso.
+* Gestión segura de sesiones mediante cookies HTTP-Only.
+* Entrega controlada de contenido multimedia.
+* Cierre automático de sesión por inactividad.
+* Sistema de advertencia previo a la expiración.
+* Protección de recursos mediante URLs firmadas.
+* Registro de eventos relevantes para auditoría y diagnóstico.
+* Frontend desarrollado sin frameworks.
+
+---
+
+## Aspectos destacados de seguridad
+
+* Gestión de sesiones mediante cookies HTTP-Only.
+* URLs firmadas con expiración automática.
+* Protección CSRF.
+* Limitación de solicitudes para reducir automatización y fuerza bruta.
+* Incremento progresivo del tiempo de espera tras intentos fallidos.
+* Validación y sanitización de entradas.
+* Cabeceras de seguridad alineadas con OWASP.
+* Recursos privados fuera del acceso público directo.
+* Manejo centralizado de errores.
+* Registro estructurado de eventos relevantes para auditoría y diagnóstico.
+
+---
+
+## Arquitectura
+
+La solución utiliza una arquitectura por capas orientada a la mantenibilidad y separación de responsabilidades.
+
+### Frontend
+
+Responsable de:
+
+* Validación de acceso.
+* Renderizado dinámico del contenido protegido.
+* Gestión del ciclo de vida de la sesión.
+* Detección de inactividad.
+* Consumo seguro de APIs.
+* Carga optimizada de contenido multimedia.
+
+### Backend
+
+#### Routes
+
+Definen los puntos de entrada de la aplicación.
+
+#### Controllers
+
+Implementan la lógica de autenticación, gestión de sesiones y entrega de contenido protegido.
+
+#### Middleware
+
+Gestionan:
+
+* Autenticación y autorización.
+* Protección CSRF.
+* Validación de entradas.
+* Limitación de solicitudes.
+* Cabeceras de seguridad.
+* Registro de eventos.
+* Manejo global de errores.
+
+#### Services
+
+Encapsulan la generación y validación de tokens.
+
+#### Utilities
+
+Agrupan funcionalidades auxiliares de auditoría, métricas y protección multimedia.
+
+#### Views
+
+Plantillas encargadas de presentar contenido público y contenido protegido accesible únicamente tras la validación de acceso.
+
+#### Recursos protegidos
+
+Los archivos privados permanecen fuera del acceso público directo y solo pueden ser obtenidos mediante mecanismos de validación implementados por el backend.
+
+---
 
 ## Tecnologías utilizadas
 
@@ -139,38 +139,55 @@ Esta organización permite incorporar nuevas funcionalidades de seguridad o esca
 | Seguridad  | JWT, CSRF, Rate Limiting |
 | Despliegue | Vercel                   |
 
-## Instalación y ejecución local
+---
+
+## Instalación
 
 ```bash
 git clone https://github.com/tierrasagrada/secure-multimedia-portfolio-demo
 
-cd repositorio
+cd secure-multimedia-portfolio-demo
 
 npm install
 
 npm run dev
 ```
 
-### Variables de entorno
+## Variables de entorno
 
-Cree un archivo `.env` utilizando como referencia `.env.example`.
+Crear un archivo `.env` utilizando `.env.example` como referencia.
 
-## Despliegue
-
-La aplicación se encuentra preparada para su despliegue en plataformas serverless como Vercel.
+---
 
 ## Posibles evoluciones
 
-La arquitectura actual fue diseñada considerando futuras mejoras, tales como:
+* Migración a una galería multimedia propia para mejorar mantenibilidad, rendimiento y control de la interfaz.
+* Carga diferida (lazy loading) de contenido embebido.
+* Gestión distribuida de sesiones mediante Redis.
+* Persistencia de eventos de seguridad y registros de auditoría.
+* Panel de monitoreo con métricas, gráficos y estadísticas de seguridad.
+* Alertas automáticas ante eventos de seguridad relevantes.
+* Mitigación avanzada de abuso mediante rate limiting distribuido.
 
-* Almacenamiento distribuido de sesiones utilizando Redis.
-* Implementación de capas de caché para optimizar rendimiento.
-* Integración con proveedores externos de identidad.
-* Monitoreo avanzado de eventos y alertas.
-* Estrategias de escalabilidad horizontal.
+---
 
-## Nota
+## Competencias demostradas
 
-Este proyecto fue desarrollado como iniciativa personal con el objetivo de aplicar principios de desarrollo seguro en un escenario práctico de distribución controlada de contenido multimedia.
+* Desarrollo de APIs REST con Node.js y Express.
+* Distribución segura de contenido multimedia.
+* Implementación de autenticación y autorización.
+* Implementación de controles de seguridad alineados con OWASP.
+* Mitigación de fuerza bruta.
+* Gestión del ciclo de vida de sesiones.
+* Arquitectura backend por capas.
+* Desarrollo frontend con JavaScript puro.
+* Despliegue cloud mediante Vercel.
+* Implementación de logging estructurado para auditoría y diagnóstico.
 
-Los recursos multimedia incluidos en este repositorio fueron creados exclusivamente con fines demostrativos y no corresponden a información personal ni a contenido protegido de terceros.
+---
+
+### Nota
+
+Este proyecto fue desarrollado como iniciativa personal con el objetivo de aplicar conceptos prácticos de seguridad web en un escenario real de distribución controlada de contenido multimedia.
+
+Todos los recursos multimedia incluidos son demostrativos y no contienen información personal ni contenido protegido de terceros.

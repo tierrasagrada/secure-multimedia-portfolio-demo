@@ -1,126 +1,61 @@
 import fs from "fs";
 import path from "path";
 
-import {
-  verifyImageToken
-} from "../services/tokenService.js";
+import { verifyImageToken } from "../services/tokenService.js";
 
-import logger from
-"../utils/logger.js";
+import logger from "../utils/logger.js";
 
-import {
-  increment
-} from "../utils/securityMetrics.js";
+import { increment } from "../utils/securityMetrics.js";
 
-import {
-  addAuditEvent
-} from "../utils/auditTrail.js";
+import { addAuditEvent } from "../utils/auditTrail.js";
 
-import {
-  sanitizeQueryForLogs
-} from "../utils/sanitizeQueryForLogs.js";
+import { sanitizeQueryForLogs } from "../utils/sanitizeQueryForLogs.js";
 
-import {
-  setImageSecurityHeaders
-} from "../utils/setImageSecurityHeaders.js";
+import { setImageSecurityHeaders } from "../utils/setImageSecurityHeaders.js";
 
-import {
-  validateProtectedImage
-} from "../utils/validateProtectedImage.js";
+import { validateProtectedImage } from "../utils/validateProtectedImage.js";
 
 const imagePath = path.join(process.cwd(), "src/protectedimages");
 
-export async function serveProtectedImage(
-  req,
-  res
-) {
+export async function serveProtectedImage(req, res) {
   try {
     const { token } = req.query;
 
-    if (!token){ 
+    if (!token) {
       increment("missingImageToken");
-      logger.security(
-        "Missing image token",
-        {
-          ip: req.ip,
-          requestId: req.requestId,
-          path: sanitizeQueryForLogs(
-            req.originalUrl
-          )
-        }
-      );      
+      logger.security("Missing image token", {
+        ip: req.ip,
+        requestId: req.requestId,
+        path: sanitizeQueryForLogs(req.originalUrl),
+      });
 
-      return res.status(401).json({ 
-        success: false, message: "Acceso no autorizado." 
+      return res.status(401).json({
+        success: false,
+        message: "Acceso no autorizado.",
       });
     }
     // 📌 Validar el token
-    const decoded =
-      verifyImageToken(token);
+    const decoded = verifyImageToken(token);
     const { filename, ip } = decoded;
-    const userIP = req.ip;
-
-    // 📌 Verificar la IP para evitar que la URL se comparta
-    if (userIP !== ip) {
-      logger.security(
-        "Image IP mismatch",
-        {
-          ip: req.ip,
-          requestId: req.requestId,
-          path: sanitizeQueryForLogs(
-            req.originalUrl
-          )
-        }
-      );
-
-      return res.status(403).json({ 
-        success: false, message: "Invalid token." 
-      });
-    }
-    
-    const imageValidation =
-      validateProtectedImage(
-        filename,
-        imagePath
-      );
+    const imageValidation = validateProtectedImage(filename, imagePath);
 
     if (!imageValidation.valid) {
-
-      if (
-        imageValidation.ext
-      ) {
-
-        logger.security(
-          "not valid image extension",
-          {
-            ip: req.ip,
-            requestId:
-              req.requestId,
-            path:
-              sanitizeQueryForLogs(
-                req.originalUrl
-              ),
-            extension:
-              imageValidation.ext
-          }
-        );
+      if (imageValidation.ext) {
+        logger.security("not valid image extension", {
+          ip: req.ip,
+          requestId: req.requestId,
+          path: sanitizeQueryForLogs(req.originalUrl),
+          extension: imageValidation.ext,
+        });
       }
 
-      return res
-        .status(
-          imageValidation.status
-        )
-        .json({
-          success: false,
-          message:
-            imageValidation.message
-        });
+      return res.status(imageValidation.status).json({
+        success: false,
+        message: imageValidation.message,
+      });
     }
 
-    const {
-      filePath,
-      ext
-    } = imageValidation;
+    const { filePath, ext } = imageValidation;
 
     const mimeTypes = {
       ".jpg": "image/jpeg",
@@ -130,11 +65,8 @@ export async function serveProtectedImage(
 
     /* =========================
        SECURITY HEADERS
-    ========================= */    
-    setImageSecurityHeaders(
-        res,
-        mimeTypes[ext]
-    );    
+    ========================= */
+    setImageSecurityHeaders(res, mimeTypes[ext]);
 
     /* =========================
        STREAM FILE
@@ -143,32 +75,22 @@ export async function serveProtectedImage(
     const stream = fs.createReadStream(filePath);
 
     stream.pipe(res);
-    
   } catch (error) {
-      increment("notvalidImageToken");
-      logger.security(
-        "Invalid or expired image token",
-        {
-          ip: req.ip,
-          requestId: req.requestId,
-          path: sanitizeQueryForLogs(
-            req.originalUrl
-          )
-        }
-      );     
+    increment("notvalidImageToken");
+    logger.security("Invalid or expired image token", {
+      ip: req.ip,
+      requestId: req.requestId,
+      path: sanitizeQueryForLogs(req.originalUrl),
+    });
 
-      addAuditEvent(
-        "INVALID_IMAGE_TOKEN",
-        {
-          ip: req.ip,
-          requestId: req.requestId
-        }
-      );
+    addAuditEvent("INVALID_IMAGE_TOKEN", {
+      ip: req.ip,
+      requestId: req.requestId,
+    });
 
-      return res.status(403).json({
-        success: false,
-        message:
-          "Invalid or expired token.",
-      });    
-    }
+    return res.status(403).json({
+      success: false,
+      message: "Invalid or expired token.",
+    });
   }
+}

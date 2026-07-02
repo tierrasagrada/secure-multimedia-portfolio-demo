@@ -9,21 +9,13 @@ const router = express.Router();
 ========================= */
 
 const csrfLimiter = rateLimit({
-
   windowMs: 15 * 60 * 1000,
-
   max: 30,
-
   standardHeaders: true,
-
   legacyHeaders: false,
-
   message: {
-
     success: false,
-
-    message:
-      "Too many token requests.",
+    message: "Too many token requests."
   },
 });
 
@@ -31,20 +23,11 @@ const csrfLimiter = rateLimit({
    CSRF TOKEN ROUTE
 ========================= */
 
-router.get(
-  "/",
-  csrfLimiter,
-
-  (req, res) => {
-
+router.get("/", csrfLimiter, (req, res) => {
     res.status(200).json({
-
       success: true,
-
-      csrfToken:
-        req.csrfToken(),
+      csrfToken: req.csrfToken(),
     });
-  }
-);
+  });
 
 export default router;

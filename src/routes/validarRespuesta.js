@@ -4,7 +4,6 @@ import slowDown from "express-slow-down";
 import { validateAnswer } from "../middleware/validateInput.js";
 import { validateSecurityAnswer } from "../controllers/authController.js";
 
-
 const router = express.Router();
 
 /* =========================
@@ -22,14 +21,14 @@ const authLimiter = rateLimit({
       event: "rate_limit",
       ip: req.ip,
       path: req.originalUrl,
-      method: req.method
+      method: req.method,
     });
 
     return res.status(429).json({
       success: false,
-      message: "Too many failed attempts. Please try again later."
+      message: "Too many failed attempts. Please try again later.",
     });
-  }
+  },
 });
 
 /* =========================
@@ -44,11 +43,12 @@ const speedLimiter = slowDown({
 });
 
 // VALIDATION ENDPOINT
-router.post("/",
+router.post(
+  "/",
   speedLimiter,
   authLimiter,
   validateAnswer,
-  validateSecurityAnswer
+  validateSecurityAnswer,
 );
 
 export default router;

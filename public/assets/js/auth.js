@@ -1,51 +1,26 @@
 /* =========================
    LOGIN
 ========================= */
-import {
-  apiFetch
-} from "./api.js";
+import { apiFetch } from "./api.js";
 
-import {
-  getCSRFToken
-} from "./csrf.js";
+import { getCSRFToken } from "./csrf.js";
 
 /* =========================
    LOGIN REQUEST
 ========================= */
 
-export async function login(
-  respuesta
-) {
+export async function login(respuesta) {
+  const csrfToken = await getCSRFToken();
 
-  const csrfToken =
-    await getCSRFToken();
-
-  return apiFetch(
-
-    "/api/validarRespuesta",
-
-    {
-
+  return apiFetch("/api/validarRespuesta", {
       method: "POST",
-
-      credentials:
-        "include",
-
+      credentials: "include",
       headers: {
-
-        "Content-Type":
-          "application/json",
-
-        "X-CSRF-Token":
-          csrfToken,
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
       },
-
-      body: JSON.stringify({
-
-        respuesta,
-      }),
-    }
-  );
+      body: JSON.stringify({ respuesta }),
+  });
 }
 
 /* =========================
@@ -53,17 +28,9 @@ export async function login(
 ========================= */
 
 export async function restoreSession() {
-
-  const response =
-    await apiFetch(
-
-      "/api/contenido",
-
-      {
-
+  const response = await apiFetch("/api/contenido",{
         method: "GET",
-      }
-    );
+  });
 
   return response;
 }

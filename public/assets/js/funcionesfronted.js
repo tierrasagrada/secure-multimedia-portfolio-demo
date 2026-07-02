@@ -19,36 +19,28 @@ submitButton.addEventListener("click", async () => {
      PREVENT MULTIPLE REQUESTS
   ========================= */
 
-  if (isSubmitting) return;
+  if (isSubmitting){
+    return;
+  }
 
   isSubmitting = true;
 
   bloquearBoton();
 
   try {
-
-    const userAnswer =
-      document.getElementById("answer")
-      .value
-      .trim();
+    const userAnswer = document.getElementById("answer").value.trim();
 
     /* =========================
        VALIDATION
     ========================= */
 
     if (!userAnswer) {
-
       mostrarError("⚠ The answer cannot be empty.");
-
       return;
     }
 
     if (!/^[a-zA-Z0-9\s]+$/.test(userAnswer)) {
-
-      mostrarError(
-        "⚠ Invalid input. Use only letters and numbers."
-      );
-
+      mostrarError("⚠ Invalid input. Use only letters and numbers.");
       return;
     }
 
@@ -64,11 +56,7 @@ submitButton.addEventListener("click", async () => {
     ========================= */
 
     if (response1.status === 429) {
-
-      mostrarError(
-        "⚠ Too many attempts. Please try again later."
-      );
-
+      mostrarError("⚠ Too many attempts. Please try again later.");
       return;
     }
 
@@ -77,16 +65,11 @@ submitButton.addEventListener("click", async () => {
     ========================= */
 
     if (response1.status === 401) {
-
-      mostrarError(
-        "⚠ Incorrect answer. Try again."
-      );
+      mostrarError("⚠ Incorrect answer. Try again.");
 
       delay = Math.min(delay * 2, 30000);
 
-      await new Promise(resolve =>
-        setTimeout(resolve, delay)
-      );
+      await new Promise(resolve => setTimeout(resolve, delay));
 
       return;
     }
@@ -96,56 +79,36 @@ submitButton.addEventListener("click", async () => {
     ========================= */
 
     if (!response1.ok) {
-
       throw new Error("Server error");
     }
 
-const data =
-  await response1.json();
+    const data = await response1.json();
 
-/* =========================
-   SUCCESS
-========================= */
+    /* =========================
+      SUCCESS
+    ========================= */
 
-if (!data.success) {
+    if (!data.success) {
+      mostrarError("⚠ Invalid server response.");
+      return;
+    }
 
-  mostrarError(
+    localStorage.setItem("hadValidSession", "true");
 
-    "⚠ Invalid server response."
-  );
+    /* =========================
+      LOAD PROTECTED SESSION
+    ========================= */
 
-  return;
-}
+    const restored = await renderProtectedContent();
 
-  localStorage.setItem(
-    "hadValidSession",
-    "true"
-  );
-
-/* =========================
-   LOAD PROTECTED SESSION
-========================= */
-
-  const restored =
-    await renderProtectedContent();
-
-  if (restored) {
-
-    startSessionWatcher();
-  }
+    if (restored) {
+      startSessionWatcher();
+    }
 
   } catch (error) {
-
-    console.error(error);
-
-    mostrarError(
-      "⚠ An error occurred. Please try again later."
-    );
-
+    mostrarError("⚠ An error occurred. Please try again later.");
   } finally {
-
     isSubmitting = false;
-
     desbloquearBoton();
   }
 });
@@ -154,28 +117,17 @@ if (!data.success) {
    IMAGE LOAD EFFECT
 ========================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const images = document.querySelectorAll("img");
 
-    const images =
-      document.querySelectorAll("img");
+  images.forEach((img) => {
+    img.onload = () => {
+      img.style.opacity = "1";
+    };
+  });
+});
 
-    images.forEach((img) => {
-
-      img.onload = () => {
-        img.style.opacity = "1";
-      };
-    });
-  }
-);
 //intenta recuperar una sesión válida existente. Si la cookie ya expiró: no muestra contenido protegido
-document.addEventListener(
-
-  "DOMContentLoaded",
-
-  async () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
     await restoreProtectedSession();
-  }
-);
+});

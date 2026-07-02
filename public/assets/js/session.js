@@ -63,19 +63,13 @@ export function resetSessionTimer() {
 
   sessionEndsAt = Date.now() + SESSION_LIMIT;
 
-  warningTimeout =
-    setTimeout(() => {
+  warningTimeout = setTimeout(() => {
+    showSessionWarning();
+  }, SESSION_LIMIT - 60000);
 
-      showSessionWarning();
-
-    }, SESSION_LIMIT - 60000);
-
-  sessionTimeout =
-    setTimeout(() => {
-
-      destroySession();
-
-    }, SESSION_LIMIT);
+  sessionTimeout = setTimeout(() => {
+    destroySession();
+  }, SESSION_LIMIT);
 }
 
 /* =========================
@@ -88,17 +82,12 @@ export function startSessionWatcher() {
   }
 
   sessionClosing = false;
-
   sessionWatcherActive = true;
 
   SESSION_EVENTS.forEach((event) => {
-
-    document.addEventListener( 
-      event, 
-      resetSessionTimer
-    );
+    document.addEventListener(event, resetSessionTimer);
   });
-
+  
   resetSessionTimer();
 }
 
@@ -107,7 +96,7 @@ export function startSessionWatcher() {
 ========================= */
 
 function showSessionWarning() {
-console.log("showSessionWarning ejecutado");
+
   const modal = document.getElementById("session-modal");
 
   const countdown = document.getElementById("session-countdown");
@@ -123,42 +112,27 @@ console.log("showSessionWarning ejecutado");
   clearInterval(countdownInterval);
 
   countdown.textContent = "60";
-  countdownInterval =
-    setInterval(() => {
-
-    const remainingSeconds =
-      Math.max(
+  
+  countdownInterval = setInterval(() => {
+    const remainingSeconds = Math.max(
         0,
-        Math.ceil(
-          (
-            sessionEndsAt -
-            Date.now()
-          ) / 1000
-        )
-      );      
-
-      countdown.textContent = remainingSeconds;
-
-      if (remainingSeconds <= 0){
-        clearInterval(countdownInterval);
-      }
-
-    }, 1000);
+        Math.ceil((sessionEndsAt - Date.now()) / 1000)
+    );      
+    countdown.textContent = remainingSeconds;
+    if (remainingSeconds <= 0){
+      clearInterval(countdownInterval);
+    }
+  }, 1000);
 }
 
 /* =========================
    CLEAN LISTENERS
 ========================= */
+
 function stopSessionWatcher() {
-
   SESSION_EVENTS.forEach(event => {
-
-    document.removeEventListener(
-      event,
-      resetSessionTimer
-    );
+    document.removeEventListener(event, resetSessionTimer);
   });
-
   sessionWatcherActive = false;
 }
 
@@ -179,19 +153,15 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   try {
     const csrfToken = await getCSRFToken();
 
-    await apiFetch(
-      "/api/logout",
-      {
+    await apiFetch("/api/logout",{
         method: "POST",
         headers: {
           "X-CSRF-Token":
             csrfToken
         }
-      }
-    );
-
+    });
   } catch (error) {
-    console.error("Logout failed",error);
+    showError("Unable to sign you out. Please refresh the page or try again.");
   }
 
   const modal = document.getElementById("session-modal");
@@ -202,9 +172,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
 
   sessionWarningActive = false;  
 
-  mostrarError(
-    "⚠ Session expired."
-  );
+  mostrarError( "⚠ Session expired." );
   
   /* =========================
      HIDE PROTECTED CONTENT
@@ -227,15 +195,10 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       DESTROY IFRAMES
     ========================= */
 
-    const iframes =
-      protectedContent.querySelectorAll(
-        "iframe"
-      );
+    const iframes = protectedContent.querySelectorAll("iframe");
 
     iframes.forEach(iframe => {
-
       iframe.src = "";
-
       iframe.remove();
     });
 
@@ -243,10 +206,7 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       RESET SLIDER CONTENT
     ========================= */
 
-    const sliker =
-      document.getElementById(
-        "sliker"
-      );
+    const sliker = document.getElementById("sliker");
 
     if (sliker) {
       sliker.innerHTML = "";
@@ -256,15 +216,13 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
       RESET FIREWORKS
     ========================= */
 
-    const wanderito =
-      document.getElementById("wanderito");
+    const wanderito = document.getElementById("wanderito");
 
     if (wanderito) {
       wanderito.innerHTML = "";
     }
 
-    const wanderito2 =
-      document.getElementById("wanderito2");
+    const wanderito2 = document.getElementById("wanderito2");
 
     if (wanderito2) {
       wanderito2.innerHTML = "";
@@ -282,7 +240,9 @@ clearInterval(countdownInterval);  //Limpia el contador cuando expira la sesión
   /* =========================
      CLEAR INPUT
   ========================= */
+
   const answerElement = document.getElementById("answer");
+
   if (answerElement) {
       answerElement.value = "";
   }
@@ -303,7 +263,6 @@ export async function restoreProtectedSession() {
   restoreInProgress = true;
 
   try {
-
     const result = await renderProtectedContent();
 
     /* =========================
@@ -311,16 +270,11 @@ export async function restoreProtectedSession() {
     ========================= */
 
       if (result.ok) {
-
         if (sessionWatcherActive) {
-
           resetSessionTimer();
-
         } else {
-
           startSessionWatcher();
         }
-
         return;
       }
 
@@ -329,20 +283,10 @@ export async function restoreProtectedSession() {
     ========================= */
 
     if (result.status === 401) {
-
-      if (
-        localStorage.getItem(
-          "hadValidSession"
-        ) === "true"
-      ) {
-
-        localStorage.removeItem(
-          "hadValidSession"
-        );
-
+      if (localStorage.getItem("hadValidSession") === "true") {
+        localStorage.removeItem("hadValidSession");
         await destroySession();
       }
-
       return;
     }
 
@@ -352,29 +296,17 @@ export async function restoreProtectedSession() {
     ========================= */
 
     if (result.status === "network_error") {
-
       if (localStorage.getItem("hadValidSession") === "true") {
-            localStorage.removeItem(
-              "hadValidSession"
-            );
-
+          localStorage.removeItem("hadValidSession");
           await destroySession();
-
           return;
       }
-
-      mostrarError(
-        "⚠ Connection error"
-      );
-
+      mostrarError("⚠ Connection error");
       return;
     }
 
   } catch (error) {
-
-    console.error(error);
-
-
+    showError("We couldn't restore your previous session. Please log in again to securely continue.");
   } finally {
     restoreInProgress = false;
     document.body.classList.remove("auth-loading");
@@ -382,92 +314,47 @@ export async function restoreProtectedSession() {
 }
 
 /* =========================
-   CONTINUE SESSION
+  CONTINUE SESSION
 ========================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const continueButton =
-      document.getElementById(
-        "continue-session"
-      );
+  const continueButton = document.getElementById("continue-session");
 
-    if (!continueButton) return;
+  if (!continueButton){
+    return;
+  } 
 
-    continueButton.addEventListener(
-      "click",
-      () => {
+  continueButton.addEventListener("click", () => {
 
-        sessionWarningActive = false;
+      sessionWarningActive = false;
 
-        clearInterval(
-          countdownInterval
-        );   
+      clearInterval(countdownInterval);   
 
-        const modal =
-          document.getElementById(
-            "session-modal"
-          );
+      const modal = document.getElementById("session-modal");
 
-        if (modal) {
-
-          modal.classList.remove(
-            "active"
-          );
-        }
-
-        resetSessionTimer();
+      if (modal) {
+        modal.classList.remove("active");
       }
-    );
-  }
-);
+      resetSessionTimer();
+  });
+});
 
-/*function imprimirError(mensaje) {
+window.addEventListener("pageshow", async (event) => {
 
-  const cajaError =
-    document.getElementById(
-      "error-box"
-    );
-
-  if (!cajaError) {
+  if (!event.persisted) {
     return;
   }
 
-  cajaError.textContent =
-    mensaje;
+  try {
+    const result = await apiFetch("/api/contenido", {
+          method: "GET"
+    });
 
-  cajaError.style.display =
-    "block";
-}*/
-
-window.addEventListener(
-  "pageshow",
-  async (event) => {
-
-    if (!event.persisted) {
-      return;
-    }
-
-    try {
-
-      const result =
-        await apiFetch(
-          "/api/contenido",
-          {
-            method: "GET"
-          }
-        );
-
-      if (!result.ok) {
-
-        await destroySession();
-      }
-
-    } catch {
-
+    if (!result.ok) {
       await destroySession();
     }
+  } catch {
+    await destroySession();
   }
-);
+});

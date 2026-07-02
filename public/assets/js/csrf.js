@@ -1,5 +1,4 @@
-import { apiFetch }
-from "./api.js";
+import { apiFetch } from "./api.js";
 
 /* =========================
    CSRF CACHE
@@ -18,33 +17,20 @@ export async function getCSRFToken() {
   ========================= */
 
   if (csrfToken) {
-
     return csrfToken;
   }
 
-  const response =
-    await apiFetch(
-
-      "/api/csrf-token",
-
-      {
-
+  const response = await apiFetch("/api/csrf-token", {
         method: "GET",
-      }
-    );
+  });
 
   if (!response.ok) {
-
-    throw new Error(
-      "Failed CSRF token."
-    );
+    throw new Error("Failed CSRF token.");
   }
 
-  const data =
-    await response.json();
+  const data = await response.json();
 
-  csrfToken =
-    data.csrfToken;
+  csrfToken = data.csrfToken;
 
   return csrfToken;
 }
